@@ -7,6 +7,7 @@
    <script>
        const midtransToken = "{{ $midtransToken }}";
    </script>
+
    <x-app-layout>
        <x-slot name="header">
            <div class="flex justify-between items-center">
@@ -156,13 +157,6 @@
                            </button>
                        </form>
 
-                       <!-- Tombol Cetak Bukti -->
-                       <form action="#" method="POST">
-                           <button type="button" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2">
-                               <i class="fas fa-print"></i> <!-- Ikon Printer -->
-                               Cetak Bukti
-                           </button>
-                       </form>
                    </div>
 
 
