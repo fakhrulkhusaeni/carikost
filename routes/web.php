@@ -1,0 +1,75 @@
+<?php
+
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KostController;
+use App\Http\Controllers\FrontController;
+use App\Http\Controllers\HunianLainController;
+use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\PromosiController;
+use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VerifikasiController;
+use App\Http\Controllers\RatingController;
+
+
+Route::get('/', [FrontController::class, 'index'])->name('frontend.index');
+Route::get('/hunian_lain', [FrontController::class, 'hunian_lain'])->name('frontend.hunian_lain');
+Route::get('/detail_hunianlain/{id}', [FrontController::class, 'detail_hunianlain'])->name('frontend.detail_hunianlain');
+Route::get('/formulir', [FrontController::class, 'formulir'])->name('frontend.formulir');
+Route::get('/promosi', [FrontController::class, 'promosi'])->name('frontend.promosi');
+Route::get('/request', [FrontController::class, 'request'])->name('frontend.request');
+Route::get('/detail/{id}', [FrontController::class, 'detail'])->name('frontend.detail');
+Route::post('/rating', [RatingController::class, 'store'])->name('rating.store');
+
+
+
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::prefix(prefix: 'admin')->name('admin.')->group(function () {
+
+    Route::middleware(['auth', 'can:manage hunian'])->group(function () {
+        Route::resource('kost', KostController::class);
+    });
+
+    Route::middleware(['auth', 'can:manage data booking'])->group(function () {
+        Route::resource('pembayaran', PembayaranController::class);
+
+        // Route untuk konfirmasi dan penolakan pembayaran
+        Route::post('pembayaran/{id}/approve', [PembayaranController::class, 'approve'])->name('pembayaran.approve');
+        Route::post('pembayaran/{id}/reject', [PembayaranController::class, 'reject'])->name('pembayaran.reject');
+    });
+
+    Route::middleware(['auth', 'can:manage riwayat booking'])->group(function () {
+        Route::resource('riwayat', RiwayatController::class);
+    });
+
+    Route::middleware(['auth', 'can:manage verifikasi data'])->group(function () {
+        Route::resource('verifikasi', VerifikasiController::class)->except(['store']);
+        Route::post('verifikasi/{id}/verifikasi', [VerifikasiController::class, 'verifikasi'])->name('verifikasi.verifikasi');
+    });
+
+    Route::middleware(['auth', 'can:manage user'])->group(function () {
+        Route::resource('pengguna', UserController::class);
+    });
+
+    Route::middleware(['auth', 'can:manage hunian lain'])->group(function () {
+        Route::resource('hunian_lain', HunianLainController::class);
+    });
+
+    Route::middleware(['auth', 'can:manage data promosi'])->group(function () {
+        Route::resource('promosi', PromosiController::class);
+    });
+});
+
+
+require __DIR__ . '/auth.php';
