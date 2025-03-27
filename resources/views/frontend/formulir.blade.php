@@ -37,7 +37,7 @@
                                 <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Hunian</a>
+                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Iklan</a>
                             </li>
 
                             @auth
@@ -79,6 +79,16 @@
                         <div class="mb-3">
                             <label for="owner_name" class="form-label">Nama Pemilik</label>
                             <input type="text" class="form-control" id="owner_name" name="owner_name" placeholder="Masukkan nama anda" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email anda" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Nomor Telepon</label>
+                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Masukkan nomor telepon" required>
                         </div>
 
                         <div class="mb-3">
@@ -153,11 +163,6 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Nomor Telepon</label>
-                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Masukkan nomor telepon" required>
-                        </div>
-
-                        <div class="mb-3">
                             <label for="details" class="form-label">Detail Hunian</label>
                             <textarea class="form-control" id="details" name="details" placeholder="Masukkan detail hunian" rows="3" required></textarea>
                         </div>
@@ -190,7 +195,7 @@
                             <p class="text-muted mt-2">Maksimal 10 foto hunian.</p>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100">Order Sekarang</button>
+                        <button type="submit" class="btn btn-primary w-100">Kirim</button>
                     </form>
                 </div>
             </div>

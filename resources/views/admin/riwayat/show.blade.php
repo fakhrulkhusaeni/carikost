@@ -2,7 +2,8 @@
    <script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
    <script type="text/javascript"
        src="{{ env('MIDTRANS_FRONT_ENDPOINT') }}"
-       data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+       data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}">
+   </script>
 
    <script>
        const midtransToken = "{{ $midtransToken }}";
@@ -12,7 +13,7 @@
        <x-slot name="header">
            <div class="flex justify-between items-center">
                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                   {{ __('Detail Kost') }}
+                   {{ __('Detail Pemesanan') }}
                </h2>
            </div>
        </x-slot>
@@ -76,6 +77,11 @@
                        <div class="mb-4">
                            <span class="font-semibold text-gray-700">Harga: </span>
                            <span class="text-gray-600">Rp{{ number_format($riwayat->kost->harga, 0, ',', '.') }}/bulan</span>
+                       </div>
+
+                       <div class="mb-4">
+                           <span class="font-semibold text-gray-700">Nomor Telepon: </span>
+                           <span class="text-gray-600">{{ $riwayat->kost->user->phone }}</span>
                        </div>
 
                    </div>
@@ -142,9 +148,7 @@
                        <button id="submit-rating" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition block mx-auto">
                            Kirim Rating
                        </button>
-
                    </div>
-
 
 
                    <!-- Button: Lakukan Pembayaran -->
@@ -156,11 +160,7 @@
                                Lakukan Pembayaran
                            </button>
                        </form>
-
                    </div>
-
-
-
                </div>
            </div>
        </div>

@@ -7,6 +7,8 @@
     <!-- Tambahkan GLightbox atau Fancybox ke dalam proyek Anda -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
 
     <div class="hero_area">
 
@@ -24,9 +26,9 @@
                         </span>
                     </a>
 
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class=""> </span>
+                        <span class="navbar-toggler-icon"></span>
                     </button>
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -41,7 +43,7 @@
                                 <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Hunian</a>
+                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Iklan</a>
                             </li>
 
                             @auth
@@ -77,40 +79,33 @@
                     <div class="row gy-5 gx-4">
                         <!-- Left Content -->
                         <div class="col-lg-12">
-                            <!-- Photo Section -->
                             <h4 class="mb-4 text-center">Foto Hunian</h4>
-                            <div class="row gy-4">
-                                <!-- Gambar 1 -->
-                                <div class="col-md-6 mb-3">
-                                    <a href="{{ asset('assets/ruko.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                        <img src="{{ asset('assets/ruko.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 1" style="width: 100%; height: auto; object-fit: cover;">
-                                    </a>
-                                </div>
-                                <!-- Gambar 2 -->
-                                <div class="col-md-6">
-                                    <a href="{{ asset('assets/ruko.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                        <img src="{{ asset('assets/ruko.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 1" style="width: 100%; height: auto; object-fit: cover;">
-                                    </a>
-                                </div>
-                                <!-- Gambar 3 -->
-                                <div class="col-md-6">
-                                    <a href="{{ asset('assets/ruko.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                        <img src="{{ asset('assets/ruko.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 1" style="width: 100%; height: auto; object-fit: cover;">
-                                    </a>
-                                </div>
-                                <!-- Gambar 4 -->
-                                <div class="col-md-6">
-                                    <a href="{{ asset('assets/ruko.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                        <img src="{{ asset('assets/ruko.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 1" style="width: 100%; height: auto; object-fit: cover;">
-                                    </a>
-                                </div>
-                            </div>
+                            <div id="kostCarousel" class="carousel slide" data-bs-ride="carousel" style="max-width: 1000px; margin: auto;">
+                                <div class="carousel-inner">
+                                    @php
+                                    $images = json_decode($hunianLain->foto, true); // Decode JSON menjadi array
+                                    @endphp
 
-                            <!-- Lihat Semua Foto Button -->
-                            <div class="text-center mt-4">
-                                <button id="view-all-photos" class="btn btn-primary">Lihat Semua Foto</button>
-                            </div>
+                                    @foreach ($images as $key => $image)
+                                    <div class="carousel-item {{ $key == 0 ? 'active' : '' }}" data-bs-interval="false">
+                                        <a href="{{ asset('storage/' . $image) }}" class="glightbox" data-gallery="kost-gallery">
+                                            <img src="{{ asset('storage/' . $image) }}" class="d-block w-100 rounded"
+                                                alt="Foto Hunian {{ $key + 1 }}" style="width: 100%; height: 500px; object-fit: cover;">
+                                        </a>
+                                    </div>
+                                    @endforeach
+                                </div>
 
+                                <!-- Tombol Navigasi -->
+                                <button class="carousel-control-prev" type="button" data-bs-target="#kostCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#kostCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
                         </div>
                         <!-- End Left Content -->
                     </div>
@@ -362,6 +357,8 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
 </script>
 <!-- End Google Map -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 
 @endpush

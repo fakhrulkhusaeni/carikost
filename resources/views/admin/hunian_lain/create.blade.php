@@ -31,8 +31,8 @@
                         <x-input-label for="tipe_hunian" :value="__('Tipe Hunian')" />
                         <select name="tipe_hunian" id="tipe_hunian" class="py-3 rounded-lg pl-3 w-full border border-slate-300">
                             <option value="" disabled selected>Pilih Jenis Hunian</option>
-                            <option value="rumah">Rumah</option>
                             <option value="ruko">Ruko</option>
+                            <option value="kios">Kios</option>
                         </select>
                         <x-input-error :messages="$errors->get('tipe_hunian')" class="mt-2" />
                     </div>

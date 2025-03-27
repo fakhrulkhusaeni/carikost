@@ -37,7 +37,7 @@
                                 <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Hunian</a>
+                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Iklan</a>
                             </li>
 
                             @auth
@@ -104,7 +104,7 @@
                 <div class="container search-form-container">
                     <div class="heading_container heading_center mb-4">
                         <h2>
-                            <span>Cari Kost dan Kontrakan</span>
+                            <span>Rekomendasi Tempat Kost dan Kontrakan</span>
                         </h2>
                         <p>
                             Temukan kost dan kontrakan terbaik yang sesuai dengan kebutuhan Anda.
@@ -115,17 +115,11 @@
                             <div class="card-cari shadow h-100 border-0 rounded" style="background-color: white;">
                                 <form action="{{ route('frontend.index') }}" method="GET">
                                     <div class="row g-3 align-items-center p-4">
-                                        <!-- Input search untuk kost -->
-                                        <div class="col-lg-4 col-md-6 col-12">
-                                            <input type="text" id="search" name="search" class="form-control"
-                                                placeholder="Cari disini.." style="border-radius: 5px;"
-                                                value="{{ request('search') }}">
-                                        </div>
 
-                                        <!-- Dropdown Lokasi -->
-                                        <div class="col-lg-3 col-md-3 col-6">
+                                        <!-- Lokasi -->
+                                        <div class="col-lg-12 col-md-6 col-12 mb-3">
                                             <select id="location" name="location" class="form-control" style="border-radius: 5px;">
-                                                <option value="" disabled {{ request('location') ? '' : 'selected' }}>Pilih Lokasi</option>
+                                                <option value="" disabled {{ request('location') ? '' : 'selected' }}>Lokasi</option>
                                                 <!-- Kota Tegal -->
                                                 <optgroup label="Kota Tegal">
                                                     <option value="Margadana" {{ request('location') == 'Margadana' ? 'selected' : '' }}>Margadana</option>
@@ -144,10 +138,10 @@
                                             </select>
                                         </div>
 
-                                        <!-- Dropdown Jenis Hunian -->
-                                        <div class="col-lg-3 col-md-3 col-6">
+                                        <!-- Jenis Hunian -->
+                                        <div class="col-lg-12 col-md-6 col-12 mb-3">
                                             <select id="type" name="type" class="form-control" style="border-radius: 5px;">
-                                                <option value="" disabled {{ request('type') ? '' : 'selected' }}>Jenis Hunian</option>
+                                                <option value="" disabled {{ request('type') ? '' : 'selected' }}>Tipe</option>
                                                 <option value="putra" {{ request('type') == 'putra' ? 'selected' : '' }}>Kost Putra</option>
                                                 <option value="putri" {{ request('type') == 'putri' ? 'selected' : '' }}>Kost Putri</option>
                                                 <option value="campur" {{ request('type') == 'campur' ? 'selected' : '' }}>Kost Campur</option>
@@ -155,10 +149,51 @@
                                             </select>
                                         </div>
 
-                                        <!-- Tombol pencarian -->
-                                        <div class="col-lg-2 col-md-4 col-12 mt-lg-0 mt-md-3">
+                                        <!-- Harga -->
+                                        <div class="col-lg-12 col-md-6 col-12 mb-3">
+                                            <select id="harga" name="harga" class="form-control" style="border-radius: 5px;">
+                                                <option value="" disabled {{ request('harga') ? '' : 'selected' }}>Harga</option>
+                                                <option value="murah" {{ request('harga') == 'murah' ? 'selected' : '' }}>Harga Termurah</option>
+                                                <option value="mahal" {{ request('harga') == 'mahal' ? 'selected' : '' }}>Harga Termahal</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Pilihan Fasilitas -->
+                                        <div class="col-lg-12 col-md-6 col-12 mb-3">
+                                            <select id="facilityDropdown" class="form-control" style="border-radius: 5px;">
+                                                <option value="" disabled selected>Fasilitas</option>
+                                            </select>
+
+                                            <!-- Checkbox Fasilitas dalam Dua Kolom -->
+                                            <div id="checkboxContainer" class="border p-3 rounded mt-2" style="display: none;">
+                                                <div class="row">
+                                                    @php
+                                                    $allFacilities = [
+                                                    "Kamar Mandi Dalam", "Air Panas", "Lemari Baju", "AC",
+                                                    "Kursi", "Meja", "TV", "Kasur", "Mesin Cuci", "Dapur Bersama", "Parkir Mobil",
+                                                    "Kloset Duduk", "Kipas Angin", "Wifi", "Parkir Motor", "Mushola", "Dispenser", "Kulkas"
+                                                    ];
+                                                    $selectedFacilities = $facilities ?? []; // Pastikan array selalu ada
+                                                    @endphp
+
+                                                    @foreach($allFacilities as $facility)
+                                                    <div class="col-md-6 col-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="facilities[]" value="{{ $facility }}"
+                                                                {{ in_array($facility, $selectedFacilities) ? 'checked' : '' }}>
+                                                            <label class="form-check-label">{{ $facility }}</label>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Tombol -->
+                                        <div class="col-lg-12 col-md-6 col-12 text-center">
                                             <button type="submit" class="btn w-100" style="background-color: #007bff; border-radius: 10px;">
-                                                <i class="fa fa-search text-white"></i> <span class="text-white">Cari</span>
+                                                <i class="bi bi-magic text-white"></i> <span class="text-white">Buat Rekomendasi</span>
                                             </button>
                                         </div>
                                     </div>
@@ -186,7 +221,7 @@
                                 <ul class="list-unstyled mb-3">
                                     <li><i class="bi bi-geo-alt me-2"></i> <span class="ms-2">Lokasi: {{ $kost->location }}</span></li>
                                     <li><i class="bi bi-cash me-2"></i> <span class="ms-2">Harga: Rp {{ number_format($kost->harga, 0, ',', '.') }}/bulan</span></li>
-                                    <li><i class="bi bi-house-door me-2"></i> <span class="ms-2">Jumlah Kamar: {{ $kost->jumlah_kamar }}</span></li>
+                                    <li><i class="bi bi-door-closed me-2"></i> <span class="ms-2">Jumlah Kamar: {{ $kost->jumlah_kamar }}</span></li>
                                 </ul>
 
                                 <!-- Tampilkan rating -->
@@ -316,6 +351,13 @@
                     });
                 });
             });
+        });
+    </script>
+
+    <script>
+        document.getElementById('facilityDropdown').addEventListener('click', function() {
+            let container = document.getElementById('checkboxContainer');
+            container.style.display = container.style.display === 'none' ? 'block' : 'none';
         });
     </script>
 

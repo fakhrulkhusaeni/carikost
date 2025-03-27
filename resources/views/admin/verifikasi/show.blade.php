@@ -83,7 +83,7 @@
                     </div>
                     <div class="mb-4">
                         <span class="font-semibold text-gray-700">Telepon: </span>
-                        <span class="text-gray-600">{{ $kost->telepon }}</span>
+                        <span class="text-gray-600">{{ $kost->user->phone }}</span>
                     </div>
                 </div>
 
@@ -111,6 +111,11 @@
                     </ul>
                 </div>
 
+                <div class="mb-4">
+                    <span class="font-semibold text-gray-700">Bukti Kepemilikan Kost/Kontrakan: </span>
+                    <span class="text-gray-600">#</span>
+                </div>
+
                 <!-- Buttons: Verifikasi and Hapus -->
                 <div class="col-span-1 md:col-span-2 flex justify-end gap-4 mt-6">
                     <!-- Button Verifikasi -->
@@ -126,7 +131,7 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-                            Hapus
+                            Tolak
                         </button>
                     </form>
                 </div>

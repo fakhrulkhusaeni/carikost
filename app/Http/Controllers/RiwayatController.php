@@ -28,6 +28,7 @@ class RiwayatController extends Controller
 
         $harga = (int)$riwayat->kost->harga;
         $margin = 2000;
+        
 
         $client = new Client();
         $response = $client->request('POST', env("MIDTRANS_ENDPOINT"), [

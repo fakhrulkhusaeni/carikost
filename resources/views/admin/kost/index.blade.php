@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Kelola Daftar Kost') }}
+                {{ __('Kelola Kost dan Kontrakan') }}
             </h2>
             <a href="{{ route('admin.kost.create') }}" class="mt-4 sm:mt-0 px-6 py-3 bg-indigo-600 text-white rounded-full font-semibold hover:bg-indigo-700 transition duration-300 text-center">
                 Tambah Baru
@@ -18,12 +18,12 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-white-100">
                             <tr>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Kost</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Kost</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Kamar</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Harga (per-bulan)</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status Verifikasi</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Hunian</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jenis Hunian</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jumlah Kamar</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Harga (per-bulan)</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Verifikasi</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -33,7 +33,7 @@
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->type }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->jumlah_kamar }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">Rp{{ number_format($kost->harga, 0, ',', '.') }}</td>
-                                <td class="px-6 py-4 text-sm text-center">
+                                <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if ($kost->verifikasi)
                                     @if ($kost->verifikasi->status === 'terverifikasi')
                                     <span class="text-blue-600">
@@ -48,6 +48,7 @@
                                     <span class="text-red-600">Belum Diverifikasi</span>
                                     @endif
                                 </td>
+
                                 <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium">
                                     <a href="{{ route('admin.kost.edit', $kost->id) }}" class="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-full font-semibold hover:bg-yellow-700 transition duration-300">
                                         Edit

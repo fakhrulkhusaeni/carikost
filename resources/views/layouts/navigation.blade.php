@@ -25,40 +25,40 @@
 
                     @can('manage verifikasi data')
                     <x-nav-link :href="route('admin.verifikasi.index')" :active="request()->routeIs('admin.verifikasi.index')">
-                        {{ __('Verifikasi Data') }}
+                        {{ __('Kelola Daftar Kost/Kontrakan') }}
                     </x-nav-link>
                     @endcan
 
                     @can('manage riwayat booking')
                     <x-nav-link :href="route('admin.riwayat.index')" :active="request()->routeIs('admin.riwayat.index')">
-                        {{ __('Riwayat Booking') }}
+                        {{ __('Riwayat Pemesanan') }}
                     </x-nav-link>
                     @endcan
 
                     @can('manage hunian')
                     <x-nav-link :href="route('admin.kost.index')" :active="request()->routeIs('admin.kost.index')">
-                        {{ __('Kelola Data Hunian') }}
+                        {{ __('Kelola Data Kost/Kontrakan') }}
                     </x-nav-link>
                     @endcan
 
                     @unless(auth()->user()->hasRole('pencari_kost') || auth()->user()->hasRole('super_admin'))
                     <x-nav-link :href="route('admin.pembayaran.index')" :active="request()->routeIs('admin.pembayaran.index')">
-                        {{ __('Data Booking') }}
+                        {{ __('Kelola Data Pemesanan') }}
                     </x-nav-link>
                     @endunless
 
 
                     @can('manage hunian lain')
                     <x-nav-link :href="route('admin.hunian_lain.index')" :active="request()->routeIs('admin.hunian_lain.index')">
-                        {{ __('Data Hunian Lain') }}
+                        {{ __('Kelola Data Ruko dan Kios') }}
                     </x-nav-link>
                     @endcan
 
-                    @can('manage data promosi')
+                    <!-- @can('manage data promosi')
                     <x-nav-link :href="route('admin.promosi.index')" :active="request()->routeIs('admin.promosi.index')">
                         {{ __('Data Promosi Hunian') }}
                     </x-nav-link>
-                    @endcan
+                    @endcan -->
 
                 </div>
             </div>

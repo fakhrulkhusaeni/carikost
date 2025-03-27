@@ -33,8 +33,8 @@
                         <x-input-label for="tipe_hunian" :value="__('Tipe Hunian')" />
                         <select name="tipe_hunian" id="tipe_hunian" class="py-3 rounded-lg pl-3 w-full border border-slate-300">
                             <option value="" disabled>Pilih Jenis Hunian</option>
-                            <option value="rumah" {{ $hunianLain->tipe_hunian == 'rumah' ? 'selected' : '' }}>Rumah</option>
                             <option value="ruko" {{ $hunianLain->tipe_hunian == 'ruko' ? 'selected' : '' }}>Ruko</option>
+                            <option value="kios" {{ $hunianLain->tipe_hunian == 'kios' ? 'selected' : '' }}>Kios</option>
                         </select>
                         <x-input-error :messages="$errors->get('tipe_hunian')" class="mt-2" />
                     </div>

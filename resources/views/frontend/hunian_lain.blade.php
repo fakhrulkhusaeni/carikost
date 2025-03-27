@@ -37,7 +37,7 @@
                 <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Hunian</a>
+                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Iklan</a>
               </li>
 
               @auth
@@ -73,10 +73,10 @@
         <div class="container search-form-container">
           <div class="heading_container heading_center mb-4">
             <h2>
-              <span>Cari Hunian Lain</span>
+              <span>Hunian Ruko dan Kios</span>
             </h2>
             <p>
-              Temukan rumah dan ruko terbaik yang sesuai dengan kebutuhan Anda.
+              Temukan ruko dan kios terbaik yang sesuai dengan kebutuhan Anda.
             </p>
           </div>
           <div class="row justify-content-center">
@@ -84,68 +84,60 @@
               <div class="card-cari shadow h-100 border-0 rounded" style="background-color: white;">
                 <form action="{{ route('frontend.hunian_lain') }}" method="GET">
                   <div class="row g-3 align-items-center p-4">
-                    <!-- Input search untuk toko atau rumah -->
-                    <div class="col-lg-4 col-md-6 col-12">
-                      <input type="text" id="search" name="search" class="form-control"
-                        placeholder="Cari disini.." style="border-radius: 5px;">
-                    </div>
 
-                    <!-- Dropdown lokasi -->
-                    <div class="col-lg-2 col-md-3 col-6">
+                    <!-- Lokasi -->
+                    <div class="col-lg-12 col-md-6 col-12 mb-3">
                       <select id="location" name="location" class="form-control" style="border-radius: 5px;">
-                        <option value="" selected disabled>Lokasi</option>
+                        <option value="" disabled {{ request('location') ? '' : 'selected' }}>Lokasi</option>
                         <!-- Kota Tegal -->
                         <optgroup label="Kota Tegal">
-                          <option value="Margadana">Margadana</option>
-                          <option value="Tegal Barat">Tegal Barat</option>
-                          <option value="Tegal Timur">Tegal Timur</option>
-                          <option value="Tegal Selatan">Tegal Selatan</option>
+                          <option value="Margadana" {{ request('location') == 'Margadana' ? 'selected' : '' }}>Margadana</option>
+                          <option value="Tegal Barat" {{ request('location') == 'Tegal Barat' ? 'selected' : '' }}>Tegal Barat</option>
+                          <option value="Tegal Timur" {{ request('location') == 'Tegal Timur' ? 'selected' : '' }}>Tegal Timur</option>
+                          <option value="Tegal Selatan" {{ request('location') == 'Tegal Selatan' ? 'selected' : '' }}>Tegal Selatan</option>
                         </optgroup>
                         <!-- Kabupaten Tegal -->
                         <optgroup label="Kabupaten Tegal">
-                          <option value="Adiwerna">Adiwerna</option>
-                          <option value="Balapulang">Balapulang</option>
-                          <option value="Bojong">Bojong</option>
-                          <option value="Dukuhturi">Dukuhturi</option>
-                          <option value="Dukuhwaru">Dukuhwaru</option>
-                          <option value="Jatinegara">Jatinegara</option>
-                          <option value="Kedungbanteng">Kedungbanteng</option>
-                          <option value="Kramat">Kramat</option>
-                          <option value="Lebaksiu">Lebaksiu</option>
-                          <option value="Margasari">Margasari</option>
-                          <option value="Pagerbarang">Pagerbarang</option>
-                          <option value="Pangkah">Pangkah</option>
-                          <option value="Slawi">Slawi</option>
-                          <option value="Suradadi">Suradadi</option>
-                          <option value="Talang">Talang</option>
-                          <option value="Tarub">Tarub</option>
-                          <option value="Warureja">Warureja</option>
+                          @foreach(['Adiwerna', 'Balapulang', 'Bojong', 'Dukuhturi', 'Dukuhwaru', 'Jatinegara',
+                          'Kedungbanteng', 'Kramat', 'Lebaksiu', 'Margasari', 'Pagerbarang', 'Pangkah',
+                          'Slawi', 'Suradadi', 'Talang', 'Tarub', 'Warureja'] as $area)
+                          <option value="{{ $area }}" {{ request('location') == $area ? 'selected' : '' }}>{{ $area }}</option>
+                          @endforeach
                         </optgroup>
                       </select>
                     </div>
 
-                    <!-- Dropdown Jenis Hunian -->
-                    <div class="col-lg-2 col-md-3 col-6">
+                    <!-- Jenis Hunian -->
+                    <div class="col-lg-12 col-md-6 col-12 mb-3">
                       <select id="tipe_hunian" name="tipe_hunian" class="form-control" style="border-radius: 5px;">
-                        <option value="" selected disabled>Tipe</option>
-                        <option value="rumah">Rumah</option>
-                        <option value="ruko">Ruko</option>
+                        <option value="" disabled {{ request('tipe_hunian') ? '' : 'selected' }}>Tipe</option>
+                        <option value="ruko" {{ request('tipe_hunian') == 'ruko' ? 'selected' : '' }}>Ruko</option>
+                        <option value="kios" {{ request('tipe_hunian') == 'kios' ? 'selected' : '' }}>Kios</option>
                       </select>
                     </div>
 
-                    <!-- Dropdown status -->
-                    <div class="col-lg-2 col-md-3 col-12">
+                    <!-- status -->
+                    <div class="col-lg-12 col-md-6 col-12 mb-3">
                       <select id="status" name="status" class="form-control" style="border-radius: 5px;">
-                        <option value="" selected disabled>Status</option>
-                        <option value="Dijual">Dijual</option>
-                        <option value="Disewakan">Disewakan</option>
+                        <option value="" disabled {{ request('status') ? '' : 'selected' }}>Status</option>
+                        <option value="dijual" {{ request('status') == 'dijual' ? 'selected' : '' }}>Dijual</option>
+                        <option value="disewakan" {{ request('status') == 'disewakan' ? 'selected' : '' }}>Disewakan</option>
                       </select>
                     </div>
 
-                    <!-- Tombol pencarian -->
-                    <div class="col-lg-2 col-md-4 col-12 mt-lg-0 mt-md-3">
+                    <!-- Harga -->
+                    <div class="col-lg-12 col-md-6 col-12 mb-3">
+                      <select id="harga" name="harga" class="form-control" style="border-radius: 5px;">
+                        <option value="" disabled {{ request('harga') ? '' : 'selected' }}>Harga</option>
+                        <option value="murah" {{ request('harga') == 'murah' ? 'selected' : '' }}>Harga Termurah</option>
+                        <option value="mahal" {{ request('harga') == 'mahal' ? 'selected' : '' }}>Harga Termahal</option>
+                      </select>
+                    </div>
+
+                    <!-- Tombol -->
+                    <div class="col-lg-12 col-md-6 col-12 text-center">
                       <button type="submit" class="btn w-100" style="background-color: #007bff; border-radius: 10px;">
-                        <i class="fa fa-search text-white"></i> <span class="text-white">Cari</span>
+                        <i class="fa fa-search text-white"></i> <span class="text-white">Buat Rekomendasi</span>
                       </button>
                     </div>
                   </div>
@@ -170,10 +162,6 @@
                   <li><i class="bi bi-geo-alt me-2"></i> <span class="ms-2">Lokasi: {{ ucfirst($hunianLain->location) }}</span></li>
                   <li><i class="bi bi-cash me-2"></i> <span class="ms-2">Harga: Rp {{ number_format($hunianLain->harga, 0, ',', '.') }}</span></li>
                 </ul>
-                <!-- Skor Rekomendasi (Hidden) -->
-                <p class="card-text text-muted d-none">
-                  Skor Rekomendasi: <strong>{{ number_format($hunianLain->weightedScore, 2) }}</strong>
-                </p>
                 <!-- Tanggal Posting -->
                 <div class="d-flex align-items-center mb-3">
                   <i class="bi bi-clock text-secondary" style="margin-right: 5px;"></i>

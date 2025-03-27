@@ -40,7 +40,7 @@
                 <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
               </li>
               <li class="nav-item active">
-                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Hunian</a>
+                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Iklan</a>
               </li>
 
               @auth
@@ -78,7 +78,7 @@
         <h2 class="mb-2">
           Cara Pasang <span>Iklan Hunian</span>
         </h2>
-        <p>Panduan untuk mempublikasikan hunian Anda untuk Dijual atau Disewakan.</p>
+        <p>Panduan untuk mempublikasikan hunian ruko dan kios Anda untuk Dijual atau Disewakan.</p>
       </div>
       <div class="row">
         <!-- Step 1 -->
@@ -88,7 +88,7 @@
               <img src="assets/cara-pasang-1.svg" alt="Step 1" class="img-fluid mb-3" style="max-height: 100px;">
               <h5 class="card-title">Klik Tombol Pasang Iklan</h5>
               <p class="card-text">
-                Klik tombol "Pasang Iklan Hunian" untuk memulai proses pemasangan.
+                Klik tombol "Pasang Iklan Hunian" untuk menghubungi kami melalui WhatsApp.
               </p>
             </div>
           </div>
@@ -100,7 +100,7 @@
               <img src="assets/cara-pasang-2.svg" alt="Step 2" class="img-fluid mb-3" style="max-height: 100px;">
               <h5 class="card-title">Kirim Informasi</h5>
               <p class="card-text">
-                Kirim informasi detail hunian Anda melalui formulir website atau WhatsApp kami.
+                Kirimkan informasi detail hunian Anda melalui chat WhatsApp.
               </p>
             </div>
           </div>
@@ -110,7 +110,7 @@
           <div class="card text-center shadow-sm h-100">
             <div class="card-body">
               <img src="assets/cara-pasang-3.svg" alt="Step 3" class="img-fluid mb-3" style="max-height: 100px;">
-              <h5 class="card-title">Instruksi Pembayaran</h5>
+              <h5 class="card-title">Pembayaran</h5>
               <p class="card-text">
                 Setelah informasi dikirim, Anda akan menerima instruksi pembayaran sebesar <strong>Rp30.000</strong>.
               </p>
@@ -133,59 +133,22 @@
 
       <!-- Button di bawah -->
       <div class="text-center mt-3">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pilihPaketModal">Pasang Iklan Hunian</button>
+        <a href="https://wa.me/62895704307742?text=Halo,%20saya%20tertarik%20untuk%20pasang%20iklan%20hunian.%0A
+          Mohon%20informasikan%20syarat%20dan%20biayanya.%0A
+          Terima%20kasih."
+          class="btn btn-primary" target="_blank">
+          Pasang Iklan Hunian Anda
+        </a>
       </div>
-
 
     </div>
   </section>
-
   <!-- end why section -->
 
-  <!-- Modal -->
-  <div class="modal fade" id="pilihPaketModal" tabindex="-1" aria-labelledby="pilihPaketLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="pilihPaketLabel">Pilih Cara Pemasangan</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body text-center">
-          <div class="row">
-            <div class="col-6">
-              <a href="{{ route('frontend.formulir') }}" class="text-decoration-none text-dark">
-                <div class="card equal-height-card">
-                  <div class="card-body" style="cursor: pointer;">
-                    <img src="assets/via-website.svg" alt="Via Website" class="mb-2" style="width: 70px;">
-                    <h6 style="font-weight: bold;">Via Website</h6>
-                    <p>Kirim melalui formulir website dengan sistem pembayaran otomatis <strong>(lebih praktis)</strong>.</p>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div class="col-6">
-              <div class="card equal-height-card">
-                <a href="https://wa.me/62895704307742?text=Halo Admin,%20saya%20butuh%20bantuan%20pemasangan%20iklan%20promosi%20hunian." target="_blank" style="text-decoration: none; color: inherit;">
-                  <div class="card-body" style="cursor: pointer;">
-                    <img src="assets/via-whatsapp.svg" alt="Via WhatsApp" class="mb-2" style="width: 70px;">
-                    <h6 style="font-weight: bold;">Via WhatsApp</h6>
-                    <p>Tim kami akan memberikan bantuan pemasangan melalui aplikasi WhatsApp.</p>
-                  </div>
-                </a>
-              </div>
-            </div>
 
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-  </div>
 
 
   <!-- info section -->
-
   <section class="info_section layout_padding2">
     <div class="container">
       <div class="row">
@@ -255,12 +218,6 @@
 
 
 </body>
-
-<script>
-  function savePaketChoice(paket) {
-    sessionStorage.setItem('paket', paket);
-  }
-</script>
 
 @endsection
 

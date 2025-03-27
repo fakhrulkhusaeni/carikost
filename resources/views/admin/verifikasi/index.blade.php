@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Verifikasi Data') }}
+                {{ __('Kelola Daftar Kost dan Kontrakan') }}
             </h2>
         </div>
     </x-slot>
@@ -14,22 +14,22 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-white-100">
                             <tr>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Pemilik</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Kost/Kontrakan</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Hunian</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Kamar</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Pemilik</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Kost/Kontrakan</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jenis Hunian</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jumlah Kamar</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Verifikasi</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @forelse ($kosts as $kost)
                             <tr>
-                                <td class="px-6 py-4 text-sm text-gray-900 text-center">{{ $kost->user->name }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-900 text-center">{{ $kost->nama }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-900 text-center">{{ $kost->type }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-900 text-center">{{ $kost->jumlah_kamar }}</td>
-                                <td class="px-6 py-4 text-sm text-center">
+                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->user->name }}</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->nama }}</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->type }}</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->jumlah_kamar }}</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if ($kost->verifikasi)
                                     @if ($kost->verifikasi->status === 'terverifikasi')
                                     <span class="text-blue-600">
@@ -45,9 +45,21 @@
                                     @endif
                                 </td>
 
-                                <td class="px-6 py-4 text-center text-sm">
-                                    <a href="{{ route('admin.verifikasi.show', $kost->id)}}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Detail</a>
+                                <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium">
+                                    <a href="{{ route('admin.verifikasi.show', $kost->id)}}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition duration-300">
+                                        Detail
+                                    </a>
+                                    <form action="{{ route('admin.verifikasi.destroy', $kost->id) }}" method="POST" class="inline-block delete-form">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition duration-300">
+                                            Hapus
+                                        </button>
+                                    </form>
                                 </td>
+
+
+
                             </tr>
                             @empty
                             <tr>
@@ -60,4 +72,35 @@
             </div>
         </div>
     </div>
+
+    <!-- SweetAlert2 Script -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Prevent the default form submission
+
+                    const form = this;
+
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: "Data ini akan dihapus dan tidak dapat dikembalikan!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); // Submit the form if confirmed
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+
 </x-app-layout>

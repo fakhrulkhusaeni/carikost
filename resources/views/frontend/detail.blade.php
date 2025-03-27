@@ -43,7 +43,7 @@
                                 <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Hunian</a>
+                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Iklan</a>
                             </li>
 
                             @auth
@@ -79,40 +79,33 @@
                     <div class="row gy-5 gx-4">
                         <!-- Left Content -->
                         <div class="col-lg-12">
-                            <!-- Photo Section -->
                             <h4 class="mb-4 text-center">Foto Hunian</h4>
-                            <div class="row gy-4">
-                                <!-- Gambar 1 -->
-                                <div class="col-md-6">
-                                    <a href="{{ asset('assets/foto.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                        <img src="{{ asset('assets/foto.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 1">
-                                    </a>
-                                </div>
-                                <!-- Gambar 2 -->
-                                <div class="col-md-6">
-                                    <a href="{{ asset('assets/foto.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                        <img src="{{ asset('assets/foto.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 2">
-                                    </a>
-                                </div>
-                                <!-- Gambar 3 -->
-                                <div class="col-md-6">
-                                    <a href="{{ asset('assets/foto.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                        <img src="{{ asset('assets/foto.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 3">
-                                    </a>
-                                </div>
-                                <!-- Gambar 4 -->
-                                <div class="col-md-6">
-                                    <a href="{{ asset('assets/foto.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                        <img src="{{ asset('assets/foto.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 4">
-                                    </a>
-                                </div>
-                            </div>
+                            <div id="kostCarousel" class="carousel slide" data-bs-ride="carousel" style="max-width: 1000px; margin: auto;">
+                                <div class="carousel-inner">
+                                    @php
+                                    $images = json_decode($kost->foto, true); // Decode JSON menjadi array
+                                    @endphp
 
-                            <!-- Lihat Semua Foto Button -->
-                            <div class="text-center mt-4">
-                                <button id="view-all-photos" class="btn btn-primary">Lihat Semua Foto</button>
-                            </div>
+                                    @foreach ($images as $key => $image)
+                                    <div class="carousel-item {{ $key == 0 ? 'active' : '' }}" data-bs-interval="false">
+                                        <a href="{{ asset('storage/' . $image) }}" class="glightbox" data-gallery="kost-gallery">
+                                            <img src="{{ asset('storage/' . $image) }}" class="d-block w-100 rounded"
+                                                alt="Foto Hunian {{ $key + 1 }}" style="width: 100%; height: 500px; object-fit: cover;">
+                                        </a>
+                                    </div>
+                                    @endforeach
+                                </div>
 
+                                <!-- Tombol Navigasi -->
+                                <button class="carousel-control-prev" type="button" data-bs-target="#kostCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#kostCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
                         </div>
                         <!-- End Left Content -->
                     </div>
@@ -257,8 +250,12 @@
                     <div class="card shadow rounded bg-white p-4 mb-4 wow slideInUp" data-wow-delay="0.1s">
                         <h4 class="mb-4">Informasi</h4>
                         <div class="card-item mb-3 d-flex align-items-center">
+                            <i class="fa fa-door-closed text-primary" style="margin-right: 10px;"></i>
+                            <span class="text-success">Jumlah Kamar: {{ $kost->jumlah_kamar }}</span>
+                        </div>
+                        <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-bed text-primary" style="margin-right: 10px;"></i>
-                            <span>Jumlah Kamar: {{ $kost->jumlah_kamar }}</span>
+                            <span class="text-danger">Sisa Kamar: 5</span>
                         </div>
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-map-marker-alt text-primary" style="margin-right: 10px;"></i>
@@ -268,7 +265,6 @@
                             <i class="fa fa-home text-primary" style="margin-right: 10px;"></i>
                             <span>Alamat Lengkap: {{ $kost->alamat }}</span>
                         </div>
-
                     </div>
 
 
@@ -284,7 +280,7 @@
                             @csrf
                             <!-- Tanggal Booking -->
                             <div class="card-item mb-4">
-                                <label for="booking-date" class="form-label">Pilih Tanggal Booking:</label>
+                                <label for="booking-date" class="form-label">Pilih Tanggal Mulai:</label>
                                 <input type="date" class="form-control" id="booking-date" name="tanggal_booking" required>
                             </div>
 
@@ -304,12 +300,12 @@
                                 @else
                                 <!-- Tombol booking yang memicu modal validasi -->
                                 <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                                    Booking Sekarang
+                                    Ajukan Sewa
                                 </button>
                                 @endif
                                 @else
                                 <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#accessModal">
-                                    Booking Sekarang
+                                    Ajukan Sewa
                                 </button>
                                 @endif
                             </div>
@@ -459,9 +455,9 @@
     <!-- Inisialisasi GLightbox -->
     <script>
         const lightbox = GLightbox({
-            selector: '.glightbox', // Select link with 'glightbox' class
-            touchNavigation: true, // Enable touch gestures
-            loop: true // Enable looping between images
+            selector: '.glightbox',
+            touchNavigation: true,
+            loop: true // 
         });
     </script>
 
@@ -491,6 +487,7 @@
             });
         });
     </script>
+
     <!-- <script>
         const stars = document.querySelectorAll('.stars i');
         const ratingValue = document.getElementById('rating-value');

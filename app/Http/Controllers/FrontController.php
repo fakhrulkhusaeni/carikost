@@ -17,82 +17,114 @@ class FrontController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->input('search');
         $location = $request->input('location');
         $type = $request->input('type');
-    
+        $harga = $request->input('harga');
+        $facilities = $request->input('facilities', []);
+
         $query = Kost::withCount('ratings')->withAvg('ratings', 'rating');
-    
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('nama', 'LIKE', '%' . $search . '%')
-                    ->orWhere('alamat', 'LIKE', '%' . $search . '%')
-                    ->orWhere('deskripsi', 'LIKE', '%' . $search . '%')
-                    ->orWhere('jumlah_kamar', 'LIKE', '%' . $search . '%')
-                    ->orWhere('harga', 'LIKE', '%' . $search . '%')
-                    ->orWhere('facilities', 'LIKE', '%' . $search . '%')
-                    ->orWhere('rules', 'LIKE', '%' . $search . '%');
-            });
-        }
-    
+
+        // Bobot untuk masing-masing kriteria
+        $bobotLokasi = 0.3;
+        $bobotHarga = 0.2;
+        $bobotTipe = 0.2;
+        $bobotFasilitas = 0.3;
+
+        // Filter berdasarkan input
         if (!empty($location)) {
             $query->where('location', $location);
         }
-    
+
         if (!empty($type)) {
             $query->where('type', $type);
         }
-    
+
+        if (!empty($harga)) {
+            if ($harga == 'murah') {
+                $query->where('harga', '<', 1000000)->orderBy('harga', 'asc');
+            } elseif ($harga == 'mahal') {
+                $query->where('harga', '>=', 1000000)->orderBy('harga', 'desc');
+            }
+        }
+
+        if (!empty($facilities)) {
+            $query->where(function ($q) use ($facilities) {
+                foreach ($facilities as $facility) {
+                    if (!empty($facility)) {
+                        $q->orWhereJsonContains('facilities', $facility);
+                    }
+                }
+            });
+        }
+
         $kosts = $query->get();
-    
-        // Ambil rata-rata rating global (C) dari semua kost yang memiliki rating
+
+        // Hitung rata-rata rating global (C) dari semua kost yang memiliki rating
         $ratedKosts = Kost::whereHas('ratings')->withAvg('ratings', 'rating')->get();
         $C = $ratedKosts->avg('ratings_avg_rating') ?? 0;
-        $m = 5;
-    
-        $weights = [
-            'harga' => 0.3,
-            'facilities' => 0.25,
-            'location' => 0.2,
-            'rating' => 0.25
-        ];
-    
-        $maxHarga = $kosts->max('harga') ?: 1;
-        $maxFasilitas = $kosts->max(fn($kost) => count(is_string($kost->facilities) ? explode(',', $kost->facilities) : (array) $kost->facilities)) ?: 1;
-        $maxRating = 5;
-    
-        $kosts = $kosts->map(function ($kost) use ($C, $m, $weights, $maxHarga, $maxFasilitas, $maxRating, $location) {
+        $m = 5; // Minimum jumlah review agar diperhitungkan
+
+        $kosts = $kosts->map(function ($kost) use ($C, $m, $location, $type, $harga, $facilities, $bobotLokasi, $bobotHarga, $bobotTipe, $bobotFasilitas) {
             $v = $kost->ratings_count;
             $R = $kost->ratings_avg_rating ?? 0;
-    
+
             // Hitung Weighted Rating dengan formula IMDB
-            $kost->weightedRating = ($v > 0) ? (($v / ($v + $m)) * $R + ($m / ($v + $m)) * $C) : 0;
-    
-            $normalizedHarga = 1 - ($kost->harga / $maxHarga);
-    
-            // Pastikan facilities adalah string sebelum dipecah
-            $facilities = is_string($kost->facilities) ? $kost->facilities : implode(',', (array) $kost->facilities);
-            $jumlahFasilitas = count(explode(',', $facilities));
-    
-            $normalizedFasilitas = $jumlahFasilitas / $maxFasilitas;
-            $normalizedLokasi = (!empty($location) && $kost->location === $location) ? 1 : 0;
-            $normalizedRating = $kost->weightedRating / $maxRating;
-    
-            $kost->finalScore = (
-                ($normalizedHarga * $weights['harga']) +
-                ($normalizedFasilitas * $weights['facilities']) +
-                ($normalizedLokasi * $weights['location']) +
-                ($normalizedRating * $weights['rating'])
-            );
-    
+            $weightedRating = ($v > 0) ? (($v / ($v + $m)) * $R + ($m / ($v + $m)) * $C) : 0;
+
+            // Hitung skor berbobot
+            $score = 0;
+
+            // Bobot lokasi
+            if (!empty($location) && $kost->location == $location) {
+                $score += $bobotLokasi * 100;
+            }
+
+            // Bobot tipe
+            if (!empty($type) && $kost->type == $type) {
+                $score += $bobotTipe * 100;
+            }
+
+            // Bobot harga
+            if (!empty($harga)) {
+                if ($harga == 'murah' && $kost->harga < 1000000) {
+                    $score += $bobotHarga * 100;
+                } elseif ($harga == 'mahal' && $kost->harga >= 1000000) {
+                    $score += $bobotHarga * 100;
+                }
+            }
+
+            // Bobot fasilitas
+            $matchingFacilities = 0;
+
+            if (!empty($facilities) && is_array($facilities)) {
+                // Pastikan data fasilitas dari database didekode dengan aman
+                $kostFacilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : (is_array($kost->facilities) ? $kost->facilities : []);
+
+                if (!empty($kostFacilities) && is_array($kostFacilities)) {
+                    foreach ($facilities as $facility) {
+                        if (!empty($facility) && in_array($facility, $kostFacilities)) {
+                            $matchingFacilities++;
+                        }
+                    }
+                }
+
+                $totalFacilities = count($facilities);
+                if ($totalFacilities > 0) {
+                    $score += $bobotFasilitas * (100 * ($matchingFacilities / $totalFacilities));
+                }
+            }
+
+            // Gabungkan Weighted Rating dan skor berbobot
+            $kost->finalScore = (0.5 * $weightedRating) + (0.5 * $score);
+
             return $kost;
         });
-    
+
+        // Urutkan berdasarkan skor tertinggi
         $kosts = $kosts->sortByDesc('finalScore')->values();
-    
-        return view('frontend.index', compact('kosts'));
+
+        return view('frontend.index', compact('kosts', 'facilities'));
     }
-    
 
 
     public function formulir()
@@ -103,81 +135,64 @@ class FrontController extends Controller
 
     public function hunian_lain(Request $request)
     {
-        // Ambil data pencarian
-        $search = $request->input('search');
+
         $location = $request->input('location');
         $tipe_hunian = $request->input('tipe_hunian');
         $status = $request->input('status');
+        $harga = $request->input('harga');
 
-        // Mulai query untuk mencari hunian lain
         $query = HunianLain::query();
 
-        // Jika ada pencarian, lakukan filter berdasarkan harga, alamat, fasilitas, atau detail_hunian
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('harga', 'LIKE', '%' . $search . '%')
-                    ->orWhere('alamat', 'LIKE', '%' . $search . '%')
-                    ->orWhere('deskripsi', 'LIKE', '%' . $search . '%')
-                    ->orWhere('fasilitas', 'LIKE', '%' . $search . '%')
-                    ->orWhere('detail_hunian', 'LIKE', '%' . $search . '%');
-            });
-        }
-
-        // Filter berdasarkan lokasi jika dipilih
         if (!empty($location)) {
             $query->where('location', $location);
         }
 
-        // Filter berdasarkan jenis hunian jika dipilih
         if (!empty($tipe_hunian)) {
             $query->where('tipe_hunian', $tipe_hunian);
         }
 
-        // Filter berdasarkan status hunian (dijual/disewakan)
         if (!empty($status)) {
             $query->where('status', $status);
+        }
+
+        if (!empty($harga)) {
+            if ($harga == 'murah') {
+                $query->where('harga', '<', 1000000)->orderBy('harga', 'asc');
+            } elseif ($harga == 'mahal') {
+                $query->where('harga', '>=', 1000000)->orderBy('harga', 'desc');
+            }
         }
 
         // Ambil data hunian
         $hunians = $query->get();
 
-        // **Cek jika tidak ada hunian yang ditemukan**
-        if ($hunians->isEmpty()) {
-            return view('frontend.hunian_lain', compact('hunians'));
-        }
-
-        // **Bobot Kriteria** (Total 100%)
-        $bobotHarga = 40;     // Harga lebih terjangkau
-        $bobotFasilitas = 35; // Fasilitas lengkap
-        $bobotLokasi = 25;    // Lokasi strategis
-
-        // **Tentukan nilai rata-rata untuk normalisasi**
-        $hargaMax = $hunians->max('harga');
-        $hargaMin = $hunians->min('harga');
-        $hargaRange = max(1, $hargaMax - $hargaMin); // Cegah pembagian dengan nol
+        // **Bobot Kriteria** (Total 1.0)
+        $bobotLokasi = 0.30;  
+        $bobotTipe = 0.25;    
+        $bobotStatus = 0.20;  
+        $bobotHarga = 0.25;   
 
         // Hitung Weighted Score untuk setiap hunian
-        $hunians = $hunians->map(function ($hunian) use ($bobotHarga, $bobotFasilitas, $bobotLokasi, $hargaMin, $hargaRange) {
-            // Harga lebih murah lebih baik (dibalik)
-            $hargaScore = 1 - (($hunian->harga - $hargaMin) / $hargaRange);
+        $hunians = $hunians->map(function ($hunian) use ($bobotLokasi, $bobotTipe, $bobotStatus, $bobotHarga, $location, $tipe_hunian, $status, $harga) {
+            // Skor lokasi
+            $lokasiScore = (!empty($location) && $hunian->location == $location) ? 1 : 0;
 
-            // Cek apakah fasilitas berupa array atau string
-            if (is_array($hunian->fasilitas)) {
-                $fasilitasScore = count($hunian->fasilitas) / 10;
-            } elseif (is_string($hunian->fasilitas)) {
-                $fasilitasScore = count(explode(',', $hunian->fasilitas)) / 10;
-            } else {
-                $fasilitasScore = 0;
-            }
+            // Skor tipe hunian
+            $tipeScore = (!empty($tipe_hunian) && $hunian->tipe_hunian == $tipe_hunian) ? 1 : 0;
 
-            // Jika lokasi tersedia, nilai 1, jika tidak 0
-            $lokasiScore = !empty($hunian->location) ? 1 : 0;
+            // Skor status hunian
+            $statusScore = (!empty($status) && $hunian->status == $status) ? 1 : 0;
+
+            // Skor harga (murah lebih baik, dibalik)
+            $hargaScore = (!empty($harga) && $harga == 'murah') ? 1 : 0;
+            $hargaScore = (!empty($harga) && $harga == 'mahal') ? 0 : $hargaScore;
 
             // Hitung Total Weighted Score
             $hunian->weightedScore =
-                ($hargaScore * $bobotHarga / 100) +
-                ($fasilitasScore * $bobotFasilitas / 100) +
-                ($lokasiScore * $bobotLokasi / 100);
+                ($lokasiScore * $bobotLokasi) +
+                ($tipeScore * $bobotTipe) +
+                ($statusScore * $bobotStatus) +
+                ($hargaScore * $bobotHarga);
 
             return $hunian;
         });

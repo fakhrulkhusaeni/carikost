@@ -37,7 +37,7 @@
                                 <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Hunian</a>
+                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Iklan</a>
                             </li>
 
                             @auth
