@@ -80,23 +80,26 @@
                         <!-- Left Content -->
                         <div class="col-lg-12">
                             <h4 class="mb-4 text-center">Foto Hunian</h4>
-                            <div id="kostCarousel" class="carousel slide" data-bs-ride="carousel" style="max-width: 1000px; margin: auto;">
+                            <div id="kostCarousel" class="carousel slide" data-bs-ride="carousel" style="margin: auto;">
                                 <div class="carousel-inner">
                                     @php
-                                    $images = json_decode($hunianLain->foto, true); // Decode JSON menjadi array
+                                    $images = json_decode($hunianLain->foto, true);
                                     @endphp
 
                                     @foreach ($images as $key => $image)
                                     <div class="carousel-item {{ $key == 0 ? 'active' : '' }}" data-bs-interval="false">
                                         <a href="{{ asset('storage/' . $image) }}" class="glightbox" data-gallery="kost-gallery">
-                                            <img src="{{ asset('storage/' . $image) }}" class="d-block w-100 rounded"
-                                                alt="Foto Hunian {{ $key + 1 }}" style="width: 100%; height: 500px; object-fit: cover;">
+                                            <div class="carousel-image-wrapper">
+                                                <img src="{{ asset('storage/' . $image) }}"
+                                                    alt="Foto Hunian {{ $key + 1 }}"
+                                                    class="d-block w-100 rounded img-fluid" />
+                                            </div>
                                         </a>
                                     </div>
                                     @endforeach
                                 </div>
 
-                                <!-- Tombol Navigasi -->
+                                <!-- Navigasi -->
                                 <button class="carousel-control-prev" type="button" data-bs-target="#kostCarousel" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Previous</span>
@@ -162,10 +165,8 @@
                                     </li>
                                     @endforeach
                                 </ul>
-
                             </div>
                         </div>
-
                     </div>
                 </div>
 

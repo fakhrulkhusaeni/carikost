@@ -7,6 +7,29 @@ body {
 }
 
 
+.carousel-image-wrapper {
+  width: 100%;
+  height: 500px; /* Default untuk desktop */
+  overflow: hidden;
+}
+
+.carousel-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Responsif di layar kecil (mobile) */
+@media (max-width: 576px) {
+  .carousel-image-wrapper {
+      height: 200px; /* Tetap persegi panjang (landscape) */
+  }
+}
+
+
+
+
 .rating-container {
   text-align: center;
   padding: 20px;
