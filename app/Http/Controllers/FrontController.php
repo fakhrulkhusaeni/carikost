@@ -117,6 +117,8 @@ class FrontController extends Controller
             // Gabungkan Weighted Rating dan skor berbobot
             $kost->finalScore = (0.5 * $weightedRating) + (0.5 * $score);
 
+            $kost->weightedRating = $weightedRating;
+
             return $kost;
         });
 
@@ -167,10 +169,10 @@ class FrontController extends Controller
         $hunians = $query->get();
 
         // **Bobot Kriteria** (Total 1.0)
-        $bobotLokasi = 0.30;  
-        $bobotTipe = 0.25;    
-        $bobotStatus = 0.20;  
-        $bobotHarga = 0.25;   
+        $bobotLokasi = 0.30;
+        $bobotTipe = 0.25;
+        $bobotStatus = 0.20;
+        $bobotHarga = 0.25;
 
         // Hitung Weighted Score untuk setiap hunian
         $hunians = $hunians->map(function ($hunian) use ($bobotLokasi, $bobotTipe, $bobotStatus, $bobotHarga, $location, $tipe_hunian, $status, $harga) {

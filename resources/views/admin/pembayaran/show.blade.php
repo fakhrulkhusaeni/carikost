@@ -70,9 +70,6 @@
                         </a>
                         @endif
                     </div>
-
-
-
                 </div>
 
                 <!-- Button -->

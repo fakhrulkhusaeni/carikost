@@ -12,134 +12,112 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
 
                 <!-- Owner Details -->
-                <div class="flex items-center mb-6">
-                    <img class="flex-shrink-0 border rounded-full w-20 h-20 mr-5" src="{{ asset('storage/' . $kost->user->avatar) }}" alt="Foto Pemilik Kost">
+                <div class="flex items-center gap-4">
+                    <img class="border rounded-full w-20 h-20" src="{{ asset('storage/' . $kost->user->avatar) }}" alt="Foto Pemilik Kost">
                     <div class="text-start">
-                        <h5 class="mb-2 font-medium">Dikelola Oleh <span class="font-semibold">{{ $kost->user->name }}</span></h5>
+                        <h5 class="mb-1 font-medium">Dikelola Oleh <span class="font-semibold">{{ $kost->user->name }}</span></h5>
                         <span class="text-gray-500">Pemilik Hunian</span>
                     </div>
                 </div>
 
                 <!-- Photo Gallery -->
-                <div class="col-span-1 md:col-span-2">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Gambar 1 -->
-                        <div class="mb-3">
-                            <a href="{{ asset('assets/foto.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                <img src="{{ asset('assets/foto.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 1" style="max-width: 100%; height: auto;">
-                            </a>
-                        </div>
-                        <!-- Gambar 2 -->
-                        <div class="mb-3">
-                            <a href="{{ asset('assets/foto.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                <img src="{{ asset('assets/foto.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 2" style="max-width: 100%; height: auto;">
-                            </a>
-                        </div>
-                        <!-- Gambar 3 -->
-                        <div class="mb-3">
-                            <a href="{{ asset('assets/foto.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                <img src="{{ asset('assets/foto.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 3" style="max-width: 100%; height: auto;">
-                            </a>
-                        </div>
-                        <!-- Gambar 4 -->
-                        <div class="mb-3">
-                            <a href="{{ asset('assets/foto.jpg') }}" class="glightbox" data-gallery="kost-gallery">
-                                <img src="{{ asset('assets/foto.jpg') }}" class="img-fluid rounded" alt="Foto Hunian Kost 4" style="max-width: 100%; height: auto;">
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <div x-data="{ currentIndex: 0 }" class="relative w-full">
+                    <div class="relative w-full overflow-hidden rounded-lg shadow">
+                        @php
+                        $images = json_decode($kost->foto, true);
+                        @endphp
 
+                        <template x-for="(image, index) in {{ json_encode($images) }}" :key="index">
+                            <div x-show="currentIndex === index" class="w-full">
+                                <a :href="'{{ asset('storage/') }}/' + image" class="glightbox" data-gallery="kost-gallery">
+                                    <img :src="'{{ asset('storage/') }}/' + image" class="w-full h-[400px] object-cover rounded-lg" alt="Foto Hunian">
+                                </a>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Navigasi Gambar -->
+                    <button @click="currentIndex = (currentIndex - 1 + {{ count($images) }}) % {{ count($images) }}"
+                        class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+
+                    <button @click="currentIndex = (currentIndex + 1) % {{ count($images) }}"
+                        class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke="currentColor" fill="none">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
 
                 <!-- Kost Details -->
-                <div class="col-span-1 md:col-span-2">
-                    <h3 class="text-3xl font-bold text-gray-900 mb-4">{{ $kost->nama }}</h3>
-                    <div class="mb-4">
-                        <span class="font-semibold text-gray-700">Deskripsi: </span>
-                        <p class="text-gray-600">{!! nl2br(e($kost->deskripsi)) !!}</p>
-                    </div>
-                    <div class="mb-4">
-                        <span class="font-semibold text-gray-700">Tipe: </span>
-                        <span class="text-gray-600">{{ $kost->type }}</span>
-                    </div>
-                    <div class="mb-4">
-                        <span class="font-semibold text-gray-700">Jumlah Kamar: </span>
-                        <span class="text-gray-600">{{ $kost->jumlah_kamar }}</span>
-                    </div>
-                    <div class="mb-4">
-                        <span class="font-semibold text-gray-700">Lokasi Kecamatan: </span>
-                        <span class="text-gray-600">{{ $kost->location }}</span>
-                    </div>
-                    <div class="mb-4">
-                        <span class="font-semibold text-gray-700">Alamat Lengkap: </span>
-                        <span class="text-gray-600">{{ $kost->alamat }}</span>
-                    </div>
-                    <div class="mb-4">
-                        <span class="font-semibold text-gray-700">Harga: </span>
-                        <span class="text-gray-600">Rp{{ number_format($kost->harga, 0, ',', '.') }} / bulan</span>
-                    </div>
-                    <div class="mb-4">
-                        <span class="font-semibold text-gray-700">Telepon: </span>
-                        <span class="text-gray-600">{{ $kost->user->phone }}</span>
+                <div>
+                    <h4 class="text-3xl font-bold text-gray-900">{{ $kost->nama }}</h4>
+                    <p class="text-gray-700">{!! nl2br(e($kost->deskripsi)) !!}</p>
+
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div><span class="font-semibold">Tipe:</span> {{ $kost->type }}</div>
+                        <div><span class="font-semibold">Jumlah Kamar:</span> {{ $kost->jumlah_kamar }}</div>
+                        <div><span class="font-semibold">Lokasi Kecamatan:</span> {{ $kost->location }}</div>
+                        <div><span class="font-semibold">Alamat Lengakp:</span> {{ $kost->alamat }}</div>
+                        <div><span class="font-semibold">Harga:</span> Rp{{ number_format($kost->harga, 0, ',', '.') }} / bulan</div>
+                        <div><span class="font-semibold">Telepon:</span> {{ $kost->user->phone }}</div>
                     </div>
                 </div>
 
-                <!-- Facilities Section -->
-                <div class="col-span-1 md:col-span-2">
-                    <span class="font-semibold text-gray-700">Fasilitas: </span>
-                    <ul class="mt-1 text-gray-600 list-disc pl-6">
-                        @forelse ($kost->facilities as $facility)
-                        <li>{{ $facility }}</li>
-                        @empty
-                        <li>Fasilitas tidak tersedia</li>
-                        @endforelse
-                    </ul>
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <!-- Facilities -->
+                    <div>
+                        <span class="font-semibold">Fasilitas:</span>
+                        <ul class="mt-1 text-gray-600 list-disc pl-6">
+                            @forelse ($kost->facilities as $facility)
+                            <li>{{ $facility }}</li>
+                            @empty
+                            <li>Fasilitas tidak tersedia</li>
+                            @endforelse
+                        </ul>
+                    </div>
+
+                    <!-- Rules -->
+                    <div>
+                        <span class="font-semibold">Peraturan:</span>
+                        <ul class="mt-1 text-gray-600 list-disc pl-6">
+                            @forelse ($kost->rules as $rule)
+                            <li>{{ $rule }}</li>
+                            @empty
+                            <li>Peraturan tidak tersedia</li>
+                            @endforelse
+                        </ul>
+                    </div>
                 </div>
 
-                <!-- Rules Section -->
-                <div class="col-span-1 md:col-span-2">
-                    <span class="font-semibold text-gray-700">Peraturan: </span>
-                    <ul class="mt-1 text-gray-600 list-disc pl-6">
-                        @forelse ($kost->rules as $rule)
-                        <li>{{ $rule }}</li>
-                        @empty
-                        <li>Peraturan tidak tersedia</li>
-                        @endforelse
-                    </ul>
+                <div>
+                    <span class="font-semibold">Bukti Kepemilikan:</span>
                 </div>
 
-                <div class="mb-4">
-                    <span class="font-semibold text-gray-700">Bukti Kepemilikan Kost/Kontrakan: </span>
-                    <span class="text-gray-600">#</span>
-                </div>
-
-                <!-- Buttons: Verifikasi and Hapus -->
-                <div class="col-span-1 md:col-span-2 flex justify-end gap-4 mt-6">
-                    <!-- Button Verifikasi -->
+                <!-- Buttons -->
+                <div class="flex justify-end gap-4 mt-6">
                     <form action="{{ route('admin.verifikasi.verifikasi', $kost->id) }}" method="POST">
                         @csrf
-                        <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                            Verifikasi
-                        </button>
+                        <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Verifikasi</button>
                     </form>
 
-                    <!-- Button Hapus -->
                     <form action="{{ route('admin.verifikasi.destroy', $kost->id) }}" method="POST" class="inline-block delete-form">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-                            Tolak
-                        </button>
+                        <button type="submit" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Tolak</button>
                     </form>
                 </div>
-
 
             </div>
         </div>
     </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 

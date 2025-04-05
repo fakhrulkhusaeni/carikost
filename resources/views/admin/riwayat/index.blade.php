@@ -19,7 +19,7 @@
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Hunian</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jenis Hunian</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Harga (per bulan)</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Tanggal Booking</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Tanggal Mulai</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Konfirmasi</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Pembayaran</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Aksi</th>

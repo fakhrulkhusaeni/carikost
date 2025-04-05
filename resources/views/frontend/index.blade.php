@@ -118,7 +118,9 @@
 
                                         <!-- Lokasi -->
                                         <div class="col-lg-12 col-md-6 col-12 mb-3">
-                                            <select id="location" name="location" class="form-control" style="border-radius: 5px;">
+                                            <select id="location" name="location" class="form-control" style="border-radius: 5px;" required
+                                                oninvalid="this.setCustomValidity('Silakan pilih lokasi terlebih dahulu!')"
+                                                oninput="this.setCustomValidity('')">
                                                 <option value="" disabled {{ request('location') ? '' : 'selected' }}>Lokasi</option>
                                                 <!-- Kota Tegal -->
                                                 <optgroup label="Kota Tegal">
