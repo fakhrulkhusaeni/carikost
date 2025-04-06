@@ -35,9 +35,23 @@ class Kost extends Model
         return $this->hasOne(Verifikasi::class);
     }
 
+    // Relasi ke Rating
     public function ratings()
     {
         return $this->hasMany(Rating::class);
+    }
+
+    // Relasi ke model Pembayaran
+    public function pembayarans()
+    {
+        return $this->hasMany(Pembayaran::class);
+    }
+
+    // Fungsi untuk menghitung sisa kamar
+    public function sisaKamar()
+    {
+        $terisi = $this->pembayarans()->where('status', 'Disetujui')->count();
+        return $this->jumlah_kamar - $terisi;
     }
 
 

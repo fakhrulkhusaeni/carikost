@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Detail Verifikasi Kost/Kontrakan') }}
+                {{ __('Detail Data Ruko/Kios') }}
             </h2>
         </div>
     </x-slot>
@@ -14,20 +14,11 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
 
-                <!-- Owner Details -->
-                <div class="flex items-center gap-4">
-                    <img class="border rounded-full w-20 h-20" src="{{ asset('storage/' . $kost->user->avatar) }}" alt="Foto Pemilik Kost">
-                    <div class="text-start">
-                        <h5 class="mb-1 font-medium">Dikelola Oleh <span class="font-semibold">{{ $kost->user->name }}</span></h5>
-                        <span class="text-gray-500">Pemilik Hunian</span>
-                    </div>
-                </div>
-
                 <!-- Photo Gallery -->
                 <div x-data="{ currentIndex: 0 }" class="relative w-full">
                     <div class="relative w-full overflow-hidden rounded-lg shadow">
                         @php
-                        $images = json_decode($kost->foto, true);
+                        $images = json_decode($hunianLain->foto, true);
                         @endphp
 
                         <template x-for="(image, index) in {{ json_encode($images) }}" :key="index">
@@ -57,16 +48,20 @@
 
                 <!-- Kost Details -->
                 <div>
-                    <h4 class="text-3xl font-bold text-gray-900">{{ $kost->nama }}</h4>
-                    <p class="text-gray-700">{!! nl2br(e($kost->deskripsi)) !!}</p>
+                    <p class="text-gray-700">{!! nl2br(e($hunianLain->deskripsi)) !!}</p>
 
                     <div class="grid grid-cols-2 gap-4 mt-4">
-                        <div><span class="font-semibold">Tipe:</span> {{ $kost->type }}</div>
-                        <div><span class="font-semibold">Jumlah Kamar:</span> {{ $kost->jumlah_kamar }}</div>
-                        <div><span class="font-semibold">Lokasi Kecamatan:</span> {{ $kost->location }}</div>
-                        <div><span class="font-semibold">Alamat Lengakp:</span> {{ $kost->alamat }}</div>
-                        <div><span class="font-semibold">Harga:</span> Rp{{ number_format($kost->harga, 0, ',', '.') }} / bulan</div>
-                        <div><span class="font-semibold">Telepon:</span> {{ $kost->user->phone }}</div>
+                        <div><span class="font-semibold">Nama Pemilik:</span> {{ $hunianLain->nama_pemilik }}</div>
+                        <div><span class="font-semibold">Tipe:</span> {{ $hunianLain->tipe_hunian }}</div>
+                        <div><span class="font-semibold">Status:</span> {{ $hunianLain->status }}</div>
+                        <div><span class="font-semibold">Lokasi Kecamatan:</span> {{ $hunianLain->location }}</div>
+                        <div><span class="font-semibold">Alamat Lengakp:</span> {{ $hunianLain->alamat }}</div>
+                        <div><span class="font-semibold">Harga:</span> Rp{{ number_format($hunianLain->harga, 0, ',', '.') }}</div>
+                        <div><span class="font-semibold">Telepon:</span> {{ $hunianLain->telepon }}</div>
+                        <div>
+                            <span class="font-semibold">Status Verifikasi:</span>
+                            <span class="text-blue-500">{{ $hunianLain->status_verifikasi }}</span>
+                        </div>
                     </div>
                 </div>
 
@@ -75,7 +70,7 @@
                     <div>
                         <span class="font-semibold">Fasilitas:</span>
                         <ul class="mt-1 text-gray-600 list-disc pl-6">
-                            @forelse ($kost->facilities as $facility)
+                            @forelse ($hunianLain->fasilitas as $facility)
                             <li>{{ $facility }}</li>
                             @empty
                             <li>Fasilitas tidak tersedia</li>
@@ -85,12 +80,12 @@
 
                     <!-- Rules -->
                     <div>
-                        <span class="font-semibold">Peraturan:</span>
+                        <span class="font-semibold">Detail Hunian:</span>
                         <ul class="mt-1 text-gray-600 list-disc pl-6">
-                            @forelse ($kost->rules as $rule)
-                            <li>{{ $rule }}</li>
+                            @forelse ($hunianLain->detail_hunian as $detail)
+                            <li>{{ $detail }}</li>
                             @empty
-                            <li>Peraturan tidak tersedia</li>
+                            <li>Detail Hunian tidak tersedia</li>
                             @endforelse
                         </ul>
                     </div>
@@ -100,19 +95,6 @@
                     <span class="font-semibold">Bukti Kepemilikan:</span>
                 </div>
 
-                <!-- Buttons -->
-                <div class="flex justify-end gap-4 mt-6">
-                    <form action="{{ route('admin.verifikasi.verifikasi', $kost->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Verifikasi</button>
-                    </form>
-
-                    <form action="{{ route('admin.verifikasi.destroy', $kost->id) }}" method="POST" class="inline-block delete-form">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Tolak</button>
-                    </form>
-                </div>
 
             </div>
         </div>
@@ -128,35 +110,6 @@
                 selector: '.glightbox', // Select link with 'glightbox' class
                 touchNavigation: true, // Enable touch gestures
                 loop: true // Enable looping between images
-            });
-        });
-    </script>
-
-    <!-- SweetAlert2 Script -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.delete-form').forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault(); // Prevent the default form submission
-
-                    const form = this;
-
-                    Swal.fire({
-                        title: 'Apakah Anda yakin?',
-                        text: "Data ini akan dihapus dan tidak dapat dikembalikan!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit(); // Submit the form if confirmed
-                        }
-                    });
-                });
             });
         });
     </script>

@@ -10,11 +10,14 @@ class KostController extends Controller
 {
     public function index()
     {
-        // Ambil hanya kost milik user yang sedang login
-        $kosts = Kost::where('user_id', auth()->id())->get();
+        // Ambil hanya kost milik user yang sedang login, urutkan dari yang terbaru
+        $kosts = Kost::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('admin.kost.index', compact('kosts'));
     }
+
 
     public function create()
     {

@@ -12,7 +12,7 @@ class HunianLainController extends Controller
     // Menampilkan daftar data hunian
     public function index()
     {
-        $hunians = HunianLain::all();
+        $hunians = HunianLain::orderBy('created_at', 'desc')->get();
         return view('admin.hunian_lain.index', compact('hunians'));
     }
 

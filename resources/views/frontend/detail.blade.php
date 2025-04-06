@@ -256,8 +256,13 @@
                         </div>
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-bed text-primary" style="margin-right: 10px;"></i>
-                            <span class="text-danger">Sisa Kamar: 5</span>
+                            @if ($kost->sisaKamar() <= 0)
+                                <span class="text-danger fw-bold">Penuh</span>
+                                @else
+                                <span class="text-danger">Sisa Kamar: {{ $kost->sisaKamar() }}</span>
+                                @endif
                         </div>
+
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-map-marker-alt text-primary" style="margin-right: 10px;"></i>
                             <span>Lokasi Kecamatan: {{ $kost->location }}</span>

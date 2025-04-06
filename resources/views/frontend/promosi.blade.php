@@ -86,9 +86,9 @@
           <div class="card text-center shadow-sm h-100">
             <div class="card-body">
               <img src="assets/cara-pasang-1.svg" alt="Step 1" class="img-fluid mb-3" style="max-height: 100px;">
-              <h5 class="card-title">Klik Tombol Pasang Iklan</h5>
+              <h5 class="card-title">Klik Tombol</h5>
               <p class="card-text">
-                Klik tombol "Pasang Iklan Hunian" untuk menghubungi kami melalui WhatsApp.
+                Klik tombol "Pasang Iklan" untuk menghubungi kami melalui WhatsApp.
               </p>
             </div>
           </div>
@@ -100,7 +100,7 @@
               <img src="assets/cara-pasang-2.svg" alt="Step 2" class="img-fluid mb-3" style="max-height: 100px;">
               <h5 class="card-title">Kirim Informasi</h5>
               <p class="card-text">
-                Kirimkan informasi detail hunian Anda melalui chat WhatsApp.
+                Kirimkan informasi detail hunian ruko atau kios Anda melalui chat WhatsApp.
               </p>
             </div>
           </div>
@@ -112,7 +112,7 @@
               <img src="assets/cara-pasang-3.svg" alt="Step 3" class="img-fluid mb-3" style="max-height: 100px;">
               <h5 class="card-title">Pembayaran</h5>
               <p class="card-text">
-                Setelah informasi dikirim, Anda akan menerima instruksi pembayaran sebesar <strong>Rp30.000</strong>.
+                Setelah informasi dikirim, Anda akan menerima instruksi pembayaran <strong>Rp30.000</strong>.
               </p>
             </div>
           </div>
@@ -124,7 +124,7 @@
               <img src="assets/cara-pasang-4.svg" alt="Step 4" class="img-fluid mb-3" style="max-height: 100px;">
               <h5 class="card-title">Publikasi Hunian</h5>
               <p class="card-text">
-                Apabila pembayaran sudah dilakukan, hunian Anda akan dipublikasikan.
+                Apabila pembayaran sudah dilakukan, hunian ruko atau kios Anda akan dipublikasikan.
               </p>
             </div>
           </div>

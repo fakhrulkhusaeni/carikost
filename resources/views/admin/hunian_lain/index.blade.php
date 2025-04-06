@@ -44,7 +44,7 @@
                                             Hapus
                                         </button>
                                     </form>
-                                    <a href="#" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition duration-300">
+                                    <a href="{{ route('admin.hunian_lain.show', $hunianLain->id)}}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition duration-300">
                                         Detail
                                     </a>
                                 </td>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kost;
 use App\Models\Riwayat;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
@@ -15,9 +16,13 @@ class PembayaranController extends Controller
     {
         $pembayarans = Pembayaran::whereHas('kost', function ($query) {
             $query->where('user_id', auth()->user()->id);
-        })->get();
+        })
+            ->orderBy('tanggal_booking', 'asc')
+            ->get();
+
         return view('admin.pembayaran.index', compact('pembayarans'));
     }
+
 
     public function store(Request $request)
     {
@@ -29,8 +34,16 @@ class PembayaranController extends Controller
         $validated = $request->validate([
             'tanggal_booking' => 'required|date',
             'kost_id' => 'required|exists:kosts,id',
-            'kartu_identitas' => 'required|file|mimes:jpeg,png,pdf|max:2048', // Validasi file
+            'kartu_identitas' => 'required|file|mimes:jpeg,png,pdf|max:2048',
         ]);
+
+        // Ambil data kost
+        $kost = Kost::findOrFail($validated['kost_id']);
+
+        // Cek apakah kamar masih tersedia
+        if ($kost->sisaKamar() <= 0) {
+            return redirect()->back()->with('error', 'Maaf, semua kamar sudah penuh.');
+        }
 
         // Cek apakah pengguna sudah booking kost ini
         $existingBooking = Pembayaran::where('kost_id', $validated['kost_id'])
@@ -49,27 +62,26 @@ class PembayaranController extends Controller
         }
 
         // Simpan data pembayaran
-        $pembayaran = Pembayaran::create([
+        Pembayaran::create([
             'kost_id' => $validated['kost_id'],
             'user_id' => auth()->id(),
             'tanggal_booking' => $validated['tanggal_booking'],
             'status' => 'Pending',
-            'kartu_identitas' => $kartuIdentitasPath, // Tambahkan kartu identitas ke pembayaran
+            'kartu_identitas' => $kartuIdentitasPath,
         ]);
 
-        // Simpan data riwayat termasuk kartu identitas
+        // Simpan data riwayat
         Riwayat::create([
             'kost_id' => $validated['kost_id'],
             'user_id' => auth()->id(),
             'tanggal_booking' => $validated['tanggal_booking'],
             'status_konfirmasi' => 'Pending',
             'status_pembayaran' => 'Pending',
-            'kartu_identitas' => $kartuIdentitasPath, // Simpan path kartu identitas di riwayat
+            'kartu_identitas' => $kartuIdentitasPath,
         ]);
 
         return redirect()->back()->with('success', 'Booking berhasil diajukan!');
     }
-
 
 
     public function show($id)
