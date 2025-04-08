@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard Admin') }}
         </h2>
         <!-- <p class="text-sm text-gray-500">Welcome back, {{ Auth::user()->name }}! Here is an overview of your account and activities.</p> -->
     </x-slot>
@@ -11,17 +11,18 @@
             <!-- Statistik Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="card bg-blue-500 text-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold">Total Kost/Kontrakan</h3>
+                    <h3 class="text-lg font-semibold">Total Pengguna</h3>
                     <p class="text-3xl font-bold mt-2">20</p>
                 </div>
                 <div class="card bg-green-500 text-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold">Data Booking</h3>
-                    <p class="text-3xl font-bold mt-2">10</p>
+                    <h3 class="text-lg font-semibold">Total Daftar Kost/Kontrakan</h3>
+                    <p class="text-3xl font-bold mt-2">{{ $totalKost }}</p>
                 </div>
-
+                <div class="card bg-orange-500 text-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold">Total Daftar Ruko dan Kios</h3>
+                    <p class="text-3xl font-bold mt-2">{{ $totalHunianLain }}</p>
+                </div>
             </div>
-
-
         </div>
     </div>
 
@@ -29,6 +30,7 @@
         .card {
             transition: transform 0.2s;
         }
+
         .card:hover {
             transform: translateY(-5px);
         }

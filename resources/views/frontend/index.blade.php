@@ -55,8 +55,6 @@
                                 </a>
                             </li>
                             @endguest
-
-
                         </ul>
                     </div>
                 </nav>
@@ -92,7 +90,6 @@
                 </div>
             </div>
         </section>
-
         <!-- end slider section -->
     </div>
 
@@ -191,7 +188,6 @@
                                             </div>
                                         </div>
 
-
                                         <!-- Tombol -->
                                         <div class="col-lg-12 col-md-6 col-12 text-center">
                                             <button type="submit" class="btn w-100" style="background-color: #007bff; border-radius: 10px;">
@@ -200,8 +196,6 @@
                                         </div>
                                     </div>
                                 </form>
-
-
                             </div>
                         </div>
                     </div>
@@ -260,8 +254,6 @@
                     </div>
                     @endforelse
                 </div>
-
-
             </div>
         </div>
     </section>
@@ -284,7 +276,6 @@
                             <a href="">
                                 <span>Syarat dan ketentuan umum</span>
                             </a>
-
                         </div>
                     </div>
                 </div>

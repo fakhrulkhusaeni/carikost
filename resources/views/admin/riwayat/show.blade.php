@@ -150,22 +150,23 @@
            });
        </script>
 
+       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
        <script>
            document.addEventListener("DOMContentLoaded", function() {
-               const stars = document.querySelectorAll('.fa-star'); // Ambil semua ikon bintang
-               const ratingValue = document.getElementById('rating-value'); // Elemen teks nilai rating
-               const submitButton = document.getElementById('submit-rating'); // Tombol submit
-               const kostId = document.getElementById('kost_id').value; // ID kost
-               let userRating = 0; // Simpan nilai rating yang dipilih
+               const stars = document.querySelectorAll('.fa-star');
+               const ratingValue = document.getElementById('rating-value');
+               const submitButton = document.getElementById('submit-rating');
+               const kostId = document.getElementById('kost_id').value;
+               let userRating = 0;
 
-               // Event listener untuk hover bintang
                stars.forEach(star => {
                    star.addEventListener("mouseover", function() {
                        highlightStars(this.getAttribute("data-value"));
                    });
 
                    star.addEventListener("mouseout", function() {
-                       highlightStars(userRating); // Kembalikan ke rating yang dipilih
+                       highlightStars(userRating);
                    });
 
                    star.addEventListener("click", function() {
@@ -174,11 +175,10 @@
                    });
                });
 
-               // Fungsi untuk memperbarui tampilan bintang
                function highlightStars(rating) {
                    stars.forEach(star => {
                        if (star.getAttribute("data-value") <= rating) {
-                           star.classList.add("text-yellow-400", "scale-110"); // Warna bintang aktif & efek zoom
+                           star.classList.add("text-yellow-400", "scale-110");
                            star.classList.remove("text-gray-300");
                        } else {
                            star.classList.add("text-gray-300");
@@ -187,10 +187,9 @@
                    });
                }
 
-               // Event listener untuk tombol submit
                submitButton.addEventListener("click", function() {
                    if (userRating > 0 && kostId) {
-                       submitButton.innerHTML = "Mengirim..."; // Indikator loading
+                       submitButton.innerHTML = "Mengirim...";
                        submitButton.disabled = true;
 
                        fetch('{{ route("rating.store") }}', {
@@ -206,25 +205,41 @@
                            })
                            .then(response => response.json())
                            .then(data => {
-                               alert(data.message);
-                               if (data.message === "Anda sudah memberikan rating untuk kost ini.") {
+                               Swal.fire({
+                                   icon: data.message === "Anda sudah memberikan rating untuk kost/kontrakan ini." ? 'warning' : 'success',
+                                   title: data.message,
+                                   showConfirmButton: false,
+                                   timer: 3000
+                               });
+
+                               if (data.message === "Anda sudah memberikan rating untuk kost/kontrakan ini.") {
                                    submitButton.disabled = true;
                                    stars.forEach(star => star.classList.add("cursor-not-allowed"));
                                }
-                               setTimeout(() => location.reload(), 1000); // Refresh setelah rating dikirim
+
+                               setTimeout(() => location.reload(), 1600);
                            })
                            .catch(error => {
                                console.error("Terjadi kesalahan:", error);
-                               alert("Gagal mengirim rating, coba lagi nanti.");
+                               Swal.fire({
+                                   icon: 'error',
+                                   title: 'Oops...',
+                                   text: 'Gagal mengirim rating, coba lagi nanti.'
+                               });
                                submitButton.innerHTML = "Kirim Rating";
                                submitButton.disabled = false;
                            });
                    } else {
-                       alert("Silakan pilih rating terlebih dahulu");
+                       Swal.fire({
+                           icon: 'info',
+                           title: 'Belum ada rating',
+                           text: 'Silakan pilih rating terlebih dahulu.'
+                       });
                    }
                });
            });
        </script>
+
 
        <script type="text/javascript" src="{{ asset('js/pay.js') }}"></script>
 

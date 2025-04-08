@@ -31,7 +31,7 @@ class RatingController extends Controller
             ->first();
 
         if ($existingRating) {
-            return response()->json(['message' => 'Anda sudah memberikan rating untuk kost ini.'], 403);
+            return response()->json(['message' => 'Anda sudah memberikan rating untuk kost/kontrakan ini.'], 403);
         }
 
         // Simpan rating ke database
@@ -41,6 +41,6 @@ class RatingController extends Controller
             'user_id' => auth()->id(), // Ambil ID pengguna yang sedang login
         ]);
 
-        return response()->json(['message' => 'Rating berhasil disimpan!'], 200);
+        return response()->json(['message' => 'Terima Kasih telah memberikan rating'], 200);
     }
 }
