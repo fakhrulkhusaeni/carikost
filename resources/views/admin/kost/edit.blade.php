@@ -125,10 +125,10 @@
                     <div class="mt-4">
                         <x-input-label for="foto" :value="__('Foto Hunian')" />
                         <div id="foto-container" class="flex flex-col gap-y-2">
-                            @foreach(old('foto', $kost->photos ?? []) as $photo)
+                            @foreach(old('foto', json_decode($kost->foto ?? '[]', true)) as $photo)
                             <div class="flex items-center gap-2">
                                 <img src="{{ asset('storage/' . $photo) }}" alt="Foto Hunian" class="w-16 h-16 rounded-lg object-cover" />
-                                <input type="hidden" name="existing_photos[]" value="{{ $photo }}">
+                                <input type="hidden" name="existing_foto[]" value="{{ $photo }}">
                                 <button type="button" class="remove-photo bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
                             </div>
                             @endforeach
@@ -136,8 +136,6 @@
                         <button type="button" id="add-foto" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded">Tambah Foto</button>
                         <x-input-error :messages="$errors->get('foto')" class="mt-2" />
                     </div>
-
-
 
                     <div class="flex items-center justify-end mt-4">
                         <button type="submit" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">

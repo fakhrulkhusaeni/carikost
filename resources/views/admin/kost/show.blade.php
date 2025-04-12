@@ -88,6 +88,10 @@
                     </div>
                 </div>
 
+                <div>
+                    <span class="font-semibold">Bukti Kepemilikan:</span>
+                </div>
+
                 <!-- Pemberitahuan Verifikasi -->
                 <div class="p-4 mb-2 text-sm text-yellow-800 bg-yellow-200 rounded-lg flex items-center" role="alert">
                     <span class="mr-2">&#9888;</span>

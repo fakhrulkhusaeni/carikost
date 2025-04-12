@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->nullable(); // Menambahkan kolom nomor telepon
-            $table->string('avatar')->nullable(); // Menambahkan kolom avatar
-            $table->string('gender')->nullable(); // Menambahkan kolom gender
+            $table->string('phone')->unique();
+            $table->string('avatar')->nullable();
+            $table->string('gender')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

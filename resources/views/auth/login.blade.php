@@ -45,9 +45,13 @@
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
                             <input class="form-control" type="email" name="email" placeholder="Email" value="{{ old('email') }}"
-                                style="outline: 1px solid gray; border-radius: 5px;" required />
+                                style="outline: 1px solid gray; border-radius: 5px;" required
+                                oninvalid="this.setCustomValidity('Silakan isi email')"
+                                oninput="this.setCustomValidity('')" />
                             <input class="form-control mt-4" type="password" name="password" placeholder="Password"
-                                style="outline: 1px solid gray; border-radius: 5px;" required />
+                                style="outline: 1px solid gray; border-radius: 5px;" required
+                                oninvalid="this.setCustomValidity('Silakan isi password')"
+                                oninput="this.setCustomValidity('')" />
                             <div class="form-button mt-4">
                                 <button id="submit" type="submit" class="btn btn-primary">Login</button>
                                 @if (Route::has('password.request'))

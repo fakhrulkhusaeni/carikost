@@ -118,7 +118,7 @@
                                             <select id="location" name="location" class="form-control" style="border-radius: 5px;" required
                                                 oninvalid="this.setCustomValidity('Silakan pilih lokasi terlebih dahulu!')"
                                                 oninput="this.setCustomValidity('')">
-                                                <option value="" disabled {{ request('location') ? '' : 'selected' }}>Lokasi</option>
+                                                <option value="" disabled {{ request('location') ? '' : 'selected' }}>Lokasi Mana Yang Sedang Anda Cari?</option>
                                                 <!-- Kota Tegal -->
                                                 <optgroup label="Kota Tegal">
                                                     <option value="Margadana" {{ request('location') == 'Margadana' ? 'selected' : '' }}>Margadana</option>
@@ -140,7 +140,7 @@
                                         <!-- Jenis Hunian -->
                                         <div class="col-lg-12 col-md-6 col-12 mb-3">
                                             <select id="type" name="type" class="form-control" style="border-radius: 5px;">
-                                                <option value="" disabled {{ request('type') ? '' : 'selected' }}>Tipe</option>
+                                                <option value="" disabled {{ request('type') ? '' : 'selected' }}>Tipe Hunian Seperti Apa Yang Anda Cari?</option>
                                                 <option value="putra" {{ request('type') == 'putra' ? 'selected' : '' }}>Kost Putra</option>
                                                 <option value="putri" {{ request('type') == 'putri' ? 'selected' : '' }}>Kost Putri</option>
                                                 <option value="campur" {{ request('type') == 'campur' ? 'selected' : '' }}>Kost Campur</option>
@@ -151,7 +151,7 @@
                                         <!-- Harga -->
                                         <div class="col-lg-12 col-md-6 col-12 mb-3">
                                             <select id="harga" name="harga" class="form-control" style="border-radius: 5px;">
-                                                <option value="" disabled {{ request('harga') ? '' : 'selected' }}>Harga</option>
+                                                <option value="" disabled {{ request('harga') ? '' : 'selected' }}>Harga Seperti Apa Yang Anda Cari?</option>
                                                 <option value="murah" {{ request('harga') == 'murah' ? 'selected' : '' }}>Harga Termurah</option>
                                                 <option value="mahal" {{ request('harga') == 'mahal' ? 'selected' : '' }}>Harga Termahal</option>
                                             </select>
@@ -160,7 +160,7 @@
                                         <!-- Pilihan Fasilitas -->
                                         <div class="col-lg-12 col-md-6 col-12 mb-3">
                                             <select id="facilityDropdown" class="form-control" style="border-radius: 5px;">
-                                                <option value="" disabled selected>Fasilitas</option>
+                                                <option value="" disabled selected>Fasilitas Apa Yang Anda Butuhkan?</option>
                                             </select>
 
                                             <!-- Checkbox Fasilitas dalam Dua Kolom -->

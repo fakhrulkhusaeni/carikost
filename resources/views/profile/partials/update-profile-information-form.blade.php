@@ -46,6 +46,7 @@
             <x-input-error class="mt-2" :messages="$errors->get('gender')" />
         </div>
 
+
         <!-- Email -->
         <div>
             <x-input-label for="email" :value="__('Email')" />

@@ -138,20 +138,34 @@
                         <x-input-error :messages="$errors->get('detail_hunian')" class="mt-2" />
                     </div>
 
-
                     <div class="mt-4">
                         <x-input-label for="foto" :value="__('Foto Hunian')" />
                         <div id="foto-container" class="flex flex-col gap-y-2">
-                            @foreach(old('foto', $hunianLain->photos ?? []) as $photo)
+                            @foreach(old('foto', json_decode($hunianLain->foto ?? '[]', true)) as $photo)
                             <div class="flex items-center gap-2">
                                 <img src="{{ asset('storage/' . $photo) }}" alt="Foto Hunian" class="w-16 h-16 rounded-lg object-cover" />
-                                <input type="hidden" name="existing_photos[]" value="{{ $photo }}">
+                                <input type="hidden" name="existing_foto[]" value="{{ $photo }}">
                                 <button type="button" class="remove-photo bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
                             </div>
                             @endforeach
                         </div>
                         <button type="button" id="add-foto" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded">Tambah Foto</button>
                         <x-input-error :messages="$errors->get('foto')" class="mt-2" />
+                    </div>
+
+                    <div class="mt-4">
+                        <x-input-label for="bukti_kepemilikan" :value="__('Bukti Kepemilikan')" />
+                        <div id="bukti-container" class="flex flex-col gap-y-2">
+                            @foreach(old('bukti_kepemilikan', json_decode($hunianLain->bukti_kepemilikan ?? '[]', true)) as $bukti)
+                            <div class="flex items-center gap-2">
+                                <img src="{{ asset('storage/' . $bukti) }}" alt="Bukti Kepemilikan" class="w-16 h-16 rounded-lg object-cover" />
+                                <input type="hidden" name="existing_bukti[]" value="{{ $bukti }}">
+                                <button type="button" class="remove-bukti bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                            </div>
+                            @endforeach
+                        </div>
+                        <button type="button" id="add-bukti" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded">Tambah Bukti</button>
+                        <x-input-error :messages="$errors->get('bukti_kepemilikan')" class="mt-2" />
                     </div>
 
                     <!-- Status Verifikasi -->
@@ -236,6 +250,23 @@
                         // Delegasi event untuk tombol hapus
                         document.addEventListener('click', (event) => {
                             if (event.target.classList.contains('remove-photo')) {
+                                event.target.closest('div').remove();
+                            }
+                        });
+
+                        document.getElementById('add-bukti').addEventListener('click', () => {
+                            const container = document.getElementById('bukti-container');
+                            const inputHTML = `
+                                <div class="flex items-center gap-2">
+                                    <input type="file" name="bukti_kepemilikan[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
+                                    <button type="button" class="remove-bukti bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                                </div>`;
+                            container.insertAdjacentHTML('beforeend', inputHTML);
+                        });
+
+                        // Delegasi event untuk tombol hapus
+                        document.addEventListener('click', (event) => {
+                            if (event.target.classList.contains('remove-bukti')) {
                                 event.target.closest('div').remove();
                             }
                         });

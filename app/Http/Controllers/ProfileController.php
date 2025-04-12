@@ -43,7 +43,7 @@ class ProfileController extends Controller
         }
 
         // Update informasi profil
-        $user->fill($request->only(['name', 'email', 'phone']));
+        $user->fill($request->only(['name', 'email', 'phone', 'gender']));
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;

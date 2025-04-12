@@ -50,6 +50,7 @@ class RolePermissionSeeder extends Seeder
         ], [
             'name' => 'Super Admin',
             'password' => Hash::make('1234567890'),
+            'phone' => '0895704307742',
         ]);
 
         $user->assignRole($superAdminRole);

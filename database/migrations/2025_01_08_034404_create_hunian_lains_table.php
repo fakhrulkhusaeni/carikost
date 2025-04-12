@@ -25,6 +25,7 @@ return new class extends Migration
             $table->json('detail_hunian')->nullable();
             $table->json('fasilitas')->nullable();
             $table->json('foto')->nullable();
+            $table->json('bukti_kepemilikan')->nullable();
             $table->timestamps();
         });
     }

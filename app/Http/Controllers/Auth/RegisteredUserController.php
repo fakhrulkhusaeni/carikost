@@ -35,7 +35,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg'], // Validasi avatar
-            'phone' => ['nullable', 'string', 'max:15'], // Validasi nomor telepon
+            'phone' => ['nullable', 'string', 'max:15', 'unique:'.User::class], // Validasi nomor telepon
             'account_type' => ['required'],
             'gender' => ['nullable', 'string', 'in:laki-laki,perempuan'],
         ]);

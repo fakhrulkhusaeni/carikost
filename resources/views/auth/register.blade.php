@@ -60,19 +60,25 @@
                             </div>
 
                             <!-- Name -->
-                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" type="text" name="name" placeholder="Nama" value="{{ old('name') }}" required />
+                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" type="text" name="name" placeholder="Nama" value="{{ old('name') }}" required
+                                oninvalid="this.setCustomValidity('Silakan isi nama lengkap')"
+                                oninput="this.setCustomValidity('')" />
                             @error('name')
                             <div class="text-danger mt-2">{{ $message }}</div>
                             @enderror
 
                             <!-- Email -->
-                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" type="email" name="email" placeholder="Email" value="{{ old('email') }}" required />
+                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" type="email" name="email" placeholder="Email" value="{{ old('email') }}" required
+                                oninvalid="this.setCustomValidity('Silakan isi email')"
+                                oninput="this.setCustomValidity('')" />
                             @error('email')
                             <div class="text-danger mt-2">{{ $message }}</div>
                             @enderror
 
                             <!-- Phone Number -->
-                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" type="text" name="phone" placeholder="Nomor Telepon" value="{{ old('phone') }}" required />
+                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" type="text" name="phone" placeholder="Nomor Telepon" value="{{ old('phone') }}" required
+                                oninvalid="this.setCustomValidity('Silakan isi nomor telepon')"
+                                oninput="this.setCustomValidity('')" />
                             @error('phone')
                             <div class="text-danger mt-2">{{ $message }}</div>
                             @enderror
@@ -82,11 +88,15 @@
                                 <label for="gender" class="form-label">Jenis Kelamin</label>
                                 <div class="d-flex align-items-center">
                                     <div class="form-check me-3">
-                                        <input class="form-check-input" type="radio" name="gender" id="laki-laki" value="laki-laki" required />
+                                        <input class="form-check-input" type="radio" name="gender" id="laki-laki" value="laki-laki" required
+                                            oninvalid="this.setCustomValidity('Silakan pilih jenis kelamin')"
+                                            oninput="this.setCustomValidity('')" />
                                         <label class="form-check-label" for="laki-laki">Laki-laki</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="perempuan" value="perempuan" required />
+                                        <input class="form-check-input" type="radio" name="gender" id="perempuan" value="perempuan" required
+                                            oninvalid="this.setCustomValidity('Silakan pilih jenis kelamin')"
+                                            oninput="this.setCustomValidity('')" />
                                         <label class="form-check-label" for="perempuan">Perempuan</label>
                                     </div>
                                 </div>
@@ -96,13 +106,17 @@
                             @enderror
 
                             <!-- Password -->
-                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" type="password" name="password" placeholder="Password" required />
+                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" type="password" name="password" placeholder="Password" required
+                                oninvalid="this.setCustomValidity('Silakan isi password')"
+                                oninput="this.setCustomValidity('')" />
                             @error('password')
                             <div class="text-danger mt-2">{{ $message }}</div>
                             @enderror
 
                             <!-- Confirm Password -->
-                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" type="password" name="password_confirmation" placeholder="Konfirmasi Password" required />
+                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" type="password" name="password_confirmation" placeholder="Konfirmasi Password" required
+                                oninvalid="this.setCustomValidity('Silakan konfirmasi password')"
+                                oninput="this.setCustomValidity('')" />
                             @error('password_confirmation')
                             <div class="text-danger mt-2">{{ $message }}</div>
                             @enderror
@@ -112,13 +126,17 @@
                                 <label for="account-type" class="form-label">Tipe Akun</label>
                                 <div class="d-flex align-items-center">
                                     <div class="form-check me-3">
-                                        <input class="form-check-input" type="radio" name="account_type" id="pemilik_kost" value="pemilik_kost" required />
+                                        <input class="form-check-input" type="radio" name="account_type" id="pemilik_kost" value="pemilik_kost" required
+                                            oninvalid="this.setCustomValidity('Silakan pilih tipe akun')"
+                                            oninput="this.setCustomValidity('')" />
                                         <label class="form-check-label" for="pemilik_kost">
                                             <img src="{{ asset('assets/pemilik-kost.png') }}" alt="Pemilik Kost" style="width: 25px; height: 25px;" class="me-1">Pemilik Hunian
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="account_type" id="pencari_kost" value="pencari_kost" required />
+                                        <input class="form-check-input" type="radio" name="account_type" id="pencari_kost" value="pencari_kost" required
+                                            oninvalid="this.setCustomValidity('Silakan pilih tipe akun')"
+                                            oninput="this.setCustomValidity('')" />
                                         <label class="form-check-label" for="pencari_kost">
                                             <img src="{{ asset('assets/pencari-kost.png') }}" alt="Pencari Kost" style="width: 25px; height: 25px;" class="me-1">Pencari Hunian
                                         </label>

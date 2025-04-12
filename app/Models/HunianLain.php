@@ -21,6 +21,7 @@ class HunianLain extends Model
         'detail_hunian',
         'fasilitas',
         'foto',
+        'bukti_kepemilikan',
     ];
 
     // Casting kolom menjadi tipe data tertentu
@@ -28,5 +29,6 @@ class HunianLain extends Model
         'detail_hunian' => 'array',
         'fasilitas' => 'array',
         'foto' => 'array',
+        'bukti_kepemilikan' => 'array',
     ];
 }

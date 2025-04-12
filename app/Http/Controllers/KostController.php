@@ -87,25 +87,26 @@ class KostController extends Controller
             'rules.*' => 'string|max:255',
             'foto' => 'nullable|array',
             'foto.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'existing_foto' => 'nullable|array',
         ]);
 
+        // Ambil semua data kecuali foto
         $data = $request->except('foto');
 
-        if ($request->hasFile('foto')) {
-            if ($kost->foto) {
-                $oldPhotos = json_decode($kost->foto, true);
-                foreach ($oldPhotos as $photo) {
-                    Storage::disk('public')->delete($photo);
-                }
-            }
+        // Ambil foto lama dari input hidden (jika ada)
+        $existingFoto = $request->input('existing_foto', []);
+        $fotoPaths = $existingFoto;
 
-            $fotoPaths = [];
+        // Tambahkan foto baru jika ada
+        if ($request->hasFile('foto')) {
             foreach ($request->file('foto') as $file) {
                 $path = $file->store('kosts', 'public');
                 $fotoPaths[] = $path;
             }
-            $data['foto'] = json_encode($fotoPaths);
         }
+
+        // Simpan kembali semua foto (lama + baru)
+        $data['foto'] = json_encode($fotoPaths);
 
         $kost->update($data);
 

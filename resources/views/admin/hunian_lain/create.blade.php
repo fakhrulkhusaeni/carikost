@@ -138,6 +138,14 @@
                         <x-input-error :messages="$errors->get('foto')" class="mt-2" />
                     </div>
 
+                    <div class="mt-4">
+                        <x-input-label for="bukti_kepemilikan" :value="__('Bukti Kepemilikan')" />
+                        <div id="bukti-container" class="flex flex-col gap-y-2">
+                            <!-- Input bukti baru akan ditambahkan di sini -->
+                        </div>
+                        <button type="button" id="add-bukti" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded">Tambah Bukti</button>
+                        <x-input-error :messages="$errors->get('bukti_kepemilikan')" class="mt-2" />
+                    </div>
 
                     <!-- Status Verifikasi -->
                     <div class="mt-4">
@@ -257,6 +265,32 @@
                                 confirmButtonText: 'OK'
                             });
                         }
+                    });
+
+                    document.getElementById('add-bukti').addEventListener('click', function() {
+                        const buktiContainer = document.getElementById('bukti-container');
+
+                        const buktiDiv = document.createElement('div');
+                        buktiDiv.className = 'flex items-center gap-x-2 mt-2';
+
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.name = 'bukti_kepemilikan[]';
+                        input.className = 'block w-full p-2 border border-gray-300 rounded';
+                        input.accept = 'image/*';
+
+                        const deleteButton = document.createElement('button');
+                        deleteButton.type = 'button';
+                        deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
+                        deleteButton.textContent = 'Hapus';
+
+                        deleteButton.addEventListener('click', function() {
+                            buktiDiv.remove();
+                        });
+
+                        buktiDiv.appendChild(input);
+                        buktiDiv.appendChild(deleteButton);
+                        buktiContainer.appendChild(buktiDiv);
                     });
                 </script>
             </div>
