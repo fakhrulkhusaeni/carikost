@@ -18,13 +18,11 @@
                         <x-input-error :messages="$errors->get('nama')" class="mt-2" />
                     </div>
 
-
                     <div class="mt-4">
                         <x-input-label for="deskripsi" :value="__('Deskripsi')" />
                         <textarea name="deskripsi" id="deskripsi" cols="30" rows="3" class="border border-slate-300 rounded-xl w-full" placeholder="Deskripsi tentang hunian Anda" required>{{ old('deskripsi') }}</textarea>
                         <x-input-error :messages="$errors->get('deskripsi')" class="mt-2" />
                     </div>
-
 
                     <div class="mt-4">
                         <x-input-label for="type" :value="__('Jenis Kost')" />
@@ -91,8 +89,8 @@
                     </div>
 
                     <div class="mt-4">
-                        <x-input-label for="harga" :value="__('Harga (per bulan) ')" />
-                        <x-text-input inputmode="numeric" id="harga" class="block mt-1 w-full" type="number" name="harga" :value="old('harga')" placeholder="Harga (per bulan)" required autocomplete="harga" />
+                        <x-input-label for="harga" :value="__('Harga (per bulan)')" />
+                        <x-text-input id="harga" class="block mt-1 w-full" type="text" name="harga" :value="old('harga')" placeholder="Harga (per bulan)" required autocomplete="off" />
                         <x-input-error :messages="$errors->get('harga')" class="mt-2" />
                     </div>
 
@@ -227,6 +225,35 @@
                         }
                     });
                 </script>
+
+                <script>
+                    const hargaInput = document.getElementById('harga');
+
+                    hargaInput.addEventListener('input', function(e) {
+                        let angka = e.target.value.replace(/[^0-9]/g, '');
+                        if (!angka) {
+                            e.target.value = '';
+                            return;
+                        }
+
+                        e.target.value = formatRupiah(angka);
+                    });
+
+                    function formatRupiah(angka) {
+                        let number_string = angka.toString(),
+                            sisa = number_string.length % 3,
+                            rupiah = number_string.substr(0, sisa),
+                            ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+                        if (ribuan) {
+                            let separator = sisa ? '.' : '';
+                            rupiah += separator + ribuan.join('.');
+                        }
+
+                        return 'Rp ' + rupiah;
+                    }
+                </script>
+
             </div>
         </div>
     </div>

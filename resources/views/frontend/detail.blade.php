@@ -278,7 +278,7 @@
                     <div class="card shadow rounded bg-white p-4 mb-4 wow slideInUp" data-wow-delay="0.1s">
                         <h4 class="mb-4">Harga</h4>
                         <div class="card-item mb-3">
-                            <p class="m-0">Harga per bulan: <strong>Rp {{ number_format($kost->harga, 0, ',', '.') }}</strong></p>
+                            <p class="m-0">Harga per bulan: <strong>Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}</strong></p>
                         </div>
 
                         <!-- Form Booking -->

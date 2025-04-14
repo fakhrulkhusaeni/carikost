@@ -30,7 +30,7 @@
                             <tr>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $riwayat->kost->nama }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $riwayat->kost->type}}</td>
-                                <td class="px-6 py-4 text-center whitespace-nowrap">Rp{{ number_format($riwayat->kost->harga, 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $riwayat->kost->harga), 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ \Carbon\Carbon::parse($riwayat->tanggal_booking)->format('d-m-Y') }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if($riwayat->status_konfirmasi == 'Disetujui')

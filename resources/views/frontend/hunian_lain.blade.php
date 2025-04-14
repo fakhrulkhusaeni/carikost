@@ -160,7 +160,7 @@
                 <p class="card-text mb-3">{{ strtoupper($hunianLain->status) }}</p>
                 <ul class="list-unstyled mb-3">
                   <li><i class="bi bi-geo-alt me-2"></i> <span class="ms-2">Lokasi: {{ ucfirst($hunianLain->location) }}</span></li>
-                  <li><i class="bi bi-cash me-2"></i> <span class="ms-2">Harga: Rp {{ number_format($hunianLain->harga, 0, ',', '.') }}</span></li>
+                  <li><i class="bi bi-cash me-2"></i> <span class="ms-2">Harga: Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $hunianLain->harga), 0, ',', '.') }}</span></li>
                 </ul>
                 <!-- Tanggal Posting -->
                 <div class="d-flex align-items-center mb-3">

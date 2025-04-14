@@ -59,7 +59,7 @@
                         <div><span class="font-semibold">Jumlah Kamar:</span> {{ $kost->jumlah_kamar }}</div>
                         <div><span class="font-semibold">Lokasi Kecamatan:</span> {{ $kost->location }}</div>
                         <div><span class="font-semibold">Alamat Lengkap:</span> {{ $kost->alamat }}</div>
-                        <div><span class="font-semibold">Harga:</span> Rp{{ number_format($kost->harga, 0, ',', '.') }} / bulan</div>
+                        <div><span class="font-semibold">Harga:</span> Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }} / bulan</div>
                         <div><span class="font-semibold">Telepon:</span> {{ $kost->user->phone }}</div>
                     </div>
                 </div>

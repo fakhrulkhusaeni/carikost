@@ -55,7 +55,7 @@ class Kost extends Model
     // Fungsi untuk menghitung sisa kamar
     public function sisaKamar()
     {
-        $terisi = $this->pembayarans()->where('status', 'Disetujui')->count();
+        $terisi = $this->pembayarans()->where('status', 'Pending')->count();
         return $this->jumlah_kamar - $terisi;
     }
 

@@ -216,7 +216,7 @@
                                 <p class="card-text mb-3">{{ $kost->nama }}</p>
                                 <ul class="list-unstyled mb-3">
                                     <li><i class="bi bi-geo-alt me-2"></i> <span class="ms-2">Lokasi: {{ $kost->location }}</span></li>
-                                    <li><i class="bi bi-cash me-2"></i> <span class="ms-2">Harga: Rp {{ number_format($kost->harga, 0, ',', '.') }}/bulan</span></li>
+                                    <li><i class="bi bi-cash me-2"></i> <span class="ms-2">Harga: Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}/bulan</span></li>
                                     <li><i class="bi bi-door-closed me-2"></i> <span class="ms-2">Jumlah Kamar: {{ $kost->jumlah_kamar }}</span></li>
                                 </ul>
 

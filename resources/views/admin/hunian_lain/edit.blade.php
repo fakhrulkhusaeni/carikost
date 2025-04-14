@@ -20,7 +20,6 @@
                         <x-input-error :messages="$errors->get('nama_pemilik')" class="mt-2" />
                     </div>
 
-
                     <!-- Deskripsi -->
                     <div class="mt-4">
                         <x-input-label for="deskripsi" :value="__('Deskripsi')" />
@@ -41,8 +40,8 @@
 
                     <!-- Harga -->
                     <div class="mt-4">
-                        <x-input-label for="harga" :value="__('Harga')" />
-                        <x-text-input inputmode="numeric" id="harga" class="block mt-1 w-full" type="number" name="harga" :value="$hunianLain->harga" placeholder="Harga (Dijual/Disewakan per bulan)" required autocomplete="harga" />
+                        <x-input-label for="harga" :value="__('Harga (Dijual/Disewakan)')" />
+                        <x-text-input id="harga" class="block mt-1 w-full" type="text" name="harga" :value="old('harga', $hunianLain->harga)" required autocomplete="harga"/>
                         <x-input-error :messages="$errors->get('harga')" class="mt-2" />
                     </div>
 
@@ -57,6 +56,7 @@
                         <x-input-error :messages="$errors->get('status')" class="mt-2" />
                     </div>
 
+                    <!-- Lokasi -->
                     <div class="mt-4">
                         <x-input-label for="location" :value="__('Lokasi Kecamatan')" />
                         <select name="location" id="location" class="py-3 rounded-lg pl-3 w-full border border-slate-300" required>
@@ -95,20 +95,21 @@
                         <x-input-error :messages="$errors->get('location')" class="mt-2" />
                     </div>
 
-
+                    <!-- Alamat -->
                     <div class="mt-4">
                         <x-input-label for="alamat" :value="__('Alamat')" />
                         <textarea name="alamat" id="alamat" cols="30" rows="3" class="border border-slate-300 rounded-xl w-full" required>{{ old('alamat', $hunianLain->alamat) }}</textarea>
                         <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
                     </div>
 
-
+                    <!-- Telepon -->
                     <div class="mt-4">
                         <x-input-label for="telepon" :value="__('Nomor Telepon')" />
                         <x-text-input id="telepon" class="block mt-1 w-full" type="number" name="telepon" :value="old('telepon', $hunianLain->telepon)" required />
                         <x-input-error :messages="$errors->get('telepon')" class="mt-2" />
                     </div>
 
+                    <!-- Fasilitas -->
                     <div class="mt-4">
                         <x-input-label for="fasilitas" :value="__('Fasilitas')" />
                         <div id="fasilitas-container" class="flex flex-col gap-y-2">
@@ -123,7 +124,7 @@
                         <x-input-error :messages="$errors->get('fasilitas')" class="mt-2" />
                     </div>
 
-
+                    <!-- Detail -->
                     <div class="mt-4">
                         <x-input-label for="detail_hunian" :value="__('Detail Hunian')" />
                         <div id="detail-hunian-container" class="flex flex-col gap-y-2">
@@ -138,6 +139,7 @@
                         <x-input-error :messages="$errors->get('detail_hunian')" class="mt-2" />
                     </div>
 
+                    <!-- Foto -->
                     <div class="mt-4">
                         <x-input-label for="foto" :value="__('Foto Hunian')" />
                         <div id="foto-container" class="flex flex-col gap-y-2">
@@ -153,6 +155,7 @@
                         <x-input-error :messages="$errors->get('foto')" class="mt-2" />
                     </div>
 
+                    <!-- Bukti -->
                     <div class="mt-4">
                         <x-input-label for="bukti_kepemilikan" :value="__('Bukti Kepemilikan')" />
                         <div id="bukti-container" class="flex flex-col gap-y-2">
@@ -273,6 +276,28 @@
 
                     });
                 </script>
+
+                <script>
+                    // Mengambil elemen input harga
+                    const hargaInput = document.getElementById('harga');
+
+                    // Format input untuk menambahkan "Rp" dan pemisah ribuan
+                    hargaInput.addEventListener('input', function(e) {
+                        let value = hargaInput.value;
+
+                        // Menghapus semua karakter non-numerik kecuali titik (.) untuk desimal
+                        value = value.replace(/[^0-9]/g, '');
+
+                        // Menambahkan "Rp" di depan dan format pemisah ribuan
+                        if (value) {
+                            value = 'Rp ' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                        }
+
+                        // Menampilkan kembali nilai dengan format yang benar
+                        hargaInput.value = value;
+                    });
+                </script>
+
             </div>
         </div>
     </div>

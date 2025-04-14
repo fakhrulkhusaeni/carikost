@@ -32,7 +32,7 @@
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->nama }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->type }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->jumlah_kamar }}</td>
-                                <td class="px-6 py-4 text-center whitespace-nowrap">Rp{{ number_format($kost->harga, 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if ($kost->verifikasi)
                                     @if ($kost->verifikasi->status === 'terverifikasi')

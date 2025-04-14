@@ -46,7 +46,7 @@ Route::prefix(prefix: 'admin')->name('admin.')->group(function () {
     Route::middleware(['auth', 'can:manage data booking'])->group(function () {
         Route::resource('pembayaran', PembayaranController::class);
 
-        // Route untuk konfirmasi dan penolakan pembayaran
+        // Route untuk konfirmasi dan penolakan
         Route::post('pembayaran/{id}/approve', [PembayaranController::class, 'approve'])->name('pembayaran.approve');
         Route::post('pembayaran/{id}/reject', [PembayaranController::class, 'reject'])->name('pembayaran.reject');
     });

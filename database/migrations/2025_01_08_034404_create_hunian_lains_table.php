@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama_pemilik');
             $table->text('deskripsi');
             $table->string('tipe_hunian');
-            $table->decimal('harga', 15, 2);
+            $table->string('harga');
             $table->string('status');
             $table->string('location');
             $table->string('alamat');

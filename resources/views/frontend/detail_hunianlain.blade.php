@@ -209,7 +209,7 @@
                         <!-- Harga -->
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-money-bill-wave text-primary" style="margin-right: 10px;"></i>
-                            <span>Harga: Rp{{ number_format($hunianLain->harga, 0, ',', '.') }}</span>
+                            <span>Harga: Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $hunianLain->harga), 0, ',', '.') }}</span>
                         </div>
 
                         <!-- Terverifikasi -->

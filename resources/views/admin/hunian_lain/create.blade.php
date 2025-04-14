@@ -40,7 +40,7 @@
                     <!-- Harga -->
                     <div class="mt-4">
                         <x-input-label for="harga" :value="__('Harga')" />
-                        <x-text-input inputmode="numeric" id="harga" class="block mt-1 w-full" type="number" name="harga" :value="old('harga')" placeholder="Harga (Dijual/Disewakan per bulan)" required autocomplete="harga" />
+                        <x-text-input id="harga" class="block mt-1 w-full" type="text" name="harga" :value="old('harga')" placeholder="Harga (Dijual/Disewakan)" required autocomplete="off" />
                         <x-input-error :messages="$errors->get('harga')" class="mt-2" />
                     </div>
 
@@ -293,6 +293,35 @@
                         buktiContainer.appendChild(buktiDiv);
                     });
                 </script>
+
+                <script>
+                    const hargaInput = document.getElementById('harga');
+
+                    hargaInput.addEventListener('input', function(e) {
+                        let angka = e.target.value.replace(/[^0-9]/g, '');
+                        if (!angka) {
+                            e.target.value = '';
+                            return;
+                        }
+
+                        e.target.value = formatRupiah(angka);
+                    });
+
+                    function formatRupiah(angka) {
+                        let number_string = angka.toString(),
+                            sisa = number_string.length % 3,
+                            rupiah = number_string.substr(0, sisa),
+                            ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+                        if (ribuan) {
+                            let separator = sisa ? '.' : '';
+                            rupiah += separator + ribuan.join('.');
+                        }
+
+                        return 'Rp ' + rupiah;
+                    }
+                </script>
+
             </div>
         </div>
     </div>

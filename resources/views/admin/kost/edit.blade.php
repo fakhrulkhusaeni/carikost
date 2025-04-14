@@ -81,7 +81,6 @@
                         <x-input-error :messages="$errors->get('location')" class="mt-2" />
                     </div>
 
-
                     <div class="mt-4">
                         <x-input-label for="alamat" :value="__('Alamat')" />
                         <textarea name="alamat" id="alamat" cols="30" rows="3" class="border border-slate-300 rounded-xl w-full" required>{{ old('alamat', $kost->alamat) }}</textarea>
@@ -90,7 +89,7 @@
 
                     <div class="mt-4">
                         <x-input-label for="harga" :value="__('Harga (per bulan)')" />
-                        <x-text-input id="harga" class="block mt-1 w-full" type="number" name="harga" :value="old('harga', $kost->harga)" required />
+                        <x-text-input id="harga" class="block mt-1 w-full" type="text" name="harga" :value="old('harga', $kost->harga)" required />
                         <x-input-error :messages="$errors->get('harga')" class="mt-2" />
                     </div>
 
@@ -195,6 +194,28 @@
                         });
                     });
                 </script>
+
+                <script>
+                    // Mengambil elemen input harga
+                    const hargaInput = document.getElementById('harga');
+
+                    // Format input untuk menambahkan "Rp" dan pemisah ribuan
+                    hargaInput.addEventListener('input', function(e) {
+                        let value = hargaInput.value;
+
+                        // Menghapus semua karakter non-numerik kecuali titik (.) untuk desimal
+                        value = value.replace(/[^0-9]/g, '');
+
+                        // Menambahkan "Rp" di depan dan format pemisah ribuan
+                        if (value) {
+                            value = 'Rp ' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                        }
+
+                        // Menampilkan kembali nilai dengan format yang benar
+                        hargaInput.value = value;
+                    });
+                </script>
+
             </div>
         </div>
     </div>

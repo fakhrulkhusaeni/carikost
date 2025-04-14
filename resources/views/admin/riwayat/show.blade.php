@@ -75,12 +75,10 @@
                            <p><span class="font-semibold">Jumlah Kamar:</span> {{ $riwayat->kost->jumlah_kamar }}</p>
                            <p><span class="font-semibold">Lokasi Kecamatan:</span> {{ $riwayat->kost->location }}</p>
                            <p><span class="font-semibold">Alamat Lengkap:</span> {{ $riwayat->kost->alamat }}</p>
-                           <p><span class="font-semibold">Harga:</span> Rp{{ number_format($riwayat->kost->harga, 0, ',', '.') }}/bulan</p>
+                           <p><span class="font-semibold">Harga:</span> Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $riwayat->kost->harga), 0, ',', '.') }}/bulan</p>
                            <p><span class="font-semibold">Nomor Telepon:</span> {{ $riwayat->kost->user->phone }}</p>
                        </div>
                    </div>
-
-
 
                    <!-- Facilities & Rules -->
                    <div class="grid grid-cols-2 gap-4">

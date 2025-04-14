@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('jumlah_kamar'); // Jumlah Kamar
             $table->string('location'); // Lokasi Kecamatan
             $table->text('alamat'); // Alamat
-            $table->decimal('harga', 12, 2); // Harga (per bulan)
+            $table->string('harga'); // Harga (per bulan)
             $table->json('facilities')->nullable(); // Fasilitas
             $table->json('rules')->nullable(); // Peraturan Kost/Kontrakan
             $table->json('foto')->nullable(); // Foto Hunian

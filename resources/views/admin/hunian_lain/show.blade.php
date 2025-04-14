@@ -56,7 +56,7 @@
                         <div><span class="font-semibold">Status:</span> {{ $hunianLain->status }}</div>
                         <div><span class="font-semibold">Lokasi Kecamatan:</span> {{ $hunianLain->location }}</div>
                         <div><span class="font-semibold">Alamat Lengakp:</span> {{ $hunianLain->alamat }}</div>
-                        <div><span class="font-semibold">Harga:</span> Rp{{ number_format($hunianLain->harga, 0, ',', '.') }}</div>
+                        <div><span class="font-semibold">Harga:</span> Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $hunianLain->harga), 0, ',', '.') }}</div>
                         <div><span class="font-semibold">Telepon:</span> {{ $hunianLain->telepon }}</div>
                         <div>
                             <span class="font-semibold">Status Verifikasi:</span>
