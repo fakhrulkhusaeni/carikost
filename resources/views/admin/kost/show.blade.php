@@ -93,13 +93,24 @@
                 </div>
 
                 <!-- Pemberitahuan Verifikasi -->
+                @if (!$sudahUpload)
                 <div class="p-4 mb-2 text-sm text-yellow-800 bg-yellow-200 rounded-lg flex items-center" role="alert">
                     <span class="mr-2">&#9888;</span>
                     <div>
                         <strong>Perhatian!</strong> Tempat kost atau kontrakan Anda belum terverifikasi. Segera upload bukti kepemilikan untuk proses verifikasi. <br>
-                        Jika tidak melakukan upload bukti kepemilikan maka tempat kost atau kontrakan Anda tidak akan tampil di website
+                        Jika tidak melakukan upload bukti kepemilikan maka tempat kost atau kontrakan Anda tidak akan tampil di website.
                     </div>
                 </div>
+                @else
+                <div class="p-4 mb-2 text-sm text-green-800 bg-green-200 rounded-lg flex items-center" role="alert">
+                    <span class="mr-2">&#9989;</span>
+                    <div>
+                        <strong>Terima kasih!</strong> Bukti kepemilikan sudah berhasil diupload dan sedang dalam proses verifikasi oleh Admin. <br>
+                        Tempat kost atau Kontrakan Anda akan segera tampil di website.
+                    </div>
+                </div>
+                @endif
+
 
                 <!-- Modal Upload Bukti Kepemilikan -->
                 <div x-data="{ openModal: false }" class="flex justify-end gap-4 mt-6">
@@ -110,8 +121,11 @@
                     <div x-show="openModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
                         <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-8">
                             <h2 class="text-lg font-semibold mb-4">Upload Bukti Kepemilikan</h2>
-                            <form method="POST" action="#" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('bukti-kepemilikan.store') }}" enctype="multipart/form-data">
                                 @csrf
+
+                                <input type="hidden" name="kost_id" value="{{ $kost->id }}">
+
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">SHM / HGB</label>
                                     <input type="file" name="shm_hgb" accept=".pdf,.jpg,.png" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
@@ -127,7 +141,9 @@
                                 <p class="text-xs text-gray-500 mb-4">Format: PDF, JPG, PNG (Max 5MB per file)</p>
                                 <div class="flex justify-end gap-2">
                                     <button type="button" @click="openModal = false" class="px-4 py-2 bg-gray-400 text-white rounded">Batal</button>
-                                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Kirim</button>
+                                    <button type="submit" id="submitButton" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                        Kirim
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -154,5 +170,28 @@
         });
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sudahUpload = @json($sudahUpload);
+
+            const submitBtn = document.getElementById('submitButton');
+            const form = submitBtn.closest('form');
+
+            if (sudahUpload) {
+                submitBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Sudah Upload!',
+                        text: 'Bukti kepemilikan sudah diunggah.',
+                        confirmButtonText: 'OK',
+                    });
+                });
+            }
+        });
+    </script>
 
 </x-app-layout>

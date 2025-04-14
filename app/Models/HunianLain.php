@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class HunianLain extends Model
 {
+    use HasFactory;
+
     // Tentukan kolom yang dapat diisi (fillable)
     protected $fillable = [
         'nama_pemilik',

@@ -23,8 +23,10 @@ class DashboardController extends Controller
             return view('dashboard.admin', compact('totalPengguna', 'totalKost', 'totalHunianLain'));
         } elseif ($user->hasRole('pemilik_kost')) {
 
-            $totalKost = Kost::count();
-            $totalPemesanan = Pembayaran::count();
+            $totalKost = Kost::where('user_id', $user->id)->count();
+            $totalPemesanan = Pembayaran::whereHas('kost', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->count();
 
             return view('dashboard.pemilik', compact('totalKost', 'totalPemesanan'));
         } elseif ($user->hasRole('pencari_kost')) {

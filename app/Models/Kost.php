@@ -47,6 +47,11 @@ class Kost extends Model
         return $this->hasMany(Pembayaran::class);
     }
 
+    public function buktiKepemilikan()
+    {
+        return $this->hasOne(BuktiKepemilikanKost::class);
+    }
+
     // Fungsi untuk menghitung sisa kamar
     public function sisaKamar()
     {

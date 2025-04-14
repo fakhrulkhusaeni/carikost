@@ -46,10 +46,10 @@ class RolePermissionSeeder extends Seeder
 
         // Create a super admin user and assign the super admin role
         $user = User::firstOrCreate([
-            'email' => 'super@admin.com',
+            'email' => 'admin@gmail.com',
         ], [
-            'name' => 'Super Admin',
-            'password' => Hash::make('1234567890'),
+            'name' => 'Admin',
+            'password' => Hash::make('Admin123'),
             'phone' => '0895704307742',
         ]);
 

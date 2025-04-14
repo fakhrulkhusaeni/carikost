@@ -98,14 +98,64 @@
 
                 <div>
                     <span class="font-semibold">Bukti Kepemilikan:</span>
+
+                    @if($kost->buktiKepemilikan)
+                    <ul class="mt-2 text-blue-600 list-disc pl-6">
+                        @if($kost->buktiKepemilikan->shm_hgb)
+                        <li>
+                            <a href="{{ asset('storage/' . $kost->buktiKepemilikan->shm_hgb) }}" target="_blank" class="underline hover:text-blue-800">
+                                Lihat Sertifikat Hak Milik / Hak Guna Bangunan
+                            </a>
+                        </li>
+                        @endif
+
+                        @if($kost->buktiKepemilikan->siuk_imb)
+                        <li>
+                            <a href="{{ asset('storage/' . $kost->buktiKepemilikan->siuk_imb) }}" target="_blank" class="underline hover:text-blue-800">
+                                Lihat Surat Izin Usaha Kost / Izin Mendirikan Bangunan
+                            </a>
+                        </li>
+                        @endif
+
+                        @if($kost->buktiKepemilikan->ktp_pemilik)
+                        <li>
+                            <a href="{{ asset('storage/' . $kost->buktiKepemilikan->ktp_pemilik) }}" target="_blank" class="underline hover:text-blue-800">
+                                Lihat KTP Pemilik
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
+                    @else
+                    <p class="text-gray-600 mt-2">Belum ada bukti kepemilikan yang diunggah.</p>
+                    @endif
                 </div>
+
 
                 <!-- Buttons -->
                 <div class="flex justify-end gap-4 mt-6">
+                    @php
+                    $sudahTerverifikasi = $kost->verifikasi && $kost->verifikasi->status === 'terverifikasi';
+                    $memenuhiSyaratDokumen = $kost->buktiKepemilikan && (
+                    $kost->buktiKepemilikan->shm_hgb ||
+                    $kost->buktiKepemilikan->siuk_imb ||
+                    $kost->buktiKepemilikan->ktp_pemilik
+                    );
+                    @endphp
+
+                    @if (!$sudahTerverifikasi)
                     <form action="{{ route('admin.verifikasi.verifikasi', $kost->id) }}" method="POST">
                         @csrf
-                        <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Verifikasi</button>
+                        <button
+                            type="submit"
+                            class="px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }}"
+                            {{ !$memenuhiSyaratDokumen ? 'disabled' : '' }}>
+                            Verifikasi
+                        </button>
                     </form>
+                    @else
+                    <span class="text-green-600 font-semibold">Sudah Diverifikasi</span>
+                    @endif
+
 
                     <!-- <form action="{{ route('admin.verifikasi.destroy', $kost->id) }}" method="POST" class="inline-block delete-form">
                         @csrf

@@ -23,6 +23,7 @@ class VerifikasiController extends Controller
     public function show($id)
     {
         $kost = Kost::with('verifikasi', 'user')->findOrFail($id);
+
         return view('admin.verifikasi.show', compact('kost'));
     }
 
@@ -39,6 +40,10 @@ class VerifikasiController extends Controller
     public function verifikasi($id)
     {
         $kost = Kost::with('verifikasi')->findOrFail($id);
+
+        if ($kost->verifikasi && $kost->verifikasi->status === 'terverifikasi') {
+            return redirect()->route('admin.verifikasi.index')->with('error', 'Kost sudah diverifikasi sebelumnya.');
+        }
 
         // Perbarui status verifikasi
         $kost->verifikasi->update(['status' => 'terverifikasi']);

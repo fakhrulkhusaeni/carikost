@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BuktiKepemilikanKost;
 use Illuminate\Http\Request;
 use App\Models\Kost;
 use Illuminate\Support\Facades\Storage;
@@ -63,7 +64,11 @@ class KostController extends Controller
 
     public function show(Kost $kost)
     {
-        return view('admin.kost.show', compact('kost'));
+
+        // Cek apakah sudah ada bukti kepemilikan untuk kost ini
+        $sudahUpload = BuktiKepemilikanKost::where('kost_id', $kost->id)->exists();
+
+        return view('admin.kost.show', compact('kost', 'sudahUpload'));
     }
 
     public function edit(Kost $kost)

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BuktiKepemilikanKostController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +23,7 @@ Route::get('/promosi', [FrontController::class, 'promosi'])->name('frontend.prom
 Route::get('/request', [FrontController::class, 'request'])->name('frontend.request');
 Route::get('/detail/{id}', [FrontController::class, 'detail'])->name('frontend.detail');
 Route::post('/rating', [RatingController::class, 'store'])->name('rating.store');
-
+Route::post('bukti-kepemilikan/store', [BuktiKepemilikanKostController::class, 'store'])->name('bukti-kepemilikan.store');
 
 
 
