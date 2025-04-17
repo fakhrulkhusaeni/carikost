@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('location'); // Lokasi Kecamatan
             $table->text('alamat'); // Alamat
             $table->string('harga'); // Harga (per bulan)
-            $table->json('facilities')->nullable(); // Fasilitas
-            $table->json('rules')->nullable(); // Peraturan Kost/Kontrakan
-            $table->json('foto')->nullable(); // Foto Hunian
+            $table->json('facilities'); // Fasilitas
+            $table->json('rules'); // Peraturan Kost/Kontrakan
+            $table->json('foto'); // Foto Hunian
             $table->timestamps(); // Created at & Updated at
         });
     }

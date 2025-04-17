@@ -21,11 +21,11 @@ return new class extends Migration
             $table->string('location');
             $table->string('alamat');
             $table->string('telepon');
-            $table->string('status_verifikasi')->nullable();
-            $table->json('detail_hunian')->nullable();
-            $table->json('fasilitas')->nullable();
-            $table->json('foto')->nullable();
-            $table->json('bukti_kepemilikan')->nullable();
+            $table->string('status_verifikasi');
+            $table->json('detail_hunian');
+            $table->json('fasilitas');
+            $table->json('foto');
+            $table->json('bukti_kepemilikan');
             $table->timestamps();
         });
     }

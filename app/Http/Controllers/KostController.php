@@ -29,17 +29,17 @@ class KostController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'deskripsi' => 'required|string',
             'type' => 'required|string',
             'jumlah_kamar' => 'required|integer',
             'location' => 'required|string',
             'alamat' => 'required|string',
             'harga' => 'required|string',
-            'facilities' => 'nullable|array',
+            'facilities' => 'required|array',
             'facilities.*' => 'string|max:255',
-            'rules' => 'nullable|array',
+            'rules' => 'required|array',
             'rules.*' => 'string|max:255',
-            'foto' => 'nullable|array',
+            'foto' => 'required|array',
             'foto.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -80,17 +80,17 @@ class KostController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'deskripsi' => 'required|string',
             'type' => 'required|string',
             'jumlah_kamar' => 'required|integer',
             'location' => 'required|string',
             'alamat' => 'required|string',
             'harga' => 'required|string',
-            'facilities' => 'nullable|array',
+            'facilities' => 'required|array',
             'facilities.*' => 'string|max:255',
-            'rules' => 'nullable|array',
+            'rules' => 'required|array',
             'rules.*' => 'string|max:255',
-            'foto' => 'nullable|array',
+            'foto' => 'required|array',
             'foto.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'existing_foto' => 'nullable|array',
         ]);
