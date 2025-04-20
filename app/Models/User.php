@@ -20,10 +20,10 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'phone', // Menambahkan nomor telepon
+        'phone',
         'password',
-        'avatar', // Menambahkan avatar
-        'gender', // Menambahkan gender
+        'avatar',
+        'gender',
     ];
 
     // Relasi ke Kost

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('bukti_kepemilikan_kosts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('kost_id')->constrained()->onDelete('cascade');
             $table->string('shm_hgb');
             $table->string('siuk_imb');

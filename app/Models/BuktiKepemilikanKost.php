@@ -10,7 +10,6 @@ class BuktiKepemilikanKost extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
         'kost_id',
         'shm_hgb',
         'siuk_imb',
@@ -22,8 +21,4 @@ class BuktiKepemilikanKost extends Model
         return $this->belongsTo(Kost::class);
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BuktiKepemilikanKost;
+use App\Models\Kost;
 use Illuminate\Http\Request;
 
 class BuktiKepemilikanKostController extends Controller
@@ -16,16 +17,21 @@ class BuktiKepemilikanKostController extends Controller
             'kost_id' => 'required|exists:kosts,id',
         ]);
 
-        $data = [
-            'kost_id' => $request->kost_id,
-            'user_id' => auth()->id(),
-        ];
+        // Pastikan user yang mengunggah adalah pemilik kost
+        $kost = Kost::findOrFail($request->kost_id);
+        if ($kost->user_id !== auth()->id()) {
+            return redirect()->back()->with('error', 'Anda tidak berhak mengunggah bukti untuk kost ini.');
+        }
 
         // Cek apakah sudah pernah upload
         $existing = BuktiKepemilikanKost::where('kost_id', $request->kost_id)->first();
         if ($existing) {
             return redirect()->back()->with('error', 'Bukti kepemilikan sudah diunggah');
         }
+
+        $data = [
+            'kost_id' => $request->kost_id,
+        ];
 
         if ($request->hasFile('shm_hgb')) {
             $data['shm_hgb'] = $request->file('shm_hgb')->store('bukti_kepemilikan_kost', 'public');

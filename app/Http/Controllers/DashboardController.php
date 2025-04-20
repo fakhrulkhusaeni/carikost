@@ -16,7 +16,10 @@ class DashboardController extends Controller
 
         if ($user->hasRole('super_admin')) {
 
-            $totalPengguna = User::count();
+            // Hitung semua user kecuali yang memiliki role 'super_admin'
+            $totalPengguna = User::whereDoesntHave('roles', function ($query) {
+                $query->where('name', 'super_admin');
+            })->count();
             $totalKost = Kost::count();
             $totalHunianLain = HunianLain::count();
 

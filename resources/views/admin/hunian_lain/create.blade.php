@@ -269,6 +269,7 @@
 
                     document.getElementById('add-bukti').addEventListener('click', function() {
                         const buktiContainer = document.getElementById('bukti-container');
+                        const currentFotos = buktiContainer.querySelectorAll('input[type="file"]').length;
 
                         const buktiDiv = document.createElement('div');
                         buktiDiv.className = 'flex items-center gap-x-2 mt-2';
