@@ -26,21 +26,33 @@ class RiwayatController extends Controller
             ->with('kost')
             ->findOrFail($id);
 
-        $harga = (int)$riwayat->kost->harga;
+        // Bersihkan dan konversi harga ke integer
+        $harga = (int) preg_replace('/[^0-9]/', '', $riwayat->kost->harga);
         $margin = 2000;
-        
+        $totalHarga = $harga + $margin;
+
+        // Buat array data body
+        $body = [
+            'transaction_details' => [
+                'order_id' => (string) time(),
+                'gross_amount' => $totalHarga,
+            ],
+            'credit_card' => [
+                'secure' => true,
+            ],
+        ];
 
         $client = new Client();
         $response = $client->request('POST', env("MIDTRANS_ENDPOINT"), [
-            'body' => '{"transaction_details":{"order_id":" ' . time() .  '","gross_amount": ' . $harga + $margin . ' },"credit_card":{"secure":true}}',
+            'body' => json_encode($body),
             'headers' => [
                 'accept' => 'application/json',
                 'authorization' => 'Basic ' . base64_encode(env("MIDTRANS_SERVER_KEY") . ":"),
                 'content-type' => 'application/json',
             ],
         ]);
-        $midtransToken = json_decode($response->getBody())->token;
 
+        $midtransToken = json_decode($response->getBody())->token;
 
         return view('admin.riwayat.show', compact('riwayat', 'midtransToken'));
     }

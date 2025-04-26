@@ -37,6 +37,9 @@
                 <a class="nav-link" href="{{ route('frontend.request') }}">Request</a>
               </li> -->
               <li class="nav-item">
+                <a class="nav-link" href="{{ route('frontend.rekomendasi') }}">Rekomendasi</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
               </li>
               <li class="nav-item active">

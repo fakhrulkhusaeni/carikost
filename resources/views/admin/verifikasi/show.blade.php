@@ -19,7 +19,7 @@
                     <img class="border rounded-full w-20 h-20" src="{{ asset('storage/' . $kost->user->avatar) }}" alt="Foto Pemilik Kost">
                     <div class="text-start">
                         <h5 class="mb-1 font-medium">Dikelola Oleh <span class="font-semibold">{{ $kost->user->name }}</span></h5>
-                        <span class="text-gray-500">Pemilik Hunian</span>
+                        <span class="text-gray-500">{{ $kost->user->email }}</span>
                     </div>
                 </div>
 
@@ -134,7 +134,7 @@
                 <!-- Buttons -->
                 <div class="flex justify-end gap-4 mt-6">
                     @php
-                    $sudahTerverifikasi = $kost->verifikasi && $kost->verifikasi->status === 'terverifikasi';
+                    $sudahTerverifikasi = $kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi';
                     $memenuhiSyaratDokumen = $kost->buktiKepemilikan && (
                     $kost->buktiKepemilikan->shm_hgb ||
                     $kost->buktiKepemilikan->siuk_imb ||

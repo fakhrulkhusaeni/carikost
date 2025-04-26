@@ -19,9 +19,8 @@
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Hunian</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jenis Hunian</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Harga (per bulan)</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Tanggal Mulai</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Tanggal Mulai Sewa</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Konfirmasi</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Pembayaran</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
@@ -42,8 +41,6 @@
                                     @endif
                                 </td>
 
-                                <td class="px-6 py-4 text-center whitespace-nowrap text-yellow-500">{{ $riwayat->status_pembayaran }}</td>
-
                                 <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium">
                                     <a href="{{ route('admin.riwayat.show', $riwayat->id)}}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition duration-300">
                                         Detail
@@ -53,7 +50,7 @@
                             @empty
                             <tr>
                                 <td colspan="6" class="px-6 py-4 text-sm text-gray-500 text-center">
-                                    Tidak ada riwayat booking.
+                                    Tidak ada riwayat pemesanan.
                                 </td>
                             </tr>
                             @endforelse

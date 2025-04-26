@@ -55,7 +55,7 @@ class Kost extends Model
     // Fungsi untuk menghitung sisa kamar
     public function sisaKamar()
     {
-        $terisi = $this->pembayarans()->where('status', 'Pending')->count();
+        $terisi = $this->pembayarans()->where('status_konfirmasi', 'Pending')->count();
         return $this->jumlah_kamar - $terisi;
     }
 
@@ -74,7 +74,7 @@ class Kost extends Model
         static::created(function ($kost) {
             Verifikasi::create([
                 'kost_id' => $kost->id, // Hubungkan dengan kost_id
-                'status' => 'pending', // Status awal
+                'status_verifikasi' => 'pending', // Status awal
             ]);
         });
     }

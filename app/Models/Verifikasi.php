@@ -11,7 +11,7 @@ class Verifikasi extends Model
 
     protected $fillable = [
         'kost_id',
-        'status', // Status verifikasi (pending, approved, rejected)
+        'status_verifikasi', // Status verifikasi (pending, approved, rejected)
     ];
 
     // Relasi ke Kost

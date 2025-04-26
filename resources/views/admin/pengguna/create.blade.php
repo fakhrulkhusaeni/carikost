@@ -70,14 +70,15 @@
                         <select id="roles" name="roles" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
                             <option value="" disabled selected>-- Pilih Tipe Akun --</option>
                             @foreach ($roles as $role)
+                            @if ($role->name !== 'super_admin') <!-- Menghindari tampilan role super_admin -->
                             <option value="{{ $role->name }}" {{ old('roles') == $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
+                            @endif
                             @endforeach
                         </select>
                         @error('roles')
                         <span class="text-red-600 text-sm mt-1">{{ $message }}</span>
                         @enderror
                     </div>
-
 
                     <div class="flex justify-end gap-4 mt-6">
                         <button type="submit" class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500">Simpan</button>

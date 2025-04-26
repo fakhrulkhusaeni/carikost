@@ -40,6 +40,9 @@
                                 <a class="nav-link" href="{{ route('frontend.request') }}">Request</a>
                             </li> -->
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('frontend.rekomendasi') }}">Rekomendasi</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
                             </li>
                             <li class="nav-item">
@@ -135,7 +138,7 @@
                                 <div class="text-start">
                                     <h5 class="mb-2">Dikelola Oleh {{ $kost->user->name }}</h5>
                                     <span class="text-muted">Pemilik Hunian</span>
-                                    @if ($kost->verifikasi && $kost->verifikasi->status === 'terverifikasi')
+                                    @if ($kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi')
                                     <span class="verified text-primary" style="font-size: 0.85rem; cursor: pointer; display: block; margin-top: 5px;">Terverifikasi</span>
                                     @endif
                                 </div>
@@ -207,7 +210,7 @@
                             <h4 class="mb-3">Rating Masyarakat</h4>
                             <div class="d-flex align-items-center mb-4">
                                 <div class="text-center" style="margin-right: 30px;">
-                                    <h2 style="font-weight: bold;">{{ number_format($weightedRating ?? 0, 1) }}/5</h2> <!-- Menampilkan rata-rata rating -->
+                                    <h2 style="font-weight: bold;">{{ number_format($weightedRating ?? 0, 1) }}</h2> <!-- Menampilkan rata-rata rating -->
                                     <div class="text-warning">
                                         @for ($i = 1; $i <= 5; $i++)
                                             @if ($i <=floor($weightedRating))
@@ -286,7 +289,7 @@
                             @csrf
                             <!-- Tanggal Booking -->
                             <div class="card-item mb-4">
-                                <label for="booking-date" class="form-label">Pilih Tanggal Mulai:</label>
+                                <label for="booking-date" class="form-label">Pilih Tanggal Mulai Sewa:</label>
                                 <input type="date" class="form-control" id="booking-date" name="tanggal_booking" required>
                             </div>
 
@@ -302,7 +305,7 @@
                             <div>
                                 @if(Auth::check() && auth()->user()->hasRole('pencari_kost'))
                                 @if($userHasBooked)
-                                <button class="btn btn-secondary w-100" disabled>Sudah Booking</button>
+                                <button class="btn btn-secondary w-100" disabled>Sudah Ajukan Sewa</button>
                                 @else
                                 <!-- Tombol booking yang memicu modal validasi -->
                                 <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#uploadModal">
@@ -338,10 +341,10 @@
                                     @if(Auth::check())
                                     <!-- Jika pengguna sudah login, tetapi tidak memiliki peran pencari_kost -->
                                     @if(!auth()->user()->hasRole('pencari_kost'))
-                                    <p>Anda harus menjadi <strong>pencari kost</strong> untuk melakukan booking.</p>
+                                    <p>Anda harus menjadi <strong>pencari kost</strong> untuk mengajukan sewa kost/kontrakan.</p>
                                     @else
                                     <!-- Jika pengguna sudah login dan memiliki peran pencari_kost -->
-                                    <p>Anda sudah dapat melakukan booking.</p>
+                                    <p>Anda sudah mengajukan sewa kost/kontrakan.</p>
                                     @endif
                                     @else
                                     <!-- Jika pengguna belum login -->
@@ -358,7 +361,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="uploadModalLabel">Upload Kartu Identitas (KTP/SIM)</h5>
+                                    <h5 class="modal-title" id="uploadModalLabel">Upload Bukti Identitas (KTP)</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -367,11 +370,11 @@
                                         <input type="hidden" name="kost_id" value="{{ $kost->id }}">
                                         <input type="hidden" name="tanggal_booking" id="modalBookingDate">
                                         <div class="mb-3">
-                                            <label for="kartu_identitas" class="form-label">Unggah KTP/SIM (PDF/JPG/PNG, max 2MB)</label>
+                                            <label for="kartu_identitas" class="form-label">Unggah KTP (PDF/JPG/PNG, max 2MB)</label>
                                             <input type="file" class="form-control" id="kartu_identitas" name="kartu_identitas" accept=".pdf,.jpg,.png" required>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-success">Konfirmasi Booking</button>
+                                            <button type="submit" class="btn btn-success">Pesan Sekarang</button>
                                         </div>
                                     </form>
                                 </div>
@@ -401,7 +404,6 @@
                             <a href="">
                                 <span>Syarat dan ketentuan umum</span>
                             </a>
-
                         </div>
                     </div>
                 </div>

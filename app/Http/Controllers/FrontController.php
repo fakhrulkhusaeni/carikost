@@ -17,18 +17,49 @@ class FrontController extends Controller
      */
     public function index(Request $request)
     {
+        $search = $request->input('search');
+
+        $query = Kost::withCount('ratings')->withAvg('ratings', 'rating');
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', '%' . $search . '%')
+                    ->orWhere('location', 'like', '%' . $search . '%')
+                    ->orWhere('type', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Ambil semua data kost, baik yang punya rating maupun tidak
+        $allKosts = $query->get();
+
+        // Hitung rata-rata global rating hanya dari yang punya rating
+        $C = $allKosts->where('ratings_count', '>', 0)->avg('ratings_avg_rating') ?? 0;
+        $m = 5;
+
+        $kosts = $allKosts->map(function ($kost) use ($C, $m) {
+            $v = $kost->ratings_count;
+            $R = $kost->ratings_avg_rating ?? 0;
+
+            $weightedRating = ($v > 0) ? (($v / ($v + $m)) * $R + ($m / ($v + $m)) * $C) : 0;
+            $kost->weightedRating = $weightedRating;
+
+            return $kost;
+        });
+
+        $kosts = $kosts->sortByDesc('weightedRating')->values();
+
+        return view('frontend.index', compact('kosts', 'search'));
+    }
+
+
+    public function rekomendasi(Request $request)
+    {
         $location = $request->input('location');
         $type = $request->input('type');
         $harga = $request->input('harga');
         $facilities = $request->input('facilities', []);
 
-        $query = Kost::withCount('ratings')->withAvg('ratings', 'rating');
-
-        // Bobot untuk masing-masing kriteria
-        $bobotLokasi = 0.3;
-        $bobotHarga = 0.2;
-        $bobotTipe = 0.2;
-        $bobotFasilitas = 0.3;
+        $query = Kost::query();
 
         // Filter berdasarkan input
         if (!empty($location)) {
@@ -59,32 +90,26 @@ class FrontController extends Controller
 
         $kosts = $query->get();
 
-        // Hitung rata-rata rating global (C) dari semua kost yang memiliki rating
-        $ratedKosts = Kost::whereHas('ratings')->withAvg('ratings', 'rating')->get();
-        $C = $ratedKosts->avg('ratings_avg_rating') ?? 0;
-        $m = 5; // Minimum jumlah review agar diperhitungkan
+        // Bobot kriteria
+        $bobotLokasi = 0.3;
+        $bobotHarga = 0.2;
+        $bobotTipe = 0.2;
+        $bobotFasilitas = 0.3;
 
-        $kosts = $kosts->map(function ($kost) use ($C, $m, $location, $type, $harga, $facilities, $bobotLokasi, $bobotHarga, $bobotTipe, $bobotFasilitas) {
-            $v = $kost->ratings_count;
-            $R = $kost->ratings_avg_rating ?? 0;
-
-            // Hitung Weighted Rating dengan formula IMDB
-            $weightedRating = ($v > 0) ? (($v / ($v + $m)) * $R + ($m / ($v + $m)) * $C) : 0;
-
-            // Hitung skor berbobot
+        $kosts = $kosts->map(function ($kost) use ($location, $type, $harga, $facilities, $bobotLokasi, $bobotHarga, $bobotTipe, $bobotFasilitas) {
             $score = 0;
 
-            // Bobot lokasi
+            // Lokasi
             if (!empty($location) && $kost->location == $location) {
                 $score += $bobotLokasi * 100;
             }
 
-            // Bobot tipe
+            // Tipe
             if (!empty($type) && $kost->type == $type) {
                 $score += $bobotTipe * 100;
             }
 
-            // Bobot harga
+            // Harga
             if (!empty($harga)) {
                 if ($harga == 'murah' && $kost->harga < 1000000) {
                     $score += $bobotHarga * 100;
@@ -93,18 +118,14 @@ class FrontController extends Controller
                 }
             }
 
-            // Bobot fasilitas
+            // Fasilitas
             $matchingFacilities = 0;
+            $kostFacilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : (is_array($kost->facilities) ? $kost->facilities : []);
 
-            if (!empty($facilities) && is_array($facilities)) {
-                // Pastikan data fasilitas dari database didekode dengan aman
-                $kostFacilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : (is_array($kost->facilities) ? $kost->facilities : []);
-
-                if (!empty($kostFacilities) && is_array($kostFacilities)) {
-                    foreach ($facilities as $facility) {
-                        if (!empty($facility) && in_array($facility, $kostFacilities)) {
-                            $matchingFacilities++;
-                        }
+            if (!empty($facilities) && is_array($kostFacilities)) {
+                foreach ($facilities as $facility) {
+                    if (!empty($facility) && in_array($facility, $kostFacilities)) {
+                        $matchingFacilities++;
                     }
                 }
 
@@ -114,19 +135,17 @@ class FrontController extends Controller
                 }
             }
 
-            // Gabungkan Weighted Rating dan skor berbobot
-            $kost->finalScore = (0.5 * $weightedRating) + (0.5 * $score);
-
-            $kost->weightedRating = $weightedRating;
+            $kost->bobotScore = $score;
 
             return $kost;
         });
 
-        // Urutkan berdasarkan skor tertinggi
-        $kosts = $kosts->sortByDesc('finalScore')->values();
+        // Urutkan berdasarkan skor berbobot
+        $kosts = $kosts->sortByDesc('bobotScore')->values();
 
-        return view('frontend.index', compact('kosts', 'facilities'));
+        return view('frontend.rekomendasi', compact('kosts', 'facilities'));
     }
+
 
 
     public function formulir()
@@ -137,72 +156,20 @@ class FrontController extends Controller
 
     public function hunian_lain(Request $request)
     {
-
-        $location = $request->input('location');
-        $tipe_hunian = $request->input('tipe_hunian');
-        $status = $request->input('status');
-        $harga = $request->input('harga');
+        $search = $request->input('search');
 
         $query = HunianLain::query();
 
-        if (!empty($location)) {
-            $query->where('location', $location);
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('location', 'like', '%' . $search . '%')
+                    ->orWhere('tipe_hunian', 'like', '%' . $search . '%')
+                    ->orWhere('status', 'like', '%' . $search . '%');
+            });
         }
 
-        if (!empty($tipe_hunian)) {
-            $query->where('tipe_hunian', $tipe_hunian);
-        }
-
-        if (!empty($status)) {
-            $query->where('status', $status);
-        }
-
-        if (!empty($harga)) {
-            if ($harga == 'murah') {
-                $query->where('harga', '<', 1000000)->orderBy('harga', 'asc');
-            } elseif ($harga == 'mahal') {
-                $query->where('harga', '>=', 1000000)->orderBy('harga', 'desc');
-            }
-        }
-
-        // Ambil data hunian
         $hunians = $query->get();
 
-        // **Bobot Kriteria** (Total 1.0)
-        $bobotLokasi = 0.30;
-        $bobotTipe = 0.25;
-        $bobotStatus = 0.20;
-        $bobotHarga = 0.25;
-
-        // Hitung Weighted Score untuk setiap hunian
-        $hunians = $hunians->map(function ($hunian) use ($bobotLokasi, $bobotTipe, $bobotStatus, $bobotHarga, $location, $tipe_hunian, $status, $harga) {
-            // Skor lokasi
-            $lokasiScore = (!empty($location) && $hunian->location == $location) ? 1 : 0;
-
-            // Skor tipe hunian
-            $tipeScore = (!empty($tipe_hunian) && $hunian->tipe_hunian == $tipe_hunian) ? 1 : 0;
-
-            // Skor status hunian
-            $statusScore = (!empty($status) && $hunian->status == $status) ? 1 : 0;
-
-            // Skor harga (murah lebih baik, dibalik)
-            $hargaScore = (!empty($harga) && $harga == 'murah') ? 1 : 0;
-            $hargaScore = (!empty($harga) && $harga == 'mahal') ? 0 : $hargaScore;
-
-            // Hitung Total Weighted Score
-            $hunian->weightedScore =
-                ($lokasiScore * $bobotLokasi) +
-                ($tipeScore * $bobotTipe) +
-                ($statusScore * $bobotStatus) +
-                ($hargaScore * $bobotHarga);
-
-            return $hunian;
-        });
-
-        // Urutkan berdasarkan skor tertinggi
-        $hunians = $hunians->sortByDesc('weightedScore')->values();
-
-        // Kembalikan hasil pencarian ke view
         return view('frontend.hunian_lain', compact('hunians'));
     }
 

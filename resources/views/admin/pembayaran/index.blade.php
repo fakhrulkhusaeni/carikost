@@ -20,7 +20,7 @@
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jenis Kelamin</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Email</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nomor Telepon</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Tanggal Mulai</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Tanggal Mulai Sewa</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Konfirmasi</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Aksi</th>
                             </tr>
@@ -35,9 +35,9 @@
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ \Carbon\Carbon::parse($pembayaran->tanggal_booking)->format('d-m-Y') }}</td>
                                 <!-- Status Konfirmasi -->
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
-                                    @if($pembayaran->status == 'Disetujui')
+                                    @if($pembayaran->status_konfirmasi == 'Disetujui')
                                     <span class="text-green-600">Disetujui</span>
-                                    @elseif($pembayaran->status == 'Ditolak')
+                                    @elseif($pembayaran->status_konfirmasi == 'Ditolak')
                                     <span class="text-red-600">Ditolak</span>
                                     @else
                                     <span class="text-yellow-600">Belum Disetujui</span>

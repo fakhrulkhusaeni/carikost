@@ -10,7 +10,7 @@
             <!-- Statistik Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="card bg-blue-500 text-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold">Total Data Kost/Kontrakan</h3>
+                    <h3 class="text-lg font-semibold">Total Kost dan Kontrakan</h3>
                     <p class="text-3xl font-bold mt-2">{{ $totalKost }}</p>
                 </div>
                 <div class="card bg-green-500 text-white p-6 rounded-lg shadow-md">

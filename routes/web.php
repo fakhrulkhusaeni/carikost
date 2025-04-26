@@ -16,6 +16,7 @@ use App\Http\Controllers\RatingController;
 
 
 Route::get('/', [FrontController::class, 'index'])->name('frontend.index');
+Route::get('/rekomendasi', [FrontController::class, 'rekomendasi'])->name('frontend.rekomendasi');
 Route::get('/hunian_lain', [FrontController::class, 'hunian_lain'])->name('frontend.hunian_lain');
 Route::get('/detail_hunianlain/{id}', [FrontController::class, 'detail_hunianlain'])->name('frontend.detail_hunianlain');
 Route::get('/formulir', [FrontController::class, 'formulir'])->name('frontend.formulir');

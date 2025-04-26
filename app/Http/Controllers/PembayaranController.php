@@ -66,7 +66,7 @@ class PembayaranController extends Controller
             'kost_id' => $validated['kost_id'],
             'user_id' => auth()->id(),
             'tanggal_booking' => $validated['tanggal_booking'],
-            'status' => 'Pending',
+            'status_konfirmasi' => 'Pending',
             'kartu_identitas' => $kartuIdentitasPath,
         ]);
 
@@ -104,7 +104,7 @@ class PembayaranController extends Controller
 
         // Update status pembayaran menjadi Disetujui
         $pembayaran->update([
-            'status' => 'Disetujui',
+            'status_konfirmasi' => 'Disetujui',
         ]);
 
         // Update riwayat konfirmasi
@@ -134,7 +134,7 @@ class PembayaranController extends Controller
 
         // Update status pembayaran menjadi Ditolak
         $pembayaran->update([
-            'status' => 'Ditolak',
+            'status_konfirmasi' => 'Ditolak',
         ]);
 
         // Update riwayat konfirmasi

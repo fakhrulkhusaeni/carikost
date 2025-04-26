@@ -35,13 +35,13 @@
                                 <td class="px-6 py-4 text-center whitespace-nowrap">Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if ($kost->verifikasi)
-                                    @if ($kost->verifikasi->status === 'terverifikasi')
+                                    @if ($kost->verifikasi->status_verifikasi === 'terverifikasi')
                                     <span class="text-blue-600">
                                         Terverifikasi
                                     </span>
                                     @else
                                     <span class="text-yellow-600">
-                                        {{ ucfirst($kost->verifikasi->status) }}
+                                        {{ ucfirst($kost->verifikasi->status_verifikasi) }}
                                     </span>
                                     @endif
                                     @else
@@ -64,7 +64,6 @@
                                         Detail
                                     </a>
                                 </td>
-
                             </tr>
                             @empty
                             <tr>

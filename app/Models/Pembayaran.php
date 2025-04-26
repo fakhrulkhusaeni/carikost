@@ -13,7 +13,7 @@ class Pembayaran extends Model
         'kost_id',
         'user_id',
         'tanggal_booking',
-        'status',
+        'status_konfirmasi',
         'kartu_identitas',
     ];
 

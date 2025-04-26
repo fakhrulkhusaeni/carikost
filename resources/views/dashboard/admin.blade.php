@@ -15,11 +15,11 @@
                     <p class="text-3xl font-bold mt-2">{{ $totalPengguna }}</p>
                 </div>
                 <div class="card bg-green-500 text-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold">Total Daftar Kost/Kontrakan</h3>
+                    <h3 class="text-lg font-semibold">Total Data Kost dan Kontrakan</h3>
                     <p class="text-3xl font-bold mt-2">{{ $totalKost }}</p>
                 </div>
                 <div class="card bg-orange-500 text-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold">Total Daftar Ruko dan Kios</h3>
+                    <h3 class="text-lg font-semibold">Total Data Ruko dan Kios</h3>
                     <p class="text-3xl font-bold mt-2">{{ $totalHunianLain }}</p>
                 </div>
             </div>

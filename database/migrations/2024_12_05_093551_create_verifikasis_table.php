@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('verifikasis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kost_id')->constrained()->onDelete('cascade');
-            $table->string('status')->default('pending'); // Status awal
+            $table->string('status_verifikasi')->default('pending'); // Status awal
             $table->timestamps();
         });
     }

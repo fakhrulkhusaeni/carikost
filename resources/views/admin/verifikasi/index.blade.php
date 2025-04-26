@@ -31,13 +31,13 @@
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->jumlah_kamar }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if ($kost->verifikasi)
-                                    @if ($kost->verifikasi->status === 'terverifikasi')
+                                    @if ($kost->verifikasi->status_verifikasi === 'terverifikasi')
                                     <span class="text-blue-600">
                                         Terverifikasi
                                     </span>
                                     @else
                                     <span class="text-yellow-600">
-                                        {{ ucfirst($kost->verifikasi->status) }}
+                                        {{ ucfirst($kost->verifikasi->status_verifikasi) }}
                                     </span>
                                     @endif
                                     @else
@@ -49,17 +49,14 @@
                                     <a href="{{ route('admin.verifikasi.show', $kost->id)}}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition duration-300">
                                         Detail
                                     </a>
-                                    <form action="{{ route('admin.verifikasi.destroy', $kost->id) }}" method="POST" class="inline-block delete-form">
+                                    <!-- <form action="{{ route('admin.verifikasi.destroy', $kost->id) }}" method="POST" class="inline-block delete-form">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition duration-300">
                                             Hapus
                                         </button>
-                                    </form>
+                                    </form> -->
                                 </td>
-
-
-
                             </tr>
                             @empty
                             <tr>

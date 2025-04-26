@@ -4,9 +4,9 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Kelola Akun Pengguna') }}
             </h2>
-            <a href="{{ route('admin.pengguna.create') }}" class="mt-4 sm:mt-0 px-6 py-3 bg-indigo-600 text-white rounded-full font-semibold hover:bg-indigo-700 transition duration-300 text-center">
+            <!-- <a href="{{ route('admin.pengguna.create') }}" class="mt-4 sm:mt-0 px-6 py-3 bg-indigo-600 text-white rounded-full font-semibold hover:bg-indigo-700 transition duration-300 text-center">
                 Tambah Pengguna
-            </a>
+            </a> -->
         </div>
     </x-slot>
 
@@ -18,6 +18,7 @@
                         <thead class="bg-white-100">
                             <tr>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Pengguna</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Kelamin</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Nomor Telepon</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe Akun</th>
@@ -28,6 +29,7 @@
                             @foreach ($users as $user)
                             <tr>
                                 <td class="px-6 py-4 text-sm text-gray-900 text-center">{{ $user->name }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900 text-center">{{ $user->gender }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-900 text-center">{{ $user->email }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-900 text-center">{{ $user->phone }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-900 text-center">
@@ -41,7 +43,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 text-center text-sm flex justify-center gap-2 flex-wrap">
-                                    <a href="{{ route('admin.pengguna.edit', $user->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Edit</a>
+                                    <!-- <a href="{{ route('admin.pengguna.edit', $user->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Edit</a> -->
 
                                     <form action="{{ route('admin.pengguna.destroy', $user->id) }}" method="POST" class="delete-form">
                                         @csrf

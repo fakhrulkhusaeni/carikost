@@ -19,13 +19,13 @@
 
                     @can('manage user')
                     <x-nav-link :href="route('admin.pengguna.index')" :active="request()->routeIs('admin.pengguna.index')">
-                        {{ __('Kelola Pengguna') }}
+                        {{ __('Kelola Akun Pengguna') }}
                     </x-nav-link>
                     @endcan
 
                     @can('manage verifikasi data')
                     <x-nav-link :href="route('admin.verifikasi.index')" :active="request()->routeIs('admin.verifikasi.index')">
-                        {{ __('Kelola Daftar Kost/Kontrakan') }}
+                        {{ __('Data Kost dan Kontrakan') }}
                     </x-nav-link>
                     @endcan
 
@@ -37,7 +37,7 @@
 
                     @can('manage hunian')
                     <x-nav-link :href="route('admin.kost.index')" :active="request()->routeIs('admin.kost.index')">
-                        {{ __('Kelola Data Kost/Kontrakan') }}
+                        {{ __('Kelola Data Kost dan Kontrakan') }}
                     </x-nav-link>
                     @endcan
 
@@ -50,7 +50,7 @@
 
                     @can('manage hunian lain')
                     <x-nav-link :href="route('admin.hunian_lain.index')" :active="request()->routeIs('admin.hunian_lain.index')">
-                        {{ __('Kelola Data Ruko dan Kios') }}
+                        {{ __('Data Ruko dan Kios') }}
                     </x-nav-link>
                     @endcan
 
@@ -80,7 +80,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Profil Pengguna') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -90,7 +90,7 @@
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('Keluar') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -126,7 +126,7 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    {{ __('Profil Pengguna') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
@@ -136,7 +136,7 @@
                     <x-responsive-nav-link :href="route('logout')"
                         onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        {{ __('Keluar') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

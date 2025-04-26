@@ -1,12 +1,12 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Information') }}
+            {{ __('Informasi Profil') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
+        <!-- <p class="mt-1 text-sm text-gray-600">
             {{ __("Update your account's profile information and email address.") }}
-        </p>
+        </p> -->
     </header>
 
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
@@ -31,14 +31,14 @@
 
         <!-- Name -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
+            <x-input-label for="name" :value="__('Nama Lengkap')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <!-- Gender -->
         <div>
-            <x-input-label for="gender" :value="__('Gender')" />
+            <x-input-label for="gender" :value="__('Jenis Kelamin')" />
             <select id="gender" name="gender" class="mt-1 block w-full border-gray-300 rounded-md">
                 <option value="laki-laki" {{ old('gender', $user->gender ?? '') == 'laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                 <option value="perempuan" {{ old('gender', $user->gender ?? '') == 'perempuan' ? 'selected' : '' }}>Perempuan</option>
@@ -74,13 +74,13 @@
 
         <!-- Phone -->
         <div>
-            <x-input-label for="phone" :value="__('Phone')" />
+            <x-input-label for="phone" :value="__('Nomor Telepon')" />
             <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" required autocomplete="tel" />
             <x-input-error class="mt-2" :messages="$errors->get('phone')" />
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button>{{ __('Simpan') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
             <p
@@ -88,7 +88,7 @@
                 x-show="show"
                 x-transition
                 x-init="setTimeout(() => show = false, 2000)"
-                class="text-sm text-gray-600">{{ __('Saved.') }}</p>
+                class="text-sm text-gray-600">{{ __('Berhasil Disimpan.') }}</p>
             @endif
         </div>
     </form>

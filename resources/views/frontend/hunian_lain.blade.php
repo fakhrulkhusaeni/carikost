@@ -33,6 +33,9 @@
               <!-- <li class="nav-item">
                 <a class="nav-link" href="{{ route('frontend.request') }}">Request</a>
               </li> -->
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('frontend.rekomendasi') }}">Rekomendasi</a>
+              </li>
               <li class="nav-item active">
                 <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
               </li>
@@ -73,7 +76,7 @@
         <div class="container search-form-container">
           <div class="heading_container heading_center mb-4">
             <h2>
-              <span>Hunian Ruko dan Kios</span>
+              <span>Cari Ruko dan Kios</span>
             </h2>
             <p>
               Temukan ruko dan kios terbaik yang sesuai dengan kebutuhan Anda.
@@ -83,61 +86,17 @@
             <div class="col-lg-10 col-md-12">
               <div class="card-cari shadow h-100 border-0 rounded" style="background-color: white;">
                 <form action="{{ route('frontend.hunian_lain') }}" method="GET">
-                  <div class="row g-3 align-items-center p-4">
+                  <div class="row g-2 align-items-center p-4">
 
-                    <!-- Lokasi -->
-                    <div class="col-lg-12 col-md-6 col-12 mb-3">
-                      <select id="location" name="location" class="form-control" style="border-radius: 5px;">
-                        <option value="" disabled {{ request('location') ? '' : 'selected' }}>Lokasi</option>
-                        <!-- Kota Tegal -->
-                        <optgroup label="Kota Tegal">
-                          <option value="Margadana" {{ request('location') == 'Margadana' ? 'selected' : '' }}>Margadana</option>
-                          <option value="Tegal Barat" {{ request('location') == 'Tegal Barat' ? 'selected' : '' }}>Tegal Barat</option>
-                          <option value="Tegal Timur" {{ request('location') == 'Tegal Timur' ? 'selected' : '' }}>Tegal Timur</option>
-                          <option value="Tegal Selatan" {{ request('location') == 'Tegal Selatan' ? 'selected' : '' }}>Tegal Selatan</option>
-                        </optgroup>
-                        <!-- Kabupaten Tegal -->
-                        <optgroup label="Kabupaten Tegal">
-                          @foreach(['Adiwerna', 'Balapulang', 'Bojong', 'Dukuhturi', 'Dukuhwaru', 'Jatinegara',
-                          'Kedungbanteng', 'Kramat', 'Lebaksiu', 'Margasari', 'Pagerbarang', 'Pangkah',
-                          'Slawi', 'Suradadi', 'Talang', 'Tarub', 'Warureja'] as $area)
-                          <option value="{{ $area }}" {{ request('location') == $area ? 'selected' : '' }}>{{ $area }}</option>
-                          @endforeach
-                        </optgroup>
-                      </select>
-                    </div>
-
-                    <!-- Jenis Hunian -->
-                    <div class="col-lg-12 col-md-6 col-12 mb-3">
-                      <select id="tipe_hunian" name="tipe_hunian" class="form-control" style="border-radius: 5px;">
-                        <option value="" disabled {{ request('tipe_hunian') ? '' : 'selected' }}>Tipe</option>
-                        <option value="ruko" {{ request('tipe_hunian') == 'ruko' ? 'selected' : '' }}>Ruko</option>
-                        <option value="kios" {{ request('tipe_hunian') == 'kios' ? 'selected' : '' }}>Kios</option>
-                      </select>
-                    </div>
-
-                    <!-- status -->
-                    <div class="col-lg-12 col-md-6 col-12 mb-3">
-                      <select id="status" name="status" class="form-control" style="border-radius: 5px;">
-                        <option value="" disabled {{ request('status') ? '' : 'selected' }}>Status</option>
-                        <option value="dijual" {{ request('status') == 'dijual' ? 'selected' : '' }}>Dijual</option>
-                        <option value="disewakan" {{ request('status') == 'disewakan' ? 'selected' : '' }}>Disewakan</option>
-                      </select>
-                    </div>
-
-                    <!-- Harga -->
-                    <div class="col-lg-12 col-md-6 col-12 mb-3">
-                      <select id="harga" name="harga" class="form-control" style="border-radius: 5px;">
-                        <option value="" disabled {{ request('harga') ? '' : 'selected' }}>Harga</option>
-                        <option value="murah" {{ request('harga') == 'murah' ? 'selected' : '' }}>Harga Termurah</option>
-                        <option value="mahal" {{ request('harga') == 'mahal' ? 'selected' : '' }}>Harga Termahal</option>
-                      </select>
+                    <!-- Search Bar -->
+                    <div class="col-lg-10 col-md-6 col-12">
+                      <input type="text" id="search" name="search" class="form-control" placeholder="Cari ruko dan kios disini..." style="border-radius: 5px;" value="{{ request('search') }}">
                     </div>
 
                     <!-- Tombol -->
-                    <div class="col-lg-12 col-md-6 col-12 text-center">
+                    <div class="col-lg-2 col-md-4 col-12 mt-lg-0 mt-md-3">
                       <button type="submit" class="btn w-100" style="background-color: #007bff; border-radius: 10px;">
-                        <i class="fa fa-search text-white"></i> <span class="text-white">Buat Rekomendasi</span>
+                        <i class="bi bi-search text-white"></i> <span class="text-white">Cari</span>
                       </button>
                     </div>
                   </div>
@@ -179,7 +138,7 @@
           @empty
           <div class="col-12">
             <div class="alert alert-warning" role="alert">
-              <i class="bi bi-exclamation-triangle"></i> Tidak ada data yang ditemukan.
+              <i class="bi bi-exclamation-triangle"></i> Tidak ada ruko atau kios yang ditemukan.
             </div>
           </div>
           @endforelse

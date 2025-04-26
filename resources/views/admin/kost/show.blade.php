@@ -19,7 +19,7 @@
                     <img class="border rounded-full w-20 h-20" src="{{ asset('storage/' . $kost->user->avatar) }}" alt="Foto Pemilik Kost">
                     <div class="text-start">
                         <h5 class="mb-1 font-medium">Dikelola Oleh <span class="font-semibold">{{ $kost->user->name }}</span></h5>
-                        <span class="text-gray-500">Pemilik Hunian</span>
+                        <span class="text-gray-500">{{ $kost->user->email }}</span>
                     </div>
                 </div>
 
@@ -114,9 +114,16 @@
 
                 <!-- Modal Upload Bukti Kepemilikan -->
                 <div x-data="{ openModal: false }" class="flex justify-end gap-4 mt-6">
+
+                    @if (!$sudahUpload)
                     <button @click="openModal = true" type="button" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
                         Upload Bukti Kepemilikan
                     </button>
+                    @else
+                    <button type="button" onclick="showAlreadyUploadedAlert()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
+                        Upload Bukti Kepemilikan
+                    </button>
+                    @endif
 
                     <div x-show="openModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
                         <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-8">
@@ -128,20 +135,20 @@
 
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">SHM / HGB</label>
-                                    <input type="file" name="shm_hgb" accept=".pdf,.jpg,.png" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                    <input type="file" name="shm_hgb" accept=".pdf,.jpg,.png" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                                 </div>
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">SIUK / IMB</label>
-                                    <input type="file" name="siuk_imb" accept=".pdf,.jpg,.png" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                    <input type="file" name="siuk_imb" accept=".pdf,.jpg,.png" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                                 </div>
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">KTP Pemilik</label>
-                                    <input type="file" name="ktp_pemilik" accept=".pdf,.jpg,.png" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                    <input type="file" name="ktp_pemilik" accept=".pdf,.jpg,.png" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                                 </div>
                                 <p class="text-xs text-gray-500 mb-4">Format: PDF, JPG, PNG (Max 5MB per file)</p>
                                 <div class="flex justify-end gap-2">
                                     <button type="button" @click="openModal = false" class="px-4 py-2 bg-gray-400 text-white rounded">Batal</button>
-                                    <button type="submit" id="submitButton" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                                         Kirim
                                     </button>
                                 </div>
@@ -173,25 +180,14 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sudahUpload = @json($sudahUpload);
-
-            const submitBtn = document.getElementById('submitButton');
-            const form = submitBtn.closest('form');
-
-            if (sudahUpload) {
-                submitBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Sudah Upload!',
-                        text: 'Bukti kepemilikan sudah diunggah.',
-                        confirmButtonText: 'OK',
-                    });
-                });
-            }
-        });
+        function showAlreadyUploadedAlert() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Sudah Diunggah',
+                text: 'Anda sudah mengunggah bukti kepemilikan.',
+                confirmButtonText: 'OK'
+            });
+        }
     </script>
 
 </x-app-layout>

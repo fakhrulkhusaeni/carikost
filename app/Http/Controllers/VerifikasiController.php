@@ -41,12 +41,12 @@ class VerifikasiController extends Controller
     {
         $kost = Kost::with('verifikasi')->findOrFail($id);
 
-        if ($kost->verifikasi && $kost->verifikasi->status === 'terverifikasi') {
+        if ($kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi') {
             return redirect()->route('admin.verifikasi.index')->with('error', 'Kost sudah diverifikasi sebelumnya.');
         }
 
         // Perbarui status verifikasi
-        $kost->verifikasi->update(['status' => 'terverifikasi']);
+        $kost->verifikasi->update(['status_verifikasi' => 'terverifikasi']);
 
         return redirect()->route('admin.verifikasi.index')->with('success', 'Kost berhasil diverifikasi.');
     }
