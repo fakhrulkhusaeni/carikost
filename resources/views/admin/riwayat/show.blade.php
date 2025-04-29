@@ -108,7 +108,7 @@
                    <div>
                        <p class="mb-3"><span class="font-semibold">Tanggal Mulai Sewa:</span> {{ \Carbon\Carbon::parse($riwayat->tanggal_booking)->translatedFormat('d F Y') }}</p>
                        <p class="mb-3"><span class="font-semibold">Status Konfirmasi:</span> <span class="text-{{ $riwayat->status_konfirmasi == 'Disetujui' ? 'green' : ($riwayat->status_konfirmasi == 'Ditolak' ? 'red' : 'yellow') }}-600">{{ $riwayat->status_konfirmasi }}</span></p>
-                       <p class="mb-3"><span class="font-semibold">Status Pembayaran:</span> <span class="text-yellow-600">{{$riwayat->status_pembayaran}}</span></p>
+                       <p class="mb-3"><span class="font-semibold">Status Pembayaran:</span> <span class="text-{{ $riwayat->status_pembayaran == 'Berhasil' ? 'green' : 'yellow' }}-600">{{$riwayat->status_pembayaran}}</span></p>
                    </div>
 
                    <!-- Rating Section -->
@@ -125,12 +125,15 @@
                    </div>
 
                    <!-- Payment Button -->
-                   <div class="flex justify-end mt-6">
-                       <button type="button" id="btn-bayar" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2">
-                           <i class="fas fa-wallet"></i>
-                           Bayar Sekarang
-                       </button>
-                   </div>
+                   <?php if ($riwayat->status_pembayaran != 'Berhasil'): ?>
+                       <div class="flex justify-end mt-6">
+                           <button type="button" id="btn-bayar" class="px-6 py-2 {{ $riwayat->status_konfirmasi == 'Disetujui' ? 'bg-green-500 text-white rounded-lg hover:bg-green-600' : ($riwayat->status_konfirmasi == 'Ditolak' ? 'Ditolak' : 'bg-gray-200 text-black rounded-lg hover:bg-gray-300') }} flex items-center gap-2"
+                               {{ $riwayat->status_konfirmasi == 'Disetujui' ? '' : 'disabled' }}>
+                               <i class="fas fa-wallet"></i>
+                               {{ $riwayat->status_konfirmasi == 'Disetujui' ? 'Bayar Sekarang' : ($riwayat->status_konfirmasi == 'Ditolak' ? 'Ditolak' : 'Pending') }}
+                           </button>
+                       </div>
+                   <?php endif ?>
                </div>
            </div>
        </div>
@@ -235,6 +238,8 @@
                    }
                });
            });
+
+           const pembayaran = JSON.parse(`<?= json_encode($pembayaran) ?>`);
        </script>
 
 

@@ -101,18 +101,11 @@
 
                     @if($kost->buktiKepemilikan)
                     <ul class="mt-2 text-blue-600 list-disc pl-6">
-                        @if($kost->buktiKepemilikan->shm_hgb)
-                        <li>
-                            <a href="{{ asset('storage/' . $kost->buktiKepemilikan->shm_hgb) }}" target="_blank" class="underline hover:text-blue-800">
-                                Lihat Sertifikat Hak Milik / Hak Guna Bangunan
-                            </a>
-                        </li>
-                        @endif
 
                         @if($kost->buktiKepemilikan->siuk_imb)
                         <li>
                             <a href="{{ asset('storage/' . $kost->buktiKepemilikan->siuk_imb) }}" target="_blank" class="underline hover:text-blue-800">
-                                Lihat Surat Izin Usaha Kost / Izin Mendirikan Bangunan
+                                Lihat Surat Izin Usaha Kost/Kontrakan
                             </a>
                         </li>
                         @endif
@@ -136,7 +129,6 @@
                     @php
                     $sudahTerverifikasi = $kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi';
                     $memenuhiSyaratDokumen = $kost->buktiKepemilikan && (
-                    $kost->buktiKepemilikan->shm_hgb ||
                     $kost->buktiKepemilikan->siuk_imb ||
                     $kost->buktiKepemilikan->ktp_pemilik
                     );
@@ -163,7 +155,6 @@
                         <button type="submit" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Tolak</button>
                     </form> -->
                 </div>
-
             </div>
         </div>
     </div>

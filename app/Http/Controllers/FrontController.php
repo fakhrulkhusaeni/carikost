@@ -19,8 +19,13 @@ class FrontController extends Controller
     {
         $search = $request->input('search');
 
-        $query = Kost::withCount('ratings')->withAvg('ratings', 'rating');
-
+        // Membuat query untuk kost dan memeriksa status verifikasi
+        $query = Kost::withCount('ratings')
+            ->withAvg('ratings', 'rating')
+            ->whereHas('verifikasi', function ($query) {
+                $query->where('status_verifikasi', 'terverifikasi'); // Pastikan hanya yang terverifikasi
+            });
+            
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', '%' . $search . '%')
@@ -56,96 +61,81 @@ class FrontController extends Controller
     {
         $location = $request->input('location');
         $type = $request->input('type');
-        $harga = $request->input('harga');
+        $hargaInput = $request->input('harga'); // Ini harga dari input manual
         $facilities = $request->input('facilities', []);
 
-        $query = Kost::query();
+        // Mengambil semua data kost
+        $kosts = Kost::all();
 
-        // Filter berdasarkan input
-        if (!empty($location)) {
-            $query->where('location', $location);
-        }
+        // Bobot untuk masing-masing kriteria
+        $weights = [
+            'location' => 0.3,
+            'type' => 0.1,
+            'harga' => 0.4,
+            'facilities' => 0.2,
+        ];
 
-        if (!empty($type)) {
-            $query->where('type', $type);
-        }
-
-        if (!empty($harga)) {
-            if ($harga == 'murah') {
-                $query->where('harga', '<', 1000000)->orderBy('harga', 'asc');
-            } elseif ($harga == 'mahal') {
-                $query->where('harga', '>=', 1000000)->orderBy('harga', 'desc');
-            }
-        }
-
-        if (!empty($facilities)) {
-            $query->where(function ($q) use ($facilities) {
-                foreach ($facilities as $facility) {
-                    if (!empty($facility)) {
-                        $q->orWhereJsonContains('facilities', $facility);
-                    }
-                }
-            });
-        }
-
-        $kosts = $query->get();
-
-        // Bobot kriteria
-        $bobotLokasi = 0.3;
-        $bobotHarga = 0.2;
-        $bobotTipe = 0.2;
-        $bobotFasilitas = 0.3;
-
-        $kosts = $kosts->map(function ($kost) use ($location, $type, $harga, $facilities, $bobotLokasi, $bobotHarga, $bobotTipe, $bobotFasilitas) {
+        $kosts = $kosts->map(function ($kost) use ($location, $type, $hargaInput, $facilities, $weights) {
             $score = 0;
 
-            // Lokasi
-            if (!empty($location) && $kost->location == $location) {
-                $score += $bobotLokasi * 100;
+            if ($location && $kost->location == $location) {
+                $score += $weights['location'] * 100;
             }
 
-            // Tipe
-            if (!empty($type) && $kost->type == $type) {
-                $score += $bobotTipe * 100;
+            if ($type && $kost->type == $type) {
+                $score += $weights['type'] * 100;
             }
 
-            // Harga
-            if (!empty($harga)) {
-                if ($harga == 'murah' && $kost->harga < 1000000) {
-                    $score += $bobotHarga * 100;
-                } elseif ($harga == 'mahal' && $kost->harga >= 1000000) {
-                    $score += $bobotHarga * 100;
-                }
+            if ($hargaInput) {
+                // Mengonversi harga input menjadi float
+                $hargaInput = $this->convertHargaToNumber($hargaInput);
+
+                // Mengonversi harga dari kost menjadi float
+                $kostHarga = $this->convertHargaToNumber($kost->harga);
+
+                // Toleransi dinamis dari harga input
+                $toleransiPersentase = 0.4;
+                $maxSelisih = $hargaInput * $toleransiPersentase;
+
+                $selisih = abs($kostHarga - $hargaInput);
+
+                // Hitung skor harga berdasarkan kedekatan
+                $hargaScore = $maxSelisih > 0 ? max(0, 100 - ($selisih / $maxSelisih * 100)) : 0;
+                $score += $weights['harga'] * $hargaScore;
             }
 
-            // Fasilitas
-            $matchingFacilities = 0;
-            $kostFacilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : (is_array($kost->facilities) ? $kost->facilities : []);
-
+            // Menangani fasilitas
+            $kostFacilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : (array) $kost->facilities;
             if (!empty($facilities) && is_array($kostFacilities)) {
-                foreach ($facilities as $facility) {
-                    if (!empty($facility) && in_array($facility, $kostFacilities)) {
-                        $matchingFacilities++;
-                    }
-                }
-
+                $matchingFacilities = collect($facilities)->intersect($kostFacilities)->count();
                 $totalFacilities = count($facilities);
+
                 if ($totalFacilities > 0) {
-                    $score += $bobotFasilitas * (100 * ($matchingFacilities / $totalFacilities));
+                    $facilityScore = ($matchingFacilities / $totalFacilities) * 100;
+                    $score += $weights['facilities'] * $facilityScore;
                 }
             }
 
+            // Menyimpan skor ke objek kost
             $kost->bobotScore = $score;
-
             return $kost;
         });
 
-        // Urutkan berdasarkan skor berbobot
-        $kosts = $kosts->sortByDesc('bobotScore')->values();
+        // Memfilter dan mengurutkan kost berdasarkan skor tertinggi
+        $kosts = $kosts->filter(function ($kost) {
+            return $kost->bobotScore > 0;
+        })->sortByDesc('bobotScore')->values();
 
         return view('frontend.rekomendasi', compact('kosts', 'facilities'));
     }
 
+    // Fungsi untuk mengonversi harga menjadi angka (menghapus simbol dan titik)
+    private function convertHargaToNumber($harga)
+    {
+        // Menghapus "Rp" dan titik, lalu mengonversi ke float
+        $harga = str_replace(['Rp', '.'], '', $harga);
+        return floatval($harga);
+    }
 
 
     public function formulir()

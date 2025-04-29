@@ -31,7 +31,9 @@ class DashboardController extends Controller
                 $query->where('user_id', $user->id);
             })->count();
 
-            return view('dashboard.pemilik', compact('totalKost', 'totalPemesanan'));
+            $totalSaldo = $user->saldo;
+
+            return view('dashboard.pemilik', compact('totalSaldo', 'totalKost', 'totalPemesanan'));
         } elseif ($user->hasRole('pencari_kost')) {
             return view('dashboard.pencari');
         } else {

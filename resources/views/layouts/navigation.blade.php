@@ -25,7 +25,7 @@
 
                     @can('manage verifikasi data')
                     <x-nav-link :href="route('admin.verifikasi.index')" :active="request()->routeIs('admin.verifikasi.index')">
-                        {{ __('Data Kost dan Kontrakan') }}
+                        {{ __('Kelola Data Kost/Kontrakan') }}
                     </x-nav-link>
                     @endcan
 
@@ -50,7 +50,7 @@
 
                     @can('manage hunian lain')
                     <x-nav-link :href="route('admin.hunian_lain.index')" :active="request()->routeIs('admin.hunian_lain.index')">
-                        {{ __('Data Ruko dan Kios') }}
+                        {{ __('Kelola Data Ruko dan Kios') }}
                     </x-nav-link>
                     @endcan
 

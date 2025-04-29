@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('tanggal_booking');
             $table->string('status_konfirmasi')->default('Pending');
             $table->string('kartu_identitas');
+            $table->text('transaksi_id');
             $table->timestamps();
         });
     }

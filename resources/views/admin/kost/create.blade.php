@@ -32,7 +32,6 @@
                             <option value="putri">Kost Putri</option>
                             <option value="campur">Kost Campur</option>
                             <option value="kontrakan">Kontrakan</option>
-
                         </select>
                         <x-input-error :messages="$errors->get('type')" class="mt-2" />
                     </div>
@@ -83,14 +82,14 @@
 
 
                     <div class="mt-4">
-                        <x-input-label for="alamat" :value="__('Alamat')" />
-                        <textarea name="alamat" id="alamat" cols="30" rows="3" class="border border-slate-300 rounded-xl w-full" placeholder="Alamat Lengkap" required>{{ old('alamat') }}</textarea>
+                        <x-input-label for="alamat" :value="__('Alamat Lengkap')" />
+                        <textarea name="alamat" id="alamat" cols="30" rows="3" class="border border-slate-300 rounded-xl w-full" placeholder="Masukkan Alamat Lengkap" required>{{ old('alamat') }}</textarea>
                         <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
                     </div>
 
                     <div class="mt-4">
                         <x-input-label for="harga" :value="__('Harga (per bulan)')" />
-                        <x-text-input id="harga" class="block mt-1 w-full" type="text" name="harga" :value="old('harga')" placeholder="Harga (per bulan)" required autocomplete="off" />
+                        <x-text-input id="harga" class="block mt-1 w-full" type="text" name="harga" :value="old('harga')" placeholder="Masukkan Harga (per bulan)" required autocomplete="off" />
                         <x-input-error :messages="$errors->get('harga')" class="mt-2" />
                     </div>
 

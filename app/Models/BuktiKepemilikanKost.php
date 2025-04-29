@@ -11,7 +11,6 @@ class BuktiKepemilikanKost extends Model
 
     protected $fillable = [
         'kost_id',
-        'shm_hgb',
         'siuk_imb',
         'ktp_pemilik',
     ];

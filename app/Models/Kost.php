@@ -20,7 +20,7 @@ class Kost extends Model
         'facilities',
         'rules',
         'foto',
-        'user_id', // Foreign key untuk pemilik
+        'user_id', // Foreign key
     ];
 
     // Relasi ke User
@@ -46,6 +46,11 @@ class Kost extends Model
     {
         return $this->hasMany(Pembayaran::class);
     }
+    
+    public function riwayat()
+    {
+        return $this->hasMany(Riwayat::class);
+    }
 
     public function buktiKepemilikan()
     {
@@ -55,10 +60,12 @@ class Kost extends Model
     // Fungsi untuk menghitung sisa kamar
     public function sisaKamar()
     {
-        $terisi = $this->pembayarans()->where('status_konfirmasi', 'Pending')->count();
+        $terisi = $this->pembayarans()
+            ->whereIn('status_konfirmasi', ['Pending', 'Disetujui'])
+            ->count();
+
         return $this->jumlah_kamar - $terisi;
     }
-
 
     protected $casts = [
         'facilities' => 'array',

@@ -90,7 +90,7 @@ class KostController extends Controller
             'facilities.*' => 'string|max:255',
             'rules' => 'required|array',
             'rules.*' => 'string|max:255',
-            'foto' => 'required|array',
+            'foto' => 'nullable|array',
             'foto.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'existing_foto' => 'nullable|array',
         ]);

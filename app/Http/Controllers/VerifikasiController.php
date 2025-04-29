@@ -13,7 +13,7 @@ class VerifikasiController extends Controller
     {
         // Ambil data kost beserta status verifikasinya, urutkan dari yang terbaru
         $kosts = Kost::with('verifikasi', 'user')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->get();
 
         return view('admin.verifikasi.index', compact('kosts'));

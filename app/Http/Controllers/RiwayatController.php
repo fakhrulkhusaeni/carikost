@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use App\Models\Riwayat;
 use GuzzleHttp\Client;
@@ -28,7 +29,7 @@ class RiwayatController extends Controller
 
         // Bersihkan dan konversi harga ke integer
         $harga = (int) preg_replace('/[^0-9]/', '', $riwayat->kost->harga);
-        $margin = 2000;
+        $margin = 0;
         $totalHarga = $harga + $margin;
 
         // Buat array data body
@@ -54,6 +55,25 @@ class RiwayatController extends Controller
 
         $midtransToken = json_decode($response->getBody())->token;
 
-        return view('admin.riwayat.show', compact('riwayat', 'midtransToken'));
+        $pembayaran = Pembayaran::where('user_id', auth()->id())
+            ->findOrFail($id);
+        $pembayaran->transaksi_id = $midtransToken;
+        $pembayaran->save();
+
+        return view('admin.riwayat.show', compact('riwayat', 'midtransToken', 'pembayaran'));
+    }
+
+    public function bayar($id)
+    {
+
+        $riwayat = Riwayat::find($id);
+
+        $riwayat->status_pembayaran = "Berhasil";
+        $riwayat->save();
+
+
+        return json_encode([
+            "berhasil" => true
+        ]);
     }
 }

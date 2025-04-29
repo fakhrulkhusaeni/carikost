@@ -85,9 +85,7 @@
 
                                         <!-- Lokasi -->
                                         <div class="col-lg-12 col-md-6 col-12 mb-3">
-                                            <select id="location" name="location" class="form-control" style="border-radius: 5px;" required
-                                                oninvalid="this.setCustomValidity('Silakan pilih lokasi terlebih dahulu!')"
-                                                oninput="this.setCustomValidity('')">
+                                            <select id="location" name="location" class="form-control" style="border-radius: 5px;">
                                                 <option value="" disabled {{ request('location') ? '' : 'selected' }}>Lokasi</option>
                                                 <!-- Kota Tegal -->
                                                 <optgroup label="Kota Tegal">
@@ -120,11 +118,14 @@
 
                                         <!-- Harga -->
                                         <div class="col-lg-12 col-md-6 col-12 mb-3">
-                                            <select id="harga" name="harga" class="form-control" style="border-radius: 5px;">
-                                                <option value="" disabled {{ request('harga') ? '' : 'selected' }}>Harga</option>
-                                                <option value="murah" {{ request('harga') == 'murah' ? 'selected' : '' }}>Harga Termurah</option>
-                                                <option value="mahal" {{ request('harga') == 'mahal' ? 'selected' : '' }}>Harga Termahal</option>
-                                            </select>
+                                            <div class="dropdown">
+                                                <select class="form-control" id="pilihanHarga" style="border-radius: 5px;">
+                                                    <option value="" disabled selected>Harga</option>
+                                                </select>
+                                                <div id="inputHargaContainer" class="mt-2" style="display: none;">
+                                                    <input type="text" id="harga" name="harga" class="form-control" placeholder="Masukkan Harga (contoh: 500000)" value="{{ request('harga') }}" style="border-radius: 5px; margin-top: 5px;">
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <!-- Pilihan Fasilitas -->
@@ -140,7 +141,7 @@
                                                     $allFacilities = [
                                                     "Kamar Mandi Dalam", "Air Panas", "Lemari Baju", "AC",
                                                     "Kursi", "Meja", "TV", "Kasur", "Mesin Cuci", "Dapur Bersama", "Parkir Mobil",
-                                                    "Kloset Duduk", "Kipas Angin", "Wifi", "Parkir Motor", "Mushola", "Dispenser", "Kulkas"
+                                                    "Kloset Duduk", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV", "Dispenser", "Kulkas"
                                                     ];
                                                     $selectedFacilities = $facilities ?? []; // Pastikan array selalu ada
                                                     @endphp
@@ -170,6 +171,55 @@
                         </div>
                     </div>
                 </div>
+
+                @if(request()->has('location') || request()->has('type') || request()->has('harga') || request()->has('facilities'))
+                @if(isset($kosts) && $kosts->count() > 0)
+                <!-- tampilkan kost -->
+                <div class="row mt-5">
+                    @foreach ($kosts as $kost)
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-90 shadow">
+                            <img src="{{ asset('storage/' . json_decode($kost->foto)[0]) }}"
+                                class="img-fluid w-100 rounded-top"
+                                style="height: 200px; object-fit: cover;"
+                                alt="{{ $kost->nama }}">
+                            <div class="card-body text-start">
+                                <h6 class="card-title mb-2" style="color: #007bff;">{{ ucfirst($kost->type) }}</h6>
+                                <p class="card-text mb-3">{{ $kost->nama }}</p>
+                                <ul class="list-unstyled mb-3">
+                                    <li><i class="bi bi-geo-alt me-2"></i> <span class="ms-2">Lokasi: {{ $kost->location }}</span></li>
+                                    <li><i class="bi bi-cash me-2"></i> <span class="ms-2">Harga: Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}/bulan</span></li>
+                                    <li><i class="bi bi-door-closed me-2"></i> <span class="ms-2">Jumlah Kamar: {{ $kost->jumlah_kamar }}</span></li>
+                                </ul>
+
+                                <!-- Tampilkan jumlah skor -->
+                                @isset($kost->bobotScore)
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-info" style="font-size: 1rem;">Skor: {{ number_format($kost->bobotScore, 2) }}</span>
+                                </div>
+                                @endisset
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="{{ route('frontend.detail', $kost->id) }}" class="btn btn-primary">Lihat Detail</a>
+                                    @if ($kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi')
+                                    <span class="verified text-primary" style="font-size: 0.80rem; cursor: pointer;">Terverifikasi</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i> Tidak ada kost atau kontrakan yang direkomendasikan.
+                        </div>
+                    </div>
+                </div>
+                @endif
+                @endif
             </div>
         </div>
     </section>
@@ -266,6 +316,48 @@
             let container = document.getElementById('checkboxContainer');
             container.style.display = container.style.display === 'none' ? 'block' : 'none';
         });
+    </script>
+
+    <script>
+        const pilihanHarga = document.getElementById('pilihanHarga');
+        const inputHargaContainer = document.getElementById('inputHargaContainer');
+
+        pilihanHarga.addEventListener('click', function() {
+            // Toggle visibility of the input field when dropdown is clicked
+            if (inputHargaContainer.style.display === 'none' || inputHargaContainer.style.display === '') {
+                inputHargaContainer.style.display = 'block'; // Show the input field
+            } else {
+                inputHargaContainer.style.display = 'none'; // Hide the input field
+            }
+        });
+    </script>
+
+    <script>
+        const hargaInput = document.getElementById('harga');
+
+        hargaInput.addEventListener('input', function(e) {
+            let angka = e.target.value.replace(/[^0-9]/g, '');
+            if (!angka) {
+                e.target.value = '';
+                return;
+            }
+
+            e.target.value = formatRupiah(angka);
+        });
+
+        function formatRupiah(angka) {
+            let number_string = angka.toString(),
+                sisa = number_string.length % 3,
+                rupiah = number_string.substr(0, sisa),
+                ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+            if (ribuan) {
+                let separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            return 'Rp ' + rupiah;
+        }
     </script>
 
 </body>

@@ -180,7 +180,7 @@
                             const container = document.getElementById('foto-container');
                             const inputHTML = `
                                 <div class="flex items-center gap-2">
-                                    <input type="file" name="foto[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
+                                    <input type="file" name="foto[]" class="w-full border border-slate-300 rounded-lg" accept="image/*">
                                     <button type="button" class="remove-photo bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
                                 </div>`;
                             container.insertAdjacentHTML('beforeend', inputHTML);

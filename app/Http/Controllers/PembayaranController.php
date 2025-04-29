@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kost;
 use App\Models\Riwayat;
 use App\Models\Pembayaran;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
 class PembayaranController extends Controller
@@ -61,6 +62,36 @@ class PembayaranController extends Controller
             return redirect()->back()->with('error', 'Kartu identitas wajib diunggah.');
         }
 
+        $kost = Kost::find($validated['kost_id']);
+
+        // Bersihkan dan konversi harga ke integer
+        $harga = (int) preg_replace('/[^0-9]/', '', $kost->harga);
+        $margin = 0;
+        $totalHarga = $harga + $margin;
+
+        // Buat array data body
+        $body = [
+            'transaction_details' => [
+                'order_id' => (string) time(),
+                'gross_amount' => $totalHarga,
+            ],
+            'credit_card' => [
+                'secure' => true,
+            ],
+        ];
+
+        $client = new Client();
+        $response = $client->request('POST', env("MIDTRANS_ENDPOINT"), [
+            'body' => json_encode($body),
+            'headers' => [
+                'accept' => 'application/json',
+                'authorization' => 'Basic ' . base64_encode(env("MIDTRANS_SERVER_KEY") . ":"),
+                'content-type' => 'application/json',
+            ],
+        ]);
+
+        $midtransToken = json_decode($response->getBody())->token;
+
         // Simpan data pembayaran
         Pembayaran::create([
             'kost_id' => $validated['kost_id'],
@@ -68,6 +99,7 @@ class PembayaranController extends Controller
             'tanggal_booking' => $validated['tanggal_booking'],
             'status_konfirmasi' => 'Pending',
             'kartu_identitas' => $kartuIdentitasPath,
+            'transaksi_id' =>  $midtransToken,
         ]);
 
         // Simpan data riwayat

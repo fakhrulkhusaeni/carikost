@@ -134,11 +134,7 @@
                                 <input type="hidden" name="kost_id" value="{{ $kost->id }}">
 
                                 <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">SHM / HGB</label>
-                                    <input type="file" name="shm_hgb" accept=".pdf,.jpg,.png" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">SIUK / IMB</label>
+                                    <label class="block text-sm font-medium text-gray-700">Surat Izin Usaha Kost/Kontrakan</label>
                                     <input type="file" name="siuk_imb" accept=".pdf,.jpg,.png" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                                 </div>
                                 <div class="mb-4">

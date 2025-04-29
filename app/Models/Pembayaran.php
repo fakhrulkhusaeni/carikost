@@ -15,6 +15,7 @@ class Pembayaran extends Model
         'tanggal_booking',
         'status_konfirmasi',
         'kartu_identitas',
+        'transaksi_id',
     ];
 
     /**

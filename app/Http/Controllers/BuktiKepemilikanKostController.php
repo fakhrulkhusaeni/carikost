@@ -11,7 +11,6 @@ class BuktiKepemilikanKostController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'shm_hgb' => 'required|file|mimes:pdf,jpg,png|max:5120',
             'siuk_imb' => 'required|file|mimes:pdf,jpg,png|max:5120',
             'ktp_pemilik' => 'required|file|mimes:pdf,jpg,png|max:5120',
             'kost_id' => 'required|exists:kosts,id',
@@ -32,10 +31,6 @@ class BuktiKepemilikanKostController extends Controller
         $data = [
             'kost_id' => $request->kost_id,
         ];
-
-        if ($request->hasFile('shm_hgb')) {
-            $data['shm_hgb'] = $request->file('shm_hgb')->store('bukti_kepemilikan_kost', 'public');
-        }
 
         if ($request->hasFile('siuk_imb')) {
             $data['siuk_imb'] = $request->file('siuk_imb')->store('bukti_kepemilikan_kost', 'public');

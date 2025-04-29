@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -22,5 +23,12 @@ class Riwayat extends Model
     public function kost()
     {
         return $this->belongsTo(Kost::class); // Relasi ke tabel Kost
+    }
+
+    protected function token(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value) => Pembayaran::where("kost_id", $this->kost_id)->where("user_id", $this->user_id)->first()->transaksi_id,
+        );
     }
 }

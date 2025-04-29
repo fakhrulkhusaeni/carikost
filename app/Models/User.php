@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -54,4 +55,27 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    protected function saldo(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?int $value) => $this->returnSaldo(),
+        );
+    }
+
+    protected function returnSaldo()
+    {
+        $riwayat = [];
+        $this->kosts->each(function ($kost, int $key) use (&$riwayat) {
+            $kost->riwayat->each(function ($r, int $keyZ) use (&$riwayat) {
+                if ($r->status_pembayaran == "Berhasil") {
+                    $riwayat[] = $r->kost->harga;
+                }
+            });
+        });
+        return collect($riwayat)->map(function (string $value) {
+            return (int) preg_replace('/[^0-9]/', '', $value);
+        })->sum();
+    }
+
 }
