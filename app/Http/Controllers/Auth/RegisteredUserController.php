@@ -70,9 +70,9 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         // Login pengguna yang baru terdaftar
-        Auth::login($user);
+        // Auth::login($user);
 
-        // Redirect ke dashboard
-        return redirect(route('dashboard', absolute: false));
+        // Redirect ke login
+        return redirect(route('login', absolute: false));
     }
 }

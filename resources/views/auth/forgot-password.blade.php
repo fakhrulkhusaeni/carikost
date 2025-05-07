@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="assets/favicon.png" type="">
 
-    <title>Password Reset</title>
+    <title>Reset Password</title>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}" />
@@ -20,7 +20,7 @@
         <div class="website-logo">
             <a class="navbar-brand" href="{{ route('frontend.index') }}">
                 <span>
-                    Tegal Kost
+                    Cari Hunian
                 </span>
             </a>
         </div>
@@ -34,13 +34,13 @@
             <div class="form-holder">
                 <div class="form-content">
                     <div class="form-items">
-                        <h3>Password Reset</h3>
-                        <p>To reset your password, enter the email address you use to sign in.</p>
+                        <h3>Reset Password</h3>
+                        <p>Untuk mereset kata sandi Anda, masukkan alamat email yang Anda gunakan saat mendaftar.</p>
 
                         <!-- Form to Request Password Reset -->
                         <form method="POST" action="{{ route('password.email') }}">
                             @csrf
-                            <input class="form-control" type="email" name="email" placeholder="E-mail Address" value="{{ old('email') }}" required autofocus />
+                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control" type="email" name="email" placeholder="ALamat Email Anda" value="{{ old('email') }}" required autofocus />
 
                             <!-- Error Message Display -->
                             @error('email')
@@ -48,7 +48,7 @@
                             @enderror
 
                             <div class="form-button full-width mt-4">
-                                <button id="submit" type="submit" class="ibtn btn-forget">Send Reset Link</button>
+                                <button id="submit" type="submit" class="btn btn-primary">Kirim</button>
                             </div>
                         </form>
                     </div>

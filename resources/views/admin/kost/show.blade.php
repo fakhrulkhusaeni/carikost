@@ -90,6 +90,56 @@
 
                 <div>
                     <span class="font-semibold">Bukti Kepemilikan:</span>
+
+                    @if ($bukti)
+                    <ul class="mt-2 text-blue-600 list-disc pl-6">
+                        @if ($bukti->siuk_imb)
+                        <li>
+                            <a href="{{ asset('storage/' . $bukti->siuk_imb) }}" target="_blank" class="underline hover:text-blue-800">
+                                Lihat Surat Izin Usaha Kost/Kontrakan
+                            </a>
+                        </li>
+                        @endif
+
+                        @if ($bukti->ktp_pemilik)
+                        <li>
+                            <a href="{{ asset('storage/' . $bukti->ktp_pemilik) }}" target="_blank" class="underline hover:text-blue-800">
+                                Lihat KTP Pemilik
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
+                    @else
+                    <p class="text-gray-600 mt-2">Belum ada bukti kepemilikan diunggah.</p>
+                    @endif
+                </div>
+
+                <div class="mb-4">
+                    <span class="font-semibold block mb-3">Daftar Penghuni:</span>
+                    <div class="flex justify-between items-center">
+                        <!-- Info Penghuni -->
+                        <div class="flex flex-row items-center gap-x-3">
+                            <img src="{{ asset('assets/profile.png') }}" alt="User Avatar" class="rounded-full object-cover w-[70px] h-[70px]">
+                            <div class="flex flex-col">
+                                <h4 class="text-indigo-950 text-l font-bold">
+                                    Nama Pengguna
+                                </h4>
+                                <p class="text-slate-500 text-sm">
+                                    pengguna@email.com
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Tombol Aksi -->
+                        <div class="flex gap-x-2">
+                            <a href="#" class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-md">
+                                Detail
+                            </a>
+                            <a href="#" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-md">
+                                Keluar
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Pemberitahuan Verifikasi -->
@@ -101,7 +151,7 @@
                         Jika tidak melakukan upload bukti kepemilikan maka tempat kost atau kontrakan Anda tidak akan tampil di website.
                     </div>
                 </div>
-                @else
+                @elseif ($sudahUpload && !$sudahTerverifikasi)
                 <div class="p-4 mb-2 text-sm text-green-800 bg-green-200 rounded-lg flex items-center" role="alert">
                     <span class="mr-2">&#9989;</span>
                     <div>
@@ -109,8 +159,14 @@
                         Tempat kost atau Kontrakan Anda akan segera tampil di website.
                     </div>
                 </div>
+                @elseif ($sudahUpload && $sudahTerverifikasi)
+                <div class="p-4 mb-2 text-sm text-blue-800 bg-blue-200 rounded-lg flex items-center" role="alert">
+                    <span class="mr-2">&#10004;</span>
+                    <div>
+                        <strong>Sudah Terverifikasi!</strong> Tempat kost atau kontrakan Anda telah diverifikasi dan sekarang sudah tampil di website.
+                    </div>
+                </div>
                 @endif
-
 
                 <!-- Modal Upload Bukti Kepemilikan -->
                 <div x-data="{ openModal: false }" class="flex justify-end gap-4 mt-6">

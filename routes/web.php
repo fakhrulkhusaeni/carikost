@@ -26,6 +26,7 @@ Route::get('/detail/{id}', [FrontController::class, 'detail'])->name('frontend.d
 Route::post('/rating', [RatingController::class, 'store'])->name('rating.store');
 Route::post('bukti-kepemilikan/store', [BuktiKepemilikanKostController::class, 'store'])->name('bukti-kepemilikan.store');
 
+Route::post('/riwayat/bayar/{transaksi_id}', [RiwayatController::class, "bayar"]);
 
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -73,7 +74,6 @@ Route::prefix(prefix: 'admin')->name('admin.')->group(function () {
         Route::resource('promosi', PromosiController::class);
     });
 });
-Route::post('/riwayat/bayar/{transaksi_id}', [RiwayatController::class, "bayar"]);
 
 
 require __DIR__ . '/auth.php';

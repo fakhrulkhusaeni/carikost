@@ -25,7 +25,7 @@ class FrontController extends Controller
             ->whereHas('verifikasi', function ($query) {
                 $query->where('status_verifikasi', 'terverifikasi'); // Pastikan hanya yang terverifikasi
             });
-            
+
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', '%' . $search . '%')
@@ -61,80 +61,70 @@ class FrontController extends Controller
     {
         $location = $request->input('location');
         $type = $request->input('type');
-        $hargaInput = $request->input('harga'); // Ini harga dari input manual
+        $hargaInput = $this->convertHargaToNumber($request->input('harga'));
         $facilities = $request->input('facilities', []);
 
-        // Mengambil semua data kost
-        $kosts = Kost::all();
+        // Ambil hanya kost yang sudah diverifikasi
+        $kosts = Kost::with('verifikasi')
+            ->whereHas('verifikasi', fn($q) => $q->where('status_verifikasi', 'terverifikasi'))
+            ->get();
 
-        // Bobot untuk masing-masing kriteria
+        // Bobot untuk tiap kriteria
         $weights = [
             'location' => 0.3,
-            'type' => 0.1,
-            'harga' => 0.4,
+            'type' => 0.2,
+            'harga' => 0.3,
             'facilities' => 0.2,
         ];
 
+        // Hitung skor untuk tiap kost
         $kosts = $kosts->map(function ($kost) use ($location, $type, $hargaInput, $facilities, $weights) {
             $score = 0;
 
+            // Kesesuaian lokasi
             if ($location && $kost->location == $location) {
                 $score += $weights['location'] * 100;
             }
 
+            // Kesesuaian tipe
             if ($type && $kost->type == $type) {
                 $score += $weights['type'] * 100;
             }
 
-            if ($hargaInput) {
-                // Mengonversi harga input menjadi float
-                $hargaInput = $this->convertHargaToNumber($hargaInput);
-
-                // Mengonversi harga dari kost menjadi float
+            // Skor harga berdasarkan kedekatan nilai
+            if ($hargaInput > 0) {
                 $kostHarga = $this->convertHargaToNumber($kost->harga);
-
-                // Toleransi dinamis dari harga input
-                $toleransiPersentase = 0.4;
-                $maxSelisih = $hargaInput * $toleransiPersentase;
-
-                $selisih = abs($kostHarga - $hargaInput);
-
-                // Hitung skor harga berdasarkan kedekatan
-                $hargaScore = $maxSelisih > 0 ? max(0, 100 - ($selisih / $maxSelisih * 100)) : 0;
+                $maxDiff = $hargaInput * 0.3; // toleransi 30%
+                $diff = abs($kostHarga - $hargaInput);
+                $hargaScore = $maxDiff > 0 ? max(0, 100 - ($diff / $maxDiff * 100)) : 0;
                 $score += $weights['harga'] * $hargaScore;
             }
 
-            // Menangani fasilitas
+            // Skor fasilitas berdasarkan kemiripan
             $kostFacilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : (array) $kost->facilities;
             if (!empty($facilities) && is_array($kostFacilities)) {
-                $matchingFacilities = collect($facilities)->intersect($kostFacilities)->count();
-                $totalFacilities = count($facilities);
-
-                if ($totalFacilities > 0) {
-                    $facilityScore = ($matchingFacilities / $totalFacilities) * 100;
-                    $score += $weights['facilities'] * $facilityScore;
-                }
+                $matched = collect($facilities)->intersect($kostFacilities)->count();
+                $facilityScore = count($facilities) > 0 ? ($matched / count($facilities)) * 100 : 0;
+                $score += $weights['facilities'] * $facilityScore;
             }
 
-            // Menyimpan skor ke objek kost
-            $kost->bobotScore = $score;
+            $kost->bobotScore = round($score, 2);
             return $kost;
         });
 
-        // Memfilter dan mengurutkan kost berdasarkan skor tertinggi
-        $kosts = $kosts->filter(function ($kost) {
-            return $kost->bobotScore > 0;
-        })->sortByDesc('bobotScore')->values();
+        // Urutkan berdasarkan skor tertinggi
+        $kosts = $kosts->filter(fn($kost) => $kost->bobotScore > 0)
+            ->sortByDesc('bobotScore')
+            ->values();
 
         return view('frontend.rekomendasi', compact('kosts', 'facilities'));
     }
 
-    // Fungsi untuk mengonversi harga menjadi angka (menghapus simbol dan titik)
+    // Mengubah harga string jadi angka
     private function convertHargaToNumber($harga)
     {
-        // Menghapus "Rp" dan titik, lalu mengonversi ke float
-        $harga = str_replace(['Rp', '.'], '', $harga);
-        return floatval($harga);
+        $harga = str_replace(['Rp', '.', ',', ' '], '', $harga);
+        return is_numeric($harga) ? floatval($harga) : 0;
     }
 
 

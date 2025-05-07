@@ -14,6 +14,7 @@ class Pembayaran extends Model
         'user_id',
         'tanggal_booking',
         'status_konfirmasi',
+        'status_pembayaran',
         'kartu_identitas',
         'transaksi_id',
     ];
@@ -32,5 +33,10 @@ class Pembayaran extends Model
     public function kost()
     {
         return $this->belongsTo(Kost::class);
+    }
+
+    public function riwayat()
+    {
+        return $this->hasOne(Riwayat::class, 'transaksi_id', 'transaksi_id');
     }
 }

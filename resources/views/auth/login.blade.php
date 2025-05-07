@@ -55,7 +55,7 @@
                             <div class="form-button mt-4">
                                 <button id="submit" type="submit" class="btn btn-primary">Login</button>
                                 @if (Route::has('password.request'))
-                                <a href="{{ route('password.request') }}">Forget password?</a>
+                                <a href="{{ route('password.request') }}">Lupa Password?</a>
                                 @endif
                             </div>
                         </form>

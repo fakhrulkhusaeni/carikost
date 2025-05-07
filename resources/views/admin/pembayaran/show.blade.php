@@ -51,7 +51,7 @@
 
                     <div class="mb-4">
                         <span class="font-semibold text-gray-700">Status Pembayaran: </span>
-                        <span class="text-gray-600">-</span>
+                        <span class="text-{{ $pembayaran->status_pembayaran == 'Berhasil' ? 'green' : 'yellow' }}-600">{{$pembayaran->status_pembayaran}}</span>
                     </div>
 
                     <div class="mb-4">

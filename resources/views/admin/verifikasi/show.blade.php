@@ -138,8 +138,7 @@
                     <form action="{{ route('admin.verifikasi.verifikasi', $kost->id) }}" method="POST">
                         @csrf
                         <button
-                            type="submit"
-                            class="px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }}"
+                            type="submit" class="px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }}"
                             {{ !$memenuhiSyaratDokumen ? 'disabled' : '' }}>
                             Verifikasi
                         </button>

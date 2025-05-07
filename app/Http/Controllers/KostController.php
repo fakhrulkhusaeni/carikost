@@ -64,11 +64,12 @@ class KostController extends Controller
 
     public function show(Kost $kost)
     {
+        $bukti = BuktiKepemilikanKost::where('kost_id', $kost->id)->first();
 
-        // Cek apakah sudah ada bukti kepemilikan untuk kost ini
-        $sudahUpload = BuktiKepemilikanKost::where('kost_id', $kost->id)->exists();
+        $sudahUpload = !is_null($bukti);
+        $sudahTerverifikasi = $bukti && $bukti->kost->verifikasi->status_verifikasi === 'terverifikasi';
 
-        return view('admin.kost.show', compact('kost', 'sudahUpload'));
+        return view('admin.kost.show', compact('kost', 'sudahUpload', 'sudahTerverifikasi', 'bukti'));
     }
 
     public function edit(Kost $kost)

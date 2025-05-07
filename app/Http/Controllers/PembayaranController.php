@@ -98,6 +98,7 @@ class PembayaranController extends Controller
             'user_id' => auth()->id(),
             'tanggal_booking' => $validated['tanggal_booking'],
             'status_konfirmasi' => 'Pending',
+            'status_pembayaran' => 'Pending',
             'kartu_identitas' => $kartuIdentitasPath,
             'transaksi_id' =>  $midtransToken,
         ]);
@@ -131,7 +132,7 @@ class PembayaranController extends Controller
 
         // Pastikan hanya pemilik kost yang dapat mengonfirmasi
         if ($pembayaran->kost->user_id != auth()->user()->id) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengonfirmasi pembayaran ini.');
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengonfirmasi ini.');
         }
 
         // Update status pembayaran menjadi Disetujui
@@ -151,7 +152,7 @@ class PembayaranController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.pembayaran.index')->with('success', 'Pembayaran telah disetujui.');
+        return redirect()->route('admin.pembayaran.index')->with('success', 'Konfirmasi telah disetujui.');
     }
 
     public function reject($id)
@@ -161,7 +162,7 @@ class PembayaranController extends Controller
 
         // Pastikan hanya pemilik kost yang dapat menolak
         if ($pembayaran->kost->user_id != auth()->user()->id) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menolak pembayaran ini.');
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menolak ini.');
         }
 
         // Update status pembayaran menjadi Ditolak
@@ -181,6 +182,6 @@ class PembayaranController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.pembayaran.index')->with('error', 'Pembayaran telah ditolak.');
+        return redirect()->route('admin.pembayaran.index')->with('error', 'Konfirmasi telah ditolak.');
     }
 }

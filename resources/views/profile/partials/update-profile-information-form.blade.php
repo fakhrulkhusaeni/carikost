@@ -21,7 +21,7 @@
         <div>
             <x-input-label for="avatar" :value="__('Foto Profil')" />
             <div class="flex items-center space-x-4">
-                <img id="avatar-preview" src="{{ $user->avatar ? asset('storage/'.$user->avatar) : asset('assets/icons/upload-avatar.svg') }}"
+                <img id="avatar-preview" src="{{ $user->avatar ? asset('storage/'.$user->avatar) : asset('assets/profile.png') }}"
                     alt="avatar"
                     class="w-16 h-16 rounded-full border border-gray-300">
                 <input id="avatar" name="avatar" type="file" class="mt-1 block w-full" accept="image/*">
@@ -50,22 +50,22 @@
         <!-- Email -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
+            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full bg-gray-200 text-gray-500" :value="old('email', $user->email)" required autocomplete="username" disabled/>
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
             <div>
                 <p class="text-sm mt-2 text-gray-800">
-                    {{ __('Your email address is unverified.') }}
+                    {{ __(' Alamat email Anda belum diverifikasi.') }}
 
                     <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        {{ __('Click here to re-send the verification email.') }}
+                        {{ __(' Klik di sini untuk mengirim ulang email verifikasi.') }}
                     </button>
                 </p>
 
                 @if (session('status') === 'verification-link-sent')
                 <p class="mt-2 font-medium text-sm text-green-600">
-                    {{ __('A new verification link has been sent to your email address.') }}
+                    {{ __('Tautan verifikasi baru telah dikirim ke alamat email Anda.') }}
                 </p>
                 @endif
             </div>

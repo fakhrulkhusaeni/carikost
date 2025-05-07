@@ -79,9 +79,9 @@
       <!-- Cara Pasang Hunian -->
       <div class="heading_container heading_center mb-5">
         <h2 class="mb-2">
-          Cara Pasang <span>Iklan Hunian</span>
+          Cara <span>Pasang Iklan</span> Tempat Usaha
         </h2>
-        <p>Panduan untuk mempublikasikan hunian ruko dan kios Anda untuk Dijual atau Disewakan.</p>
+        <p>Panduan untuk mempublikasikan tempat usaha ruko dan kios Anda untuk Dijual atau Disewakan.</p>
       </div>
       <div class="row">
         <!-- Step 1 -->
@@ -103,7 +103,7 @@
               <img src="assets/cara-pasang-2.svg" alt="Step 2" class="img-fluid mb-3" style="max-height: 100px;">
               <h5 class="card-title">Kirim Informasi</h5>
               <p class="card-text">
-                Kirimkan informasi detail hunian ruko atau kios Anda melalui chat WhatsApp.
+                Kirimkan informasi detail tempat usaha ruko atau kios Anda melalui chat WhatsApp.
               </p>
             </div>
           </div>
@@ -127,7 +127,7 @@
               <img src="assets/cara-pasang-4.svg" alt="Step 4" class="img-fluid mb-3" style="max-height: 100px;">
               <h5 class="card-title">Publikasi Hunian</h5>
               <p class="card-text">
-                Apabila pembayaran sudah dilakukan, hunian ruko atau kios Anda akan dipublikasikan.
+                Apabila pembayaran sudah dilakukan, tempat usaha ruko atau kios Anda akan dipublikasikan.
               </p>
             </div>
           </div>
@@ -140,7 +140,7 @@
           Mohon%20informasikan%20syarat%20dan%20biayanya.%0A
           Terima%20kasih."
           class="btn btn-primary" target="_blank">
-          Pasang Iklan Hunian Anda
+          Pasang Iklan Disini...
         </a>
       </div>
 

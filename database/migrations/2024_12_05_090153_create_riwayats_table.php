@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('tanggal_booking');
             $table->string('kartu_identitas');
             $table->string('status_konfirmasi')->default('pending');
-            $table->string('status_pembayaran')->default('unpaid');
+            $table->string('status_pembayaran')->default('pending');
             $table->timestamps();
         });
     }
