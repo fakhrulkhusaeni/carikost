@@ -190,54 +190,41 @@
 
                             <hr class="my-4">
 
-                            <!-- Bagian Rating Interaktif -->
-                            <!-- <div class="rating-container">
-                                <h4>Beri Penilaian Anda</h4>
-                                <div class="stars">
-                                    <i class="fa fa-star" data-value="1"></i>
-                                    <i class="fa fa-star" data-value="2"></i>
-                                    <i class="fa fa-star" data-value="3"></i>
-                                    <i class="fa fa-star" data-value="4"></i>
-                                    <i class="fa fa-star" data-value="5"></i>
-                                </div>
-                                <p id="rating-value">Nilai: 0</p>
-                                <input type="hidden" name="kost_id" id="kost_id" value="{{ $kost->id }}">
-                                <button id="submit-rating" class="btn btn-primary">Kirim Rating</button>
-                            </div> -->
-
-
                             <!-- Bagian Rating -->
                             <h4 class="mb-3">Rating Masyarakat</h4>
                             <div class="d-flex align-items-center mb-4">
                                 <div class="text-center" style="margin-right: 30px;">
-                                    <h2 style="font-weight: bold;">{{ number_format($weightedRating ?? 0, 1) }}</h2> <!-- Menampilkan rata-rata rating -->
+                                    <h2 style="font-weight: bold;">{{ number_format($averageRating ?? 0, 1) }}</h2> <!-- Rata-rata rating -->
                                     <div class="text-warning">
+                                        @php
+                                        $rating = $averageRating ?? 0;
+                                        @endphp
                                         @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <=floor($weightedRating))
-                                            <i class="fa fa-star"></i> <!-- Bintang penuh -->
-                                            @elseif ($i - 0.5 <= $weightedRating)
-                                                <i class="fa fa-star-half-o"></i> <!-- Setengah bintang -->
-                                                @else
-                                                <i class="fa fa-star-o"></i> <!-- Bintang kosong -->
+                                            @if ($i <=floor($rating)) <!-- Bintang penuh -->
+                                            <i class="fa fa-star"></i>
+                                            @elseif ($i - 0.5 <= $rating) <!-- Setengah bintang -->
+                                                <i class="fa fa-star-half-o"></i>
+                                                @else <!-- Bintang kosong -->
+                                                <i class="fa fa-star-o"></i>
                                                 @endif
                                                 @endfor
                                     </div>
-                                    <small>{{ $totalRatings ?? 0 }} Penilaian</small> <!-- Menampilkan jumlah penilaian -->
+                                    <small>{{ $totalRatings ?? 0 }} Penilaian</small> <!-- Jumlah penilaian -->
                                 </div>
                                 <div style="flex-grow: 1;">
                                     <ul class="list-unstyled mb-0">
-                                        @foreach ([5, 4, 3, 2, 1] as $rating)
+                                        @foreach ([5, 4, 3, 2, 1] as $bintang)
                                         <li class="d-flex align-items-center mb-2">
-                                            <span style="width: 20px; font-weight: bold;">{{ $rating }}</span>
+                                            <span style="width: 20px; font-weight: bold;">{{ $bintang }}</span>
                                             <div class="progress flex-grow-1 mx-2" style="height: 8px;">
                                                 <div class="progress-bar bg-warning" role="progressbar"
-                                                    style="width: {{ $totalRatings > 0 ? (($distribution[$rating] ?? 0) / $totalRatings) * 100 : 0 }}%;"
-                                                    aria-valuenow="{{ $distribution[$rating] ?? 0 }}"
+                                                    style="width: {{ $totalRatings > 0 ? (($distribution[$bintang] ?? 0) / $totalRatings) * 100 : 0 }}%;"
+                                                    aria-valuenow="{{ $distribution[$bintang] ?? 0 }}"
                                                     aria-valuemin="0"
                                                     aria-valuemax="100">
                                                 </div>
                                             </div>
-                                            <span>{{ $distribution[$rating] ?? 0 }}</span>
+                                            <span>{{ $distribution[$bintang] ?? 0 }}</span>
                                         </li>
                                         @endforeach
                                     </ul>
@@ -260,7 +247,7 @@
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-bed text-primary" style="margin-right: 10px;"></i>
                             @if ($kost->sisaKamar() <= 0)
-                                <span class="text-danger fw-bold">Penuh</span>
+                                <span class="text-danger fw-bold">Sisa Kamar: Penuh</span>
                                 @else
                                 <span class="text-danger">Sisa Kamar: {{ $kost->sisaKamar() }}</span>
                                 @endif
@@ -305,16 +292,18 @@
                             <div>
                                 @if(Auth::check() && auth()->user()->hasRole('pencari_kost'))
                                 @if($userHasBooked)
-                                <button class="btn btn-secondary w-100" disabled>Sudah Ajukan Sewa</button>
+                                <button type="button" onclick="showAlreadyBookingAlert()" class="btn btn-success w-100">
+                                    Pesan Sekarang
+                                </button>
                                 @else
-                                <!-- Tombol booking yang memicu modal validasi -->
+                                <!-- Tombol booking modal validasi -->
                                 <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                                    Ajukan Sewa
+                                    Pesan Sekarang
                                 </button>
                                 @endif
                                 @else
                                 <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#accessModal">
-                                    Ajukan Sewa
+                                    Pesan Sekarang
                                 </button>
                                 @endif
                             </div>
@@ -334,14 +323,14 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="accessModalLabel">Akses Diperlukan</h5>
+                                    <h5 class="modal-title" id="accessModalLabel">Peringatan!</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     @if(Auth::check())
                                     <!-- Jika pengguna sudah login, tetapi tidak memiliki peran pencari_kost -->
                                     @if(!auth()->user()->hasRole('pencari_kost'))
-                                    <p>Anda harus menjadi <strong>pencari kost</strong> untuk mengajukan sewa kost/kontrakan.</p>
+                                    <p>Anda harus menjadi <strong>pencari kost</strong> untuk mengajukan sewa.</p>
                                     @else
                                     <!-- Jika pengguna sudah login dan memiliki peran pencari_kost -->
                                     <p>Anda sudah mengajukan sewa kost/kontrakan.</p>
@@ -494,69 +483,15 @@
         });
     </script>
 
-    <!-- <script>
-        const stars = document.querySelectorAll('.stars i');
-        const ratingValue = document.getElementById('rating-value');
-        const submitButton = document.getElementById('submit-rating');
-        const kostId = document.getElementById('kost_id').value;
-        let userRating = 0;
-
-        // Event listener untuk setiap bintang
-        stars.forEach(star => {
-            star.addEventListener('click', function() {
-                userRating = this.getAttribute('data-value');
-                updateStars(userRating);
-                ratingValue.textContent = `Nilai: ${userRating}`;
-            });
-        });
-
-        // Fungsi untuk memperbarui tampilan bintang
-        function updateStars(rating) {
-            stars.forEach(star => {
-                if (star.getAttribute('data-value') <= rating) {
-                    star.classList.add('active');
-                } else {
-                    star.classList.remove('active');
-                }
+    <script>
+        function showAlreadyBookingAlert() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Sudah Mengajukan Sewa',
+                text: 'Anda sudah mengajukan sewa untuk hunian ini sebelumnya.'
             });
         }
-
-        // Event listener untuk tombol submit
-        submitButton.addEventListener('click', function() {
-            if (userRating > 0 && kostId) {
-                fetch('{{ route("rating.store") }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            rating: userRating,
-                            kost_id: kostId
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.message) {
-                            alert(data.message);
-                            if (data.message === 'Anda sudah memberikan rating untuk kost ini.') {
-                                submitButton.disabled = true;
-                                stars.forEach(star => star.classList.add('disabled'));
-                            }
-                            setTimeout(() => {
-                                location.reload(); // Refresh halaman setelah rating dikirim
-                            }, 1000); // Delay 1 detik sebelum refresh agar pesan bisa terbaca
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Terjadi kesalahan:', error);
-                        alert('Gagal mengirim rating, coba lagi nanti.');
-                    });
-            } else {
-                alert('Silakan pilih rating terlebih dahulu');
-            }
-        });
-    </script> -->
+    </script>
 
 </body>
 

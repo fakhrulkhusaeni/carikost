@@ -113,13 +113,13 @@ class PembayaranController extends Controller
             'kartu_identitas' => $kartuIdentitasPath,
         ]);
 
-        return redirect()->back()->with('success', 'Booking berhasil diajukan!');
+        return redirect()->back()->with('success', 'Berhasil Mengajukan Sewa!');
     }
 
 
     public function show($id)
     {
-        $pembayaran = Pembayaran::with('kost', 'user') // Memuat relasi dengan kost dan user
+        $pembayaran = Pembayaran::with('kost', 'user')
             ->findOrFail($id);
 
         return view('admin.pembayaran.show', compact('pembayaran'));

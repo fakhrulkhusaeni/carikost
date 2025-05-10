@@ -154,22 +154,25 @@
                                     <li><i class="bi bi-door-closed me-2"></i> <span class="ms-2">Jumlah Kamar: {{ $kost->jumlah_kamar }}</span></li>
                                 </ul>
 
-                                <!-- Tampilkan rating -->
+                                <!-- Tampilkan rating biasa -->
                                 <div class="d-flex align-items-center mb-3">
                                     <span class="me-2" style="color: #ffc107;">
+                                        @php
+                                        $rating = $kost->ratings_avg_rating ?? 0;
+                                        @endphp
+
                                         @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <=floor($kost->weightedRating))
+                                            @if ($i <=floor($rating))
                                             <i class="bi bi-star-fill"></i> <!-- Bintang penuh -->
-                                            @elseif ($i - $kost->weightedRating < 1 && $i - $kost->weightedRating > 0)
+                                            @elseif ($i - $rating < 1 && $i - $rating> 0)
                                                 <i class="bi bi-star-half"></i> <!-- Bintang setengah -->
                                                 @else
                                                 <i class="bi bi-star"></i> <!-- Bintang kosong -->
                                                 @endif
                                                 @endfor
                                     </span>
-                                    <small>({{ number_format($kost->weightedRating, 1) }})</small>
+                                    <small>({{ number_format($rating, 1) }})</small>
                                 </div>
-
 
                                 <div class="d-flex justify-content-between align-items-center">
                                     <a href="{{ route('frontend.detail', $kost->id) }}" class="btn btn-primary">Lihat Detail</a>

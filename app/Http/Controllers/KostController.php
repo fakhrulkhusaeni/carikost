@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BuktiKepemilikanKost;
 use Illuminate\Http\Request;
 use App\Models\Kost;
+use App\Models\Pembayaran;
 use Illuminate\Support\Facades\Storage;
 
 class KostController extends Controller
@@ -69,7 +70,13 @@ class KostController extends Controller
         $sudahUpload = !is_null($bukti);
         $sudahTerverifikasi = $bukti && $bukti->kost->verifikasi->status_verifikasi === 'terverifikasi';
 
-        return view('admin.kost.show', compact('kost', 'sudahUpload', 'sudahTerverifikasi', 'bukti'));
+        // Ambil pengguna dari pembayaran yang disetujui
+        $penghuni = Pembayaran::where('kost_id', $kost->id)
+            ->where('status_konfirmasi', 'Disetujui')
+            ->with('user')
+            ->get();
+
+        return view('admin.kost.show', compact('kost', 'sudahUpload', 'sudahTerverifikasi', 'bukti', 'penghuni'));
     }
 
     public function edit(Kost $kost)

@@ -50,7 +50,7 @@
         <!-- Email -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full bg-gray-200 text-gray-500" :value="old('email', $user->email)" required autocomplete="username" disabled/>
+            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full bg-gray-200 text-gray-500" :value="old('email', $user->email)" autocomplete="username" readonly/>
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
@@ -75,7 +75,7 @@
         <!-- Phone -->
         <div>
             <x-input-label for="phone" :value="__('Nomor Telepon')" />
-            <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" required autocomplete="tel" />
+            <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" required autocomplete="phone" />
             <x-input-error class="mt-2" :messages="$errors->get('phone')" />
         </div>
 

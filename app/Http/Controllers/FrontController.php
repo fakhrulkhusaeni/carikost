@@ -19,13 +19,13 @@ class FrontController extends Controller
     {
         $search = $request->input('search');
 
-        // Membuat query untuk kost dan memeriksa status verifikasi
-        $query = Kost::withCount('ratings')
-            ->withAvg('ratings', 'rating')
+        // Query semua kost terverifikasi, lengkap dengan rata-rata rating
+        $query = Kost::withAvg('ratings', 'rating')
             ->whereHas('verifikasi', function ($query) {
-                $query->where('status_verifikasi', 'terverifikasi'); // Pastikan hanya yang terverifikasi
+                $query->where('status_verifikasi', 'terverifikasi');
             });
 
+        // Filter pencarian jika ada
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', '%' . $search . '%')
@@ -34,28 +34,12 @@ class FrontController extends Controller
             });
         }
 
-        // Ambil semua data kost, baik yang punya rating maupun tidak
-        $allKosts = $query->get();
-
-        // Hitung rata-rata global rating hanya dari yang punya rating
-        $C = $allKosts->where('ratings_count', '>', 0)->avg('ratings_avg_rating') ?? 0;
-        $m = 5;
-
-        $kosts = $allKosts->map(function ($kost) use ($C, $m) {
-            $v = $kost->ratings_count;
-            $R = $kost->ratings_avg_rating ?? 0;
-
-            $weightedRating = ($v > 0) ? (($v / ($v + $m)) * $R + ($m / ($v + $m)) * $C) : 0;
-            $kost->weightedRating = $weightedRating;
-
-            return $kost;
-        });
-
-        $kosts = $kosts->sortByDesc('weightedRating')->values();
+        // Ambil data dan urutkan berdasarkan rata-rata rating biasa
+        $kosts = $query->orderByDesc('ratings_avg_rating')->get();
 
         return view('frontend.index', compact('kosts', 'search'));
     }
-
+    
 
     public function rekomendasi(Request $request)
     {
@@ -196,16 +180,6 @@ class FrontController extends Controller
             $distribution = ['5' => 0, '4' => 0, '3' => 0, '2' => 0, '1' => 0];
         }
 
-        // Ambil rata-rata rating global (C) dari semua kost yang memiliki rating
-        $ratedKosts = Kost::whereHas('ratings')->withAvg('ratings', 'rating')->get();
-        $C = $ratedKosts->avg('ratings_avg_rating') ?? 0;
-        $m = 5;
-        $v = $totalRatings;
-        $R = $averageRating;
-
-        // Hitung Weighted Rating dengan formula IMDB
-        $weightedRating = ($v > 0) ? (($v / ($v + $m)) * $R + ($m / ($v + $m)) * $C) : 0;
-
-        return view('frontend.detail', compact('kost', 'userHasBooked', 'averageRating', 'totalRatings', 'distribution', 'weightedRating'));
+        return view('frontend.detail', compact('kost', 'userHasBooked', 'averageRating', 'totalRatings', 'distribution'));
     }
 }

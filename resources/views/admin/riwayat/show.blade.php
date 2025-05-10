@@ -149,14 +149,19 @@
                    </div>
 
                    <!-- Payment Button -->
-                   @if ($riwayat->status_pembayaran != 'Berhasil')
                    <div class="flex justify-end mt-6">
+                       @if ($riwayat->status_pembayaran != 'Berhasil')
                        <button type="button" id="btn-bayar" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2">
                            <i class="fas fa-wallet"></i>
                            Bayar Sekarang
                        </button>
+                       @else
+                       <button type="button" onclick="showAlreadyBayarAlert()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2">
+                           <i class="fas fa-check-circle"></i>
+                           Sudah Dibayar
+                       </button>
+                       @endif
                    </div>
-                   @endif
 
                </div>
            </div>
@@ -266,6 +271,15 @@
            const pembayaran = JSON.parse(`<?= json_encode($pembayaran) ?>`);
        </script>
 
+       <script>
+           function showAlreadyBayarAlert() {
+               Swal.fire({
+                   icon: 'info',
+                   title: 'Sudah Dibayar',
+                   text: 'Anda sudah melakukan pembayaran.'
+               });
+           }
+       </script>
 
        <script type="text/javascript" src="{{ asset('js/pay.js') }}"></script>
 

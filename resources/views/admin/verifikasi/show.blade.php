@@ -144,7 +144,9 @@
                         </button>
                     </form>
                     @else
-                    <span class="text-green-600 font-semibold">Sudah Diverifikasi</span>
+                    <button type="button" onclick="showAlreadyVerifiedAlert()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
+                        Sudah Diverifikasi
+                    </button>
                     @endif
 
 
@@ -174,7 +176,8 @@
 
     <!-- SweetAlert2 Script -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.delete-form').forEach(form => {
                 form.addEventListener('submit', function(e) {
@@ -199,6 +202,16 @@
                 });
             });
         });
+    </script> -->
+
+    <script>
+        function showAlreadyVerifiedAlert() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Sudah Diverifikasi',
+                text: 'Tempat kost atau kontrakan ini telah diverifikasi sebelumnya.'
+            });
+        }
     </script>
 
 

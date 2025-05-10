@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifikasiVerifikasiKost;
 use App\Models\Kost;
+use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Http\Request;
 
@@ -39,14 +41,17 @@ class VerifikasiController extends Controller
 
     public function verifikasi($id)
     {
-        $kost = Kost::with('verifikasi')->findOrFail($id);
+        $kost = Kost::with('verifikasi', 'user')->findOrFail($id);
 
         if ($kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi') {
             return redirect()->route('admin.verifikasi.index')->with('error', 'Kost sudah diverifikasi sebelumnya.');
         }
 
-        // Perbarui status verifikasi
+        // Update status verifikasi
         $kost->verifikasi->update(['status_verifikasi' => 'terverifikasi']);
+
+        // Kirim email ke user pemilik kost
+        Mail::to($kost->user->email)->send(new NotifikasiVerifikasiKost($kost, $kost->user));
 
         return redirect()->route('admin.verifikasi.index')->with('success', 'Kost berhasil diverifikasi.');
     }

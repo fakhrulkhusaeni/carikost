@@ -116,16 +116,17 @@
 
                 <div class="mb-4">
                     <span class="font-semibold block mb-3">Daftar Penghuni:</span>
-                    <div class="flex justify-between items-center">
-                        <!-- Info Penghuni -->
+
+                    @forelse ($penghuni as $item)
+                    <div class="flex justify-between items-center mb-3">
                         <div class="flex flex-row items-center gap-x-3">
-                            <img src="{{ asset('assets/profile.png') }}" alt="User Avatar" class="rounded-full object-cover w-[70px] h-[70px]">
+                            <img src="{{ asset('storage/' . $item->user->avatar) }}" alt="User Avatar" class="rounded-full object-cover w-[70px] h-[70px]">
                             <div class="flex flex-col">
                                 <h4 class="text-indigo-950 text-l font-bold">
-                                    Nama Pengguna
+                                    {{ $item->user->name }}
                                 </h4>
                                 <p class="text-slate-500 text-sm">
-                                    pengguna@email.com
+                                    {{ $item->user->phone }}
                                 </p>
                             </div>
                         </div>
@@ -140,7 +141,11 @@
                             </a>
                         </div>
                     </div>
+                    @empty
+                    <p class="text-gray-500">Belum ada daftar penghuni.</p>
+                    @endforelse
                 </div>
+
 
                 <!-- Pemberitahuan Verifikasi -->
                 @if (!$sudahUpload)
@@ -177,7 +182,7 @@
                     </button>
                     @else
                     <button type="button" onclick="showAlreadyUploadedAlert()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                        Upload Bukti Kepemilikan
+                        Sudah Upload Bukti Kepemilikan
                     </button>
                     @endif
 
