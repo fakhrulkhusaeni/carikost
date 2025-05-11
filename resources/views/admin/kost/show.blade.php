@@ -115,7 +115,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <span class="font-semibold block mb-3">Daftar Penghuni:</span>
+                    <span class="font-semibold block mb-3">Daftar Penghuni ({{ $penghuni->count() }}):</span>
 
                     @forelse ($penghuni as $item)
                     <div class="flex justify-between items-center mb-3">

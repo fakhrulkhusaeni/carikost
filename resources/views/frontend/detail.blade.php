@@ -400,7 +400,7 @@
                 <!-- Info Detail -->
                 <div class="col-md-6 col-lg-3 mx-auto info_col">
                     <div class="info_detail">
-                        <h4>Info</h4>
+                        <h4>Tentang Kami</h4>
                         <p>
                             Aplikasi ini membantu Anda menemukan kost terbaik yang sesuai dengan kebutuhan. Jelajahi berbagai pilihan kost dengan mudah dan cepat.
                         </p>
@@ -422,7 +422,7 @@
                                 <i class="fa fa-instagram" aria-hidden="true"></i>
                                 <span>Instagram</span>
                             </a>
-                            <a href="https://wa.me/nomor_telepon_anda" target="_blank">
+                            <a href="https://wa.me/62895704307742" target="_blank">
                                 <i class="fa fa-whatsapp" aria-hidden="true"></i>
                                 <span>WhatsApp</span>
                             </a>
