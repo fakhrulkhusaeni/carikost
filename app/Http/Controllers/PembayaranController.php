@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifikasiBookingMasuk;
+use App\Mail\NotifikasiDisetujui;
 use App\Models\Kost;
 use App\Models\Riwayat;
 use App\Models\Pembayaran;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PembayaranController extends Controller
 {
@@ -52,14 +55,14 @@ class PembayaranController extends Controller
             ->exists();
 
         if ($existingBooking) {
-            return redirect()->back()->with('error', 'Anda sudah pernah booking kost ini.');
+            return redirect()->back()->with('error', 'Anda sudah pernah booking tempat ini.');
         }
 
         // Simpan file kartu identitas
         if ($request->hasFile('kartu_identitas')) {
             $kartuIdentitasPath = $request->file('kartu_identitas')->store('kartu_identitas', 'public');
         } else {
-            return redirect()->back()->with('error', 'Kartu identitas wajib diunggah.');
+            return redirect()->back()->with('error', 'Bukti identitas wajib diunggah.');
         }
 
         $kost = Kost::find($validated['kost_id']);
@@ -113,6 +116,13 @@ class PembayaranController extends Controller
             'kartu_identitas' => $kartuIdentitasPath,
         ]);
 
+        // Ambil data kost beserta pemiliknya
+        $kostWithOwner = Kost::with('user')->find($validated['kost_id']);
+        $user = auth()->user();
+
+        // Kirim notifikasi email ke pemilik kost
+        Mail::to($kostWithOwner->user->email)->send(new NotifikasiBookingMasuk($kostWithOwner, $user));
+
         return redirect()->back()->with('success', 'Berhasil Mengajukan Sewa!');
     }
 
@@ -135,7 +145,7 @@ class PembayaranController extends Controller
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengonfirmasi ini.');
         }
 
-        // Update status pembayaran menjadi Disetujui
+        // Update status konfirmasi menjadi Disetujui
         $pembayaran->update([
             'status_konfirmasi' => 'Disetujui',
         ]);
@@ -151,6 +161,10 @@ class PembayaranController extends Controller
                 'status_konfirmasi' => 'Disetujui',
             ]);
         }
+
+        // Kirim notifikasi email ke user
+        $user = $pembayaran->user;
+        Mail::to($user->email)->send(new NotifikasiDisetujui($pembayaran, $user));
 
         return redirect()->route('admin.pembayaran.index')->with('success', 'Konfirmasi telah disetujui.');
     }
