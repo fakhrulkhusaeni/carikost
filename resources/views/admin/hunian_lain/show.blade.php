@@ -93,8 +93,24 @@
 
                 <div>
                     <span class="font-semibold">Bukti Kepemilikan:</span>
-                </div>
 
+                    @if ($hunianLain->bukti_kepemilikan && is_array(json_decode($hunianLain->bukti_kepemilikan)))
+                    <ul class="list-disc list-inside mt-2 text-blue-600">
+                        @foreach (json_decode($hunianLain->bukti_kepemilikan) as $index => $file)
+                        @php
+                        $fileUrl = asset('storage/' . $file);
+                        @endphp
+                        <li>
+                            <a href="{{ $fileUrl }}" target="_blank" class="hover:underline">
+                                Bukti Kepemilikan {{ $index + 1 }}
+                            </a>
+                        </li>
+                        @endforeach
+                    </ul>
+                    @else
+                    <p class="text-gray-500 mt-2">Belum ada bukti kepemilikan.</p>
+                    @endif
+                </div>
 
             </div>
         </div>

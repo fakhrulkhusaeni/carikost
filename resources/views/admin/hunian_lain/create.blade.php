@@ -269,29 +269,45 @@
 
                     document.getElementById('add-bukti').addEventListener('click', function() {
                         const buktiContainer = document.getElementById('bukti-container');
-                        const currentFotos = buktiContainer.querySelectorAll('input[type="file"]').length;
+                        const currentBukti = buktiContainer.querySelectorAll('input[type="file"]').length;
 
-                        const buktiDiv = document.createElement('div');
-                        buktiDiv.className = 'flex items-center gap-x-2 mt-2';
+                        // Batasi hingga 5 file bukti kepemilikan
+                        if (currentBukti < 5) {
+                            // Membuat div baru untuk file dan tombol hapus
+                            const buktiDiv = document.createElement('div');
+                            buktiDiv.className = 'flex items-center gap-x-2 mt-2';
 
-                        const input = document.createElement('input');
-                        input.type = 'file';
-                        input.name = 'bukti_kepemilikan[]';
-                        input.className = 'block w-full p-2 border border-gray-300 rounded';
-                        input.accept = 'image/*';
+                            // Input file
+                            const input = document.createElement('input');
+                            input.type = 'file';
+                            input.name = 'bukti_kepemilikan[]';
+                            input.className = 'block w-full p-2 border border-gray-300 rounded';
+                            input.accept = 'image/*,application/pdf';
 
-                        const deleteButton = document.createElement('button');
-                        deleteButton.type = 'button';
-                        deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
-                        deleteButton.textContent = 'Hapus';
+                            // Tombol hapus
+                            const deleteButton = document.createElement('button');
+                            deleteButton.type = 'button';
+                            deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
+                            deleteButton.textContent = 'Hapus';
 
-                        deleteButton.addEventListener('click', function() {
-                            buktiDiv.remove();
-                        });
+                            // Event hapus input
+                            deleteButton.addEventListener('click', function() {
+                                buktiDiv.remove();
+                            });
 
-                        buktiDiv.appendChild(input);
-                        buktiDiv.appendChild(deleteButton);
-                        buktiContainer.appendChild(buktiDiv);
+                            // Masukkan ke DOM
+                            buktiDiv.appendChild(input);
+                            buktiDiv.appendChild(deleteButton);
+                            buktiContainer.appendChild(buktiDiv);
+                        } else {
+                            // Jika lebih dari 5, tampilkan alert
+                            Swal.fire({
+                                title: 'Maksimal 5 File!',
+                                text: 'Anda sudah mencapai batas maksimum file bukti kepemilikan.',
+                                icon: 'warning',
+                                confirmButtonText: 'OK'
+                            });
+                        }
                     });
                 </script>
 

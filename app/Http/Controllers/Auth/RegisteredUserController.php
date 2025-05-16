@@ -32,12 +32,15 @@ class RegisteredUserController extends Controller
         // Validasi input, termasuk avatar, phone, dan account_type, gender
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg'], // Validasi avatar
-            'phone' => ['required', 'string', 'max:15', 'unique:'.User::class], // Validasi nomor telepon
+            'phone' => ['required', 'string', 'max:15', 'unique:' . User::class], // Validasi nomor telepon
             'account_type' => ['required'],
             'gender' => ['nullable', 'string', 'in:laki-laki,perempuan'],
+        ], [
+            'email.unique' => 'Email sudah digunakan.',
+            'phone.unique' => 'Nomor telepon sudah digunakan.',
         ]);
 
         // Proses penyimpanan avatar jika ada
@@ -56,13 +59,11 @@ class RegisteredUserController extends Controller
             'gender' => $request->gender, // Menyimpan jenis kelamin
         ]);
 
-        if($request->account_type== 'pemilik_kost') {
+        if ($request->account_type == 'pemilik_kost') {
             $user->assignRole('pemilik_kost');
-        }
-        elseif($request->account_type== 'pencari_kost') {
+        } elseif ($request->account_type == 'pencari_kost') {
             $user->assignRole('pencari_kost');
-        }
-        else {
+        } else {
             $user->assignRole('pencari_kost');
         }
 

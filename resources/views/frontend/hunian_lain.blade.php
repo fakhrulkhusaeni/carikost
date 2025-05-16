@@ -121,13 +121,6 @@
                   <li><i class="bi bi-geo-alt me-2"></i> <span class="ms-2">Lokasi: {{ ucfirst($hunianLain->location) }}</span></li>
                   <li><i class="bi bi-cash me-2"></i> <span class="ms-2">Harga: Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $hunianLain->harga), 0, ',', '.') }}</span></li>
                 </ul>
-                <!-- Tanggal Posting -->
-                <div class="d-flex align-items-center mb-3">
-                  <i class="bi bi-clock text-secondary" style="margin-right: 5px;"></i>
-                  <span class="text-muted ms-2" style="font-size: 0.8rem;">
-                    {{ $hunianLain->created_at->locale('id')->diffForHumans() }}
-                  </span>
-                </div>
                 <div class="d-flex justify-content-between align-items-center">
                   <a href="{{ route('frontend.detail_hunianlain', $hunianLain->id) }}" class="btn btn-primary">Lihat Detail</a>
                   <span class="verified text-primary" style="font-size: 0.80rem; cursor: pointer;">{{ ucfirst($hunianLain->status_verifikasi) }}</span>

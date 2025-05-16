@@ -178,12 +178,28 @@
                         // Tambah foto
                         document.getElementById('add-foto').addEventListener('click', () => {
                             const container = document.getElementById('foto-container');
-                            const inputHTML = `
-                                <div class="flex items-center gap-2">
-                                    <input type="file" name="foto[]" class="w-full border border-slate-300 rounded-lg" accept="image/*">
-                                    <button type="button" class="remove-photo bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
-                                </div>`;
-                            container.insertAdjacentHTML('beforeend', inputHTML);
+
+                            // Hitung jumlah foto yang sudah ada (img) dan input file baru
+                            const existingPhotos = container.querySelectorAll('img').length;
+                            const addedInputs = container.querySelectorAll('input[type="file"]').length;
+
+                            const totalPhotos = existingPhotos + addedInputs;
+
+                            if (totalPhotos < 10) {
+                                const inputHTML = `
+                                    <div class="flex items-center gap-2">
+                                        <input type="file" name="foto[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
+                                        <button type="button" class="remove-photo bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                                    </div>`;
+                                container.insertAdjacentHTML('beforeend', inputHTML);
+                            } else {
+                                Swal.fire({
+                                    title: 'Maksimal 10 Foto Hunian!',
+                                    text: 'Anda sudah mencapai batas maksimum foto yang dapat diunggah.',
+                                    icon: 'warning',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
                         });
 
                         // Hapus elemen (fasilitas, peraturan, atau foto)

@@ -42,8 +42,8 @@ class HunianLainController extends Controller
             'detail_hunian.*' => 'string|max:255',
             'foto' => 'required|array',
             'foto.*' => 'image|mimes:jpeg,png,jpg|max:2048',
-            'bukti_kepemilikan' => 'required|array', // <- array
-            'bukti_kepemilikan.*' => 'file|mimes:jpeg,png,jpg,pdf|max:2048', // <- tiap file validasi
+            'bukti_kepemilikan' => 'required|array',
+            'bukti_kepemilikan.*' => 'file|mimes:jpeg,png,jpg,pdf|max:2048',
         ]);
 
         // Menyimpan data hunian

@@ -34,6 +34,18 @@
             <div class="form-holder">
                 <div class="form-content">
                     <div class="form-items">
+
+                        @if ($errors->any())
+                        <div class="alert alert-danger mt-2">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+
+
                         <h3>Login</h3>
                         <p>
                             Temukan tempat kost dan kontrakan dengan mudah dan cepat.
@@ -59,8 +71,6 @@
                                 @endif
                             </div>
                         </form>
-
-
                     </div>
                 </div>
             </div>

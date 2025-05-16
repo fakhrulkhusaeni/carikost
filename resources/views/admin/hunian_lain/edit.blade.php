@@ -41,7 +41,7 @@
                     <!-- Harga -->
                     <div class="mt-4">
                         <x-input-label for="harga" :value="__('Harga (Dijual/Disewakan)')" />
-                        <x-text-input id="harga" class="block mt-1 w-full" type="text" name="harga" :value="old('harga', $hunianLain->harga)" required autocomplete="harga"/>
+                        <x-text-input id="harga" class="block mt-1 w-full" type="text" name="harga" :value="old('harga', $hunianLain->harga)" required autocomplete="harga" />
                         <x-input-error :messages="$errors->get('harga')" class="mt-2" />
                     </div>
 
@@ -242,32 +242,65 @@
                         // Tambah foto hunian
                         document.getElementById('add-foto').addEventListener('click', () => {
                             const container = document.getElementById('foto-container');
-                            const inputHTML = `
-                                <div class="flex items-center gap-2">
-                                    <input type="file" name="foto[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
-                                    <button type="button" class="remove-photo bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
-                                </div>`;
-                            container.insertAdjacentHTML('beforeend', inputHTML);
+
+                            // Hitung jumlah foto yang sudah ada (img) dan input file baru
+                            const existingPhotos = container.querySelectorAll('img').length;
+                            const addedInputs = container.querySelectorAll('input[type="file"]').length;
+
+                            const totalPhotos = existingPhotos + addedInputs;
+
+                            if (totalPhotos < 10) {
+                                const inputHTML = `
+                                    <div class="flex items-center gap-2">
+                                        <input type="file" name="foto[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
+                                        <button type="button" class="remove-photo bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                                    </div>`;
+                                container.insertAdjacentHTML('beforeend', inputHTML);
+                            } else {
+                                Swal.fire({
+                                    title: 'Maksimal 10 Foto Hunian!',
+                                    text: 'Anda sudah mencapai batas maksimum foto yang dapat diunggah.',
+                                    icon: 'warning',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
                         });
 
-                        // Delegasi event untuk tombol hapus
+                        // Hapus foto
                         document.addEventListener('click', (event) => {
                             if (event.target.classList.contains('remove-photo')) {
                                 event.target.closest('div').remove();
                             }
                         });
 
+                        // Tambah foto bukti
                         document.getElementById('add-bukti').addEventListener('click', () => {
                             const container = document.getElementById('bukti-container');
-                            const inputHTML = `
-                                <div class="flex items-center gap-2">
-                                    <input type="file" name="bukti_kepemilikan[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
-                                    <button type="button" class="remove-bukti bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
-                                </div>`;
-                            container.insertAdjacentHTML('beforeend', inputHTML);
+
+                            // Hitung jumlah bukti yang sudah ada (img) dan input file baru
+                            const existingBukti = container.querySelectorAll('img').length;
+                            const addedInputs = container.querySelectorAll('input[type="file"]').length;
+
+                            const totalBukti = existingBukti + addedInputs;
+
+                            if (totalBukti < 5) {
+                                const inputHTML = `
+                                    <div class="flex items-center gap-2">
+                                        <input type="file" name="bukti_kepemilikan[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
+                                        <button type="button" class="remove-bukti bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                                    </div>`;
+                                container.insertAdjacentHTML('beforeend', inputHTML);
+                            } else {
+                                Swal.fire({
+                                    title: 'Maksimal 5 Bukti Kepemilikan!',
+                                    text: 'Anda sudah mencapai batas maksimum bukti kepemilikan yang dapat diunggah.',
+                                    icon: 'warning',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
                         });
 
-                        // Delegasi event untuk tombol hapus
+                        // Hapus foto bukti
                         document.addEventListener('click', (event) => {
                             if (event.target.classList.contains('remove-bukti')) {
                                 event.target.closest('div').remove();

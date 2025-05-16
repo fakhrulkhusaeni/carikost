@@ -35,7 +35,7 @@ class FrontController extends Controller
         }
 
         // Ambil data dan urutkan berdasarkan rata-rata rating biasa
-        $kosts = $query->orderByDesc('ratings_avg_rating')->get();
+        $kosts = $query->orderByDesc('ratings_avg_rating')->paginate(9);
 
         return view('frontend.index', compact('kosts', 'search'));
     }

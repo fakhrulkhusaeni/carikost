@@ -85,7 +85,9 @@
 
                                         <!-- Lokasi -->
                                         <div class="col-lg-12 col-md-6 col-12 mb-3">
-                                            <select id="location" name="location" class="form-control" style="border-radius: 5px;">
+                                            <select id="location" name="location" class="form-control" style="border-radius: 5px;" required
+                                                oninvalid="this.setCustomValidity('Silakan Pilih Lokasi')"
+                                                oninput="this.setCustomValidity('')">
                                                 <option value="" disabled {{ request('location') ? '' : 'selected' }}>Lokasi</option>
                                                 <!-- Kota Tegal -->
                                                 <optgroup label="Kota Tegal">
@@ -141,7 +143,8 @@
                                                     $allFacilities = [
                                                     "Kamar Mandi Dalam", "Air Panas", "Lemari Baju", "AC",
                                                     "Kursi", "Meja", "TV", "Kasur", "Mesin Cuci", "Dapur Bersama", "Parkir Mobil",
-                                                    "Kloset Duduk", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV", "Dispenser", "Kulkas"
+                                                    "Kloset Duduk", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV", "Dispenser", "Kulkas", "Teras",
+                                                    "Ruang Tamu", "Ruang Makan", "Tempat Jemur", "Kamar Mandi Luar", "Mushola"
                                                     ];
                                                     $selectedFacilities = $facilities ?? []; // Pastikan array selalu ada
                                                     @endphp
@@ -162,7 +165,7 @@
                                         <!-- Tombol -->
                                         <div class="col-lg-12 col-md-6 col-12 text-center">
                                             <button type="submit" class="btn w-100" style="background-color: #007bff; border-radius: 10px;">
-                                                <i class="bi bi-magic text-white"></i> <span class="text-white">Buat Rekomendasi</span>
+                                                <i class="bi bi-magic text-white"></i> <span class="text-white">Cari Rekomendasi</span>
                                             </button>
                                         </div>
                                     </div>

@@ -37,7 +37,7 @@
 
                     @can('manage hunian')
                     <x-nav-link :href="route('admin.kost.index')" :active="request()->routeIs('admin.kost.index')">
-                        {{ __('Kelola Data Kost dan Kontrakan') }}
+                        {{ __('Kelola Kost dan Kontrakan') }}
                     </x-nav-link>
                     @endcan
 

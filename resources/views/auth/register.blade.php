@@ -72,7 +72,7 @@
                                 oninvalid="this.setCustomValidity('Silakan isi email')"
                                 oninput="this.setCustomValidity('')" />
                             @error('email')
-                            <div class="text-danger mt-2">{{ $message }}</div>
+                            <div class="text-danger mb-2">{{ $message }}</div>
                             @enderror
 
                             <!-- Phone Number -->
@@ -80,7 +80,7 @@
                                 oninvalid="this.setCustomValidity('Silakan isi nomor telepon')"
                                 oninput="this.setCustomValidity('')" />
                             @error('phone')
-                            <div class="text-danger mt-2">{{ $message }}</div>
+                            <div class="text-danger mb-2">{{ $message }}</div>
                             @enderror
 
                             <!-- Gender -->
