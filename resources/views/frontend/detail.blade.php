@@ -236,14 +236,18 @@
 
 
                 <!-- Right Content -->
-                <div class="col-lg-4 mb-4"> <!-- Added mb-4 for margin-bottom -->
+                <div class="col-lg-4 mb-4">
                     <!-- Informasi -->
                     <div class="card shadow rounded bg-white p-4 mb-4 wow slideInUp" data-wow-delay="0.1s">
                         <h4 class="mb-4">Informasi</h4>
+
+                        <!-- Jumlah Kamar -->
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-door-closed text-primary" style="margin-right: 10px;"></i>
                             <span class="text-success">Jumlah Kamar: {{ $kost->jumlah_kamar }}</span>
                         </div>
+
+                        <!-- Sisa Kamar -->
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-bed text-primary" style="margin-right: 10px;"></i>
                             @if ($kost->sisaKamar() <= 0)
@@ -253,50 +257,59 @@
                                 @endif
                         </div>
 
+                        <!-- Lokasi -->
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-map-marker-alt text-primary" style="margin-right: 10px;"></i>
                             <span>Lokasi Kecamatan: {{ $kost->location }}</span>
                         </div>
+
+                        <!-- Alamat Lengkap -->
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-home text-primary" style="margin-right: 10px;"></i>
                             <span>Alamat Lengkap: {{ $kost->alamat }}</span>
                         </div>
-                    </div>
 
+                        <!-- Nomor Telepon -->
+                        <div class="card-item mb-3 d-flex align-items-center">
+                            <i class="fa fa-phone text-primary" style="margin-right: 10px;"></i>
+                            <span>Nomor Telepon: <span id="phone">{{ $kost->user->phone }}</span></span>
+                            <button class="btn btn-sm ms-2 p-0" onclick="copyToClipboard('#phone')" style="border: none; background: none;">
+                                <i class="bi bi-clipboard-check" style="font-size: 16px;"></i>
+                            </button>
+                        </div>
 
-                    <!-- Harga Kost -->
-                    <div class="card shadow rounded bg-white p-4 mb-4 wow slideInUp" data-wow-delay="0.1s">
-                        <h4 class="mb-4">Harga</h4>
-                        <div class="card-item mb-3">
-                            <p class="m-0">Harga per bulan: <strong>Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}</strong></p>
+                        <!-- Harga -->
+                        <div class="card-item mb-4 d-flex align-items-center">
+                            <i class="fa fa-money-bill-wave text-primary" style="margin-right: 10px;"></i>
+                            <span>Harga: <strong>Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}/bulan</strong></span>
                         </div>
 
                         <!-- Form Booking -->
                         <form action="{{ route('admin.pembayaran.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
+
                             <!-- Tanggal Booking -->
-                            <div class="card-item mb-4">
+                            <div class="card-item mb-3">
                                 <label for="booking-date" class="form-label">Pilih Tanggal Mulai Sewa:</label>
                                 <input type="date" class="form-control" id="booking-date" name="tanggal_booking" required>
                             </div>
 
-                            <!-- Input Tersembunyi untuk Kost ID -->
+                            <!-- Hidden Kost ID -->
                             <input type="hidden" name="kost_id" value="{{ $kost->id }}">
 
                             <!-- Tombol Tanya Pemilik -->
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <a href="https://wa.me/{{ '62' . substr($kost->user->phone, 1) }}" target="_blank" class="btn btn-primary w-100">Tanya Pemilik</a>
-                            </div>
+                            </div> -->
 
                             <!-- Tombol Booking -->
-                            <div>
+                            <div class="card-item">
                                 @if(Auth::check() && auth()->user()->hasRole('pencari_kost'))
                                 @if($userHasBooked)
                                 <button type="button" onclick="showAlreadyBookingAlert()" class="btn btn-success w-100">
                                     Pesan Sekarang
                                 </button>
                                 @else
-                                <!-- Tombol booking modal validasi -->
                                 <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#uploadModal">
                                     Pesan Sekarang
                                 </button>
@@ -337,7 +350,7 @@
                                     @endif
                                     @else
                                     <!-- Jika pengguna belum login -->
-                                    <p>Untuk melanjutkan, silakan login terlebih dahulu.</p>
+                                    <p>Untuk melanjutkan, silakan login terlebih dahulu sebagai pencari hunian.</p>
                                     <a href="{{ route('login') }}" class="btn btn-primary w-100">Login</a>
                                     @endif
                                 </div>
@@ -466,6 +479,7 @@
 
     <!-- SweetAlert2 Script -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const verifiedIcons = document.querySelectorAll('.verified');
@@ -489,6 +503,29 @@
                 icon: 'info',
                 title: 'Sudah Mengajukan Sewa',
                 text: 'Anda sudah mengajukan sewa untuk hunian ini sebelumnya.'
+            });
+        }
+    </script>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const textToCopy = document.querySelector(elementId).innerText;
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                // SweetAlert2 success alert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Teks telah disalin ke clipboard!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }, function(err) {
+                console.error('Failed to copy text: ', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    text: 'Gagal menyalin teks!',
+                });
             });
         }
     </script>

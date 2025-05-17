@@ -185,6 +185,15 @@
                             <span>Nama Pemilik: {{ ucfirst($hunianLain->nama_pemilik) }}</span>
                         </div>
 
+                        <!-- Telepom -->
+                        <div class="card-item mb-3 d-flex align-items-center">
+                            <i class="fa fa-phone text-primary" style="margin-right: 10px;"></i>
+                            <span>Nomor Telepon: <span id="phone">{{ $hunianLain->telepon }}</span></span>
+                            <button class="btn btn-sm ms-2 p-0" onclick="copyToClipboard('#phone')" style="border: none; background: none;">
+                                <i class="bi bi-clipboard-check" style="font-size: 16px;"></i>
+                            </button>
+                        </div>
+
                         <!-- Tipe Hunian -->
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-building text-primary" style="margin-right: 10px;"></i>
@@ -212,7 +221,7 @@
                         <!-- Harga -->
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-money-bill-wave text-primary" style="margin-right: 10px;"></i>
-                            <span>Harga: Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $hunianLain->harga), 0, ',', '.') }}</span>
+                            <span>Harga: <strong>Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $hunianLain->harga), 0, ',', '.') }}</strong></span>
                         </div>
 
                         <!-- Terverifikasi -->
@@ -222,12 +231,10 @@
                         </div>
 
                         <!-- Tombol Tanya Pemilik -->
-                        <div class="card-item d-flex align-items-center">
+                        <!-- <div class="card-item d-flex align-items-center">
                             <a href="https://wa.me/{{ '62' . substr($hunianLain->telepon, 1) }}" target="_blank" class="btn btn-primary w-100">Tanya Pemilik</a>
-                        </div>
+                        </div> -->
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -252,7 +259,6 @@
                             <a href="">
                                 <span>Syarat dan ketentuan umum</span>
                             </a>
-
                         </div>
                     </div>
                 </div>
@@ -319,6 +325,7 @@
 
     <!-- SweetAlert2 Script -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const verifiedIcons = document.querySelectorAll('.verified');
@@ -334,6 +341,29 @@
                 });
             });
         });
+    </script>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const textToCopy = document.querySelector(elementId).innerText;
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                // SweetAlert2 success alert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Teks telah disalin ke clipboard!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }, function(err) {
+                console.error('Failed to copy text: ', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    text: 'Gagal menyalin teks!',
+                });
+            });
+        }
     </script>
 
 </body>

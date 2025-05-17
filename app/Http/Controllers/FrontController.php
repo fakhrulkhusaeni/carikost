@@ -34,7 +34,7 @@ class FrontController extends Controller
             });
         }
 
-        // Ambil data dan urutkan berdasarkan rata-rata rating biasa
+        // Ambil data dan urutkan berdasarkan rata-rata rating
         $kosts = $query->orderByDesc('ratings_avg_rating')->paginate(9);
 
         return view('frontend.index', compact('kosts', 'search'));
@@ -132,7 +132,7 @@ class FrontController extends Controller
             });
         }
 
-        $hunians = $query->get();
+        $hunians = $query->paginate(9);
 
         return view('frontend.hunian_lain', compact('hunians'));
     }

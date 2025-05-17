@@ -136,6 +136,11 @@
           </div>
           @endforelse
         </div>
+
+        <div class="d-flex justify-content-center mt-4">
+          {{ $hunians->withQueryString()->links('pagination::bootstrap-5') }}
+        </div>
+
       </div>
     </div>
   </section>
@@ -157,7 +162,6 @@
               <a href="">
                 <span>Syarat dan ketentuan umum</span>
               </a>
-
             </div>
           </div>
         </div>

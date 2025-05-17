@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Riwayat;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -9,20 +10,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NotifikasiDisetujui extends Mailable
+class NotifikasiBuktiPembayaran extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $pembayaran;
-    public $user;
+    public $riwayat;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($pembayaran, $user)
+    public function __construct(Riwayat $riwayat)
     {
-        $this->pembayaran = $pembayaran;
-        $this->user = $user;
+        $this->riwayat = $riwayat;
     }
 
     /**
@@ -31,7 +30,7 @@ class NotifikasiDisetujui extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Konfirmasi Pesanan',
+            subject: 'Bukti Pembayaran',
         );
     }
 
@@ -41,18 +40,17 @@ class NotifikasiDisetujui extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.konfirmasi_pesanan',
+            view: 'email.bukti_pembayaran',
             with: [
-                'pembayaran' => $this->pembayaran,
-                'user' => $this->user,
-            ],
+                'riwayat' => $this->riwayat
+            ]
         );
     }
 
     /**
      * Get the attachments for the message.
      *
-     * @return array
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
     public function attachments(): array
     {

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifikasiBuktiPembayaran;
+use App\Mail\NotifikasiPembayaranMasuk;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use App\Models\Riwayat;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class RiwayatController extends Controller
 {
@@ -66,10 +69,16 @@ class RiwayatController extends Controller
     public function bayar($id)
     {
 
-        $riwayat = Riwayat::find($id);
+        $riwayat = Riwayat::with(['user', 'kost.user'])->findOrFail($id);
 
         $riwayat->status_pembayaran = "Berhasil";
         $riwayat->save();
+
+        // Kirim email ke pencari kost
+        Mail::to($riwayat->user->email)->send(new NotifikasiBuktiPembayaran($riwayat));
+
+        // Kirim email ke pemilik kost
+        Mail::to($riwayat->kost->user->email)->send(new NotifikasiPembayaranMasuk($riwayat));
 
 
         return json_encode([

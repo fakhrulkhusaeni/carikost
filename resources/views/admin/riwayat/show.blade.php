@@ -138,14 +138,26 @@
                    <!-- Rating Section -->
                    <div class="p-6 max-w-sm bg-white shadow-lg rounded-lg">
                        <h4 class="text-center text-lg font-semibold mb-4">Beri Penilaian Anda</h4>
-                       <div class="flex justify-center space-x-2">
+
+                       @if ($riwayat && $riwayat->status_pembayaran === 'Berhasil')
+                       <div class="flex justify-center space-x-2" id="stars">
                            @for ($i = 1; $i <= 5; $i++)
                                <i class="fa fa-star cursor-pointer text-gray-300 text-3xl transition duration-200" data-value="{{ $i }}"></i>
                                @endfor
                        </div>
                        <p id="rating-value" class="text-center mt-2 text-gray-600">Nilai: 0</p>
                        <input type="hidden" name="kost_id" id="kost_id" value="{{ $riwayat->kost->id }}">
+                       <input type="hidden" name="rating" id="rating" value="0">
                        <button id="submit-rating" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition block mx-auto">Kirim Rating</button>
+                       @else
+                       <div class="flex justify-center space-x-2" id="stars-disabled">
+                           @for ($i = 1; $i <= 5; $i++)
+                               <i class="fa fa-star text-gray-300 text-3xl transition duration-200"></i>
+                               @endfor
+                       </div>
+                       <p class="text-center mt-2 text-gray-600">Nilai: 0</p>
+                       <button type="button" onclick="showPaymentAlert()" class="mt-4 px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed block mx-auto">Kirim Rating</button>
+                       @endif
                    </div>
 
                    <!-- Payment Button -->
@@ -267,6 +279,15 @@
                    }
                });
            });
+
+           function showPaymentAlert() {
+               Swal.fire({
+                   icon: 'info',
+                   title: 'Belum Bisa Memberi Rating',
+                   text: 'Silakan selesaikan pembayaran terlebih dahulu untuk memberikan penilaian.',
+                   confirmButtonText: 'OK'
+               });
+           }
 
            const pembayaran = JSON.parse(`<?= json_encode($pembayaran) ?>`);
        </script>
