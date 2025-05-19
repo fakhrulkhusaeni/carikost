@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\HunianLain;
 use App\Models\Kost;
 use App\Models\Pembayaran;
+use App\Models\Riwayat;
 use App\Models\User;
 use Illuminate\Http\Request;
 

@@ -8,7 +8,7 @@ use App\Models\Pembayaran;
 use App\Models\Rating;
 
 use App\Models\HunianLain;
-
+use App\Models\Riwayat;
 
 class FrontController extends Controller
 {
@@ -159,10 +159,11 @@ class FrontController extends Controller
     {
         $kost = Kost::with('user')->findOrFail($id);
 
-        $userHasBooked = auth()->check() && Pembayaran::where('kost_id', $kost->id)
+        $userHasBooked = auth()->check() && $c = Riwayat::where('kost_id', $kost->id)
             ->where('user_id', auth()->id())
+            ->where('tanggal_keluar', null)
             ->exists();
-
+        
         $ratings = Rating::where('kost_id', $kost->id)->get();
         $totalRatings = $ratings->count();
 

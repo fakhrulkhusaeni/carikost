@@ -43,6 +43,10 @@ Route::prefix(prefix: 'admin')->name('admin.')->group(function () {
 
     Route::middleware(['auth', 'can:manage hunian'])->group(function () {
         Route::resource('kost', KostController::class);
+
+        Route::post('kost/{id}/keluar', [KostController::class, 'keluar'])->name('kost.keluar');
+
+        Route::get('kost/{id}/detail', [KostController::class, 'detail'])->name('kost.detail');
     });
 
     Route::middleware(['auth', 'can:manage data booking'])->group(function () {

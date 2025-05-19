@@ -44,8 +44,8 @@ class NotifikasiVerifikasiKost extends Mailable
             with: [
                 'kost' => $this->kost,
                 'user' => $this->user,
-                'facilities' => json_decode($this->kost->facilities, true),
-                'rules' => json_decode($this->kost->rules, true),
+                'facilities' => $this->kost->facilities,
+                'rules' => $this->kost->rules,
             ],
         );
     }

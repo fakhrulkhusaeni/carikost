@@ -70,9 +70,16 @@ class RiwayatController extends Controller
     {
 
         $riwayat = Riwayat::with(['user', 'kost.user'])->findOrFail($id);
+        $pembayaran = Pembayaran::where("kost_id", $riwayat->kost_id)
+        ->where("user_id", $riwayat->user_id)->first();
 
         $riwayat->status_pembayaran = "Berhasil";
+        $riwayat->nominal = $riwayat->kost->harga;
         $riwayat->save();
+        
+        $pembayaran->status_pembayaran = "Berhasil";
+        $pembayaran->nominal = $riwayat->kost->harga;
+        $pembayaran->save();
 
         // Kirim email ke pencari kost
         Mail::to($riwayat->user->email)->send(new NotifikasiBuktiPembayaran($riwayat));

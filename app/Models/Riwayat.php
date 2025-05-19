@@ -18,6 +18,7 @@ class Riwayat extends Model
         'status_konfirmasi',
         'status_pembayaran',
         'kartu_identitas',
+        'nominal',
     ];
 
     public function kost()

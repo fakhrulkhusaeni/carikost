@@ -133,12 +133,16 @@
 
                         <!-- Tombol Aksi -->
                         <div class="flex gap-x-2">
-                            <a href="#" class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-md">
+                            <a href="{{ route('admin.kost.detail', $kost->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-md">
                                 Detail
                             </a>
-                            <a href="#" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-md">
-                                Keluar
-                            </a>
+                            <form action="{{ route('admin.kost.keluar', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin mengeluarkan penghuni?')">
+                                @csrf
+                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-md">
+                                    Keluar
+                                </button>
+                            </form>
+
                         </div>
                     </div>
                     @empty

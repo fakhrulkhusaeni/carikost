@@ -6,6 +6,8 @@ use App\Models\BuktiKepemilikanKost;
 use Illuminate\Http\Request;
 use App\Models\Kost;
 use App\Models\Pembayaran;
+use App\Models\Riwayat;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class KostController extends Controller
@@ -71,7 +73,8 @@ class KostController extends Controller
         $sudahTerverifikasi = $bukti && $bukti->kost->verifikasi->status_verifikasi === 'terverifikasi';
 
         // Ambil pengguna dari pembayaran yang disetujui
-        $penghuni = Pembayaran::where('kost_id', $kost->id)
+        $penghuni = Riwayat::where('kost_id', $kost->id)
+            ->where("tanggal_keluar", null)
             ->where('status_konfirmasi', 'Disetujui')
             ->with('user')
             ->get();
@@ -138,5 +141,25 @@ class KostController extends Controller
         $kost->delete();
 
         return redirect()->route('admin.kost.index')->with('success', 'Data kost berhasil dihapus.');
+    }
+
+    public function detail($id)
+    {
+        $kost = Kost::findOrFail($id);
+
+        $pembayaran = Pembayaran::where('kost_id', $kost->id)
+            ->where('status_konfirmasi', 'Disetujui')
+            ->with('user')
+            ->first();
+
+        return view('admin.kost.detail', compact('kost', 'pembayaran'));
+    }
+
+    public function keluar($id)
+    {
+        $r = Riwayat::findOrFail($id);
+        $r->tanggal_keluar = Carbon::now();
+        $r->save();
+        return redirect()->back()->with('success', 'PEnghuni sudah keluar');
     }
 }

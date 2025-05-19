@@ -309,6 +309,10 @@
                                 <button type="button" onclick="showAlreadyBookingAlert()" class="btn btn-success w-100">
                                     Pesan Sekarang
                                 </button>
+                                @elseif($kost->sisaKamar() <= 0)
+                                <button type="button" onclick="showFullBookingAlert()" class="btn btn-success w-100">
+                                    Pesan Sekarang
+                                </button>
                                 @else
                                 <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#uploadModal">
                                     Pesan Sekarang
@@ -503,6 +507,13 @@
                 icon: 'info',
                 title: 'Sudah Mengajukan Sewa',
                 text: 'Anda sudah mengajukan sewa untuk hunian ini sebelumnya.'
+            });
+        }
+        function showFullBookingAlert() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Kamar sudah penuh',
+                text: 'sudah penuh'
             });
         }
     </script>

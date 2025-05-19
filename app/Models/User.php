@@ -67,16 +67,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected function returnSaldo()
     {
-        $riwayat = [];
-        $this->kosts->each(function ($kost, int $key) use (&$riwayat) {
-            $kost->riwayat->each(function ($r, int $keyZ) use (&$riwayat) {
-                if ($r->status_pembayaran == "Berhasil") {
-                    $riwayat[] = $r->kost->harga;
-                }
-            });
-        });
-        return collect($riwayat)->map(function (string $value) {
-            return (int) preg_replace('/[^0-9]/', '', $value);
+        $riwayat = Riwayat::where("status_pembayaran", "Berhasil")->get();
+        // $this->kosts->each(function ($kost, int $key) use (&$riwayat) {
+        //     $kost->riwayat->each(function ($r, int $keyZ) use (&$riwayat) {
+        //         if ($r->status_pembayaran == "Berhasil") {
+        //             $riwayat[] = $r->kost->harga;
+        //         }
+        //     });
+        // });
+        return collect($riwayat)->map(function ($value) {
+            return (int) preg_replace('/[^0-9]/', '', $value->nominal);
         })->sum();
     }
 

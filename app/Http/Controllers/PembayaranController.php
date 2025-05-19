@@ -50,8 +50,9 @@ class PembayaranController extends Controller
         }
 
         // Cek apakah pengguna sudah booking kost ini
-        $existingBooking = Pembayaran::where('kost_id', $validated['kost_id'])
+        $existingBooking = Riwayat::where('kost_id', $validated['kost_id'])
             ->where('user_id', auth()->id())
+            ->where("tanggal_keluar", null)
             ->exists();
 
         if ($existingBooking) {

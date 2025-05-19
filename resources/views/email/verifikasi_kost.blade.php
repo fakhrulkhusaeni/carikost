@@ -29,9 +29,10 @@
         </ul>
 
         @php
-        $facilities = json_decode($kost->facilities, true);
-        $rules = json_decode($kost->rules, true);
+        $facilities = $kost->facilities;
+        $rules = $kost->rules;
         @endphp
+
 
         @if (!empty($facilities))
         <p style="font-size: 16px; margin-bottom: 5px;"><strong>Fasilitas:</strong></p>
