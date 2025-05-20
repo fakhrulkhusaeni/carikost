@@ -17,6 +17,7 @@ class Pembayaran extends Model
         'status_pembayaran',
         'kartu_identitas',
         'nominal',
+        'tanggal_keluar',
         'transaksi_id',
     ];
 

@@ -36,7 +36,11 @@
                     </div>
                     <div class="mb-4">
                         <span class="font-semibold text-gray-700">Tanggal Mulai Sewa: </span>
-                        <span class="text-gray-600">{{ \Carbon\Carbon::parse($pembayaran->tanggal_booking)->translatedFormat('d F Y') }}</span>
+                        <span class="text-gray-600">{{ \Carbon\Carbon::parse($pembayaran->tanggal_booking)->translatedFormat('l, d F Y') }}</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="font-semibold text-gray-700">Tanggal Keluar: </span>
+                        <span class="text-gray-600">{{ $pembayaran->tanggal_keluar ? \Carbon\Carbon::parse($pembayaran->tanggal_keluar)->translatedFormat('l, d F Y') : "-" }}</span>
                     </div>
                     <div class="mb-4">
                         <span class="font-semibold text-gray-700">Status Konfirmasi: </span>
@@ -45,7 +49,7 @@
                         @elseif($pembayaran->status_konfirmasi == 'Ditolak')
                         <span class="text-red-600">Ditolak</span>
                         @else
-                        <span class="text-yellow-600">Belum Disetujui</span>
+                        <span class="text-yellow-600">Pending</span>
                         @endif
                     </div>
 

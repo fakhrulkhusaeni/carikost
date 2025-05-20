@@ -133,16 +133,12 @@
 
                         <!-- Tombol Aksi -->
                         <div class="flex gap-x-2">
-                            <a href="{{ route('admin.kost.detail', $kost->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-md">
-                                Detail
-                            </a>
-                            <form action="{{ route('admin.kost.keluar', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin mengeluarkan penghuni?')">
+                            <form action="{{ route('admin.kost.keluar', $item->id) }}" method="POST" class="form-keluar">
                                 @csrf
                                 <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-md">
                                     Keluar
                                 </button>
                             </form>
-
                         </div>
                     </div>
                     @empty
@@ -250,5 +246,33 @@
             });
         }
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('.form-keluar');
+
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault(); // stop form submit
+
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: "Tindakan ini akan mengeluarkan penghuni dari kost/kontrakan.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, keluar!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); // lanjut submit
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
 
 </x-app-layout>

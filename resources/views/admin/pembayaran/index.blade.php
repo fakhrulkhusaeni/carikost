@@ -40,7 +40,7 @@
                                     @elseif($pembayaran->status_konfirmasi == 'Ditolak')
                                     <span class="text-red-600">Ditolak</span>
                                     @else
-                                    <span class="text-yellow-600">Belum Disetujui</span>
+                                    <span class="text-yellow-600">Pending</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium">

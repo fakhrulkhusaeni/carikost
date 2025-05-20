@@ -37,7 +37,7 @@
                                     @elseif($riwayat->status_konfirmasi == 'Ditolak')
                                     <span class="text-red-500">Ditolak</span>
                                     @else
-                                    <span class="text-yellow-500">Belum Disetujui</span>
+                                    <span class="text-yellow-500">Pending</span>
                                     @endif
                                 </td>
 

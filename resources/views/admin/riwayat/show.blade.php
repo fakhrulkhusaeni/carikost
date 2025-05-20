@@ -106,15 +106,15 @@
 
                    <!-- Booking Information -->
                    <div>
-                       <p class="mb-3"><span class="font-semibold">Tanggal Mulai Sewa:</span> {{ \Carbon\Carbon::parse($riwayat->tanggal_booking)->translatedFormat('d F Y') }}</p>
-                       <p class="mb-3"><span class="font-semibold">Tanggal Keluar:</span> {{ $riwayat->tanggal_keluar ? \Carbon\Carbon::parse($riwayat->tanggal_keluar)->translatedFormat('d F Y') : "-" }}</p>
+                       <p class="mb-3"><span class="font-semibold">Tanggal Mulai Sewa:</span> {{ \Carbon\Carbon::parse($riwayat->tanggal_booking)->translatedFormat('l, d F Y') }}</p>
+                       <p class="mb-3"><span class="font-semibold">Tanggal Keluar:</span> {{ $riwayat->tanggal_keluar ? \Carbon\Carbon::parse($riwayat->tanggal_keluar)->translatedFormat('l, d F Y') : "-" }}</p>
                        <p class="mb-3"><span class="font-semibold">Status Konfirmasi:</span>
                            @if($riwayat->status_konfirmasi == 'Disetujui')
                            <span class="text-green-600">Disetujui</span>
                            @elseif($riwayat->status_konfirmasi == 'Ditolak')
                            <span class="text-red-600">Ditolak</span>
                            @else
-                           <span class="text-yellow-600">Belum Disetujui</span>
+                           <span class="text-yellow-600">Pending</span>
                            @endif
                        </p>
                        <p class="mb-3"><span class="font-semibold">Status Pembayaran:</span>

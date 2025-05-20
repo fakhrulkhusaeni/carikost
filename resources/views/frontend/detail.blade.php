@@ -51,7 +51,7 @@
 
                             @auth
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('dashboard') }}" style="color: #7CFC00;">{{ Auth::user()->name }}</a>
+                                <a class="nav-link" href="{{ route('dashboard') }}" style="color: #7CFC00;">{{ explode(' ', Auth::user()->name)[0] }}</a>
                             </li>
                             @endauth
 
@@ -310,19 +310,19 @@
                                     Pesan Sekarang
                                 </button>
                                 @elseif($kost->sisaKamar() <= 0)
-                                <button type="button" onclick="showFullBookingAlert()" class="btn btn-success w-100">
+                                    <button type="button" onclick="showFullBookingAlert()" class="btn btn-success w-100">
                                     Pesan Sekarang
-                                </button>
-                                @else
-                                <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                                    Pesan Sekarang
-                                </button>
-                                @endif
-                                @else
-                                <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#accessModal">
-                                    Pesan Sekarang
-                                </button>
-                                @endif
+                                    </button>
+                                    @else
+                                    <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                                        Pesan Sekarang
+                                    </button>
+                                    @endif
+                                    @else
+                                    <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#accessModal">
+                                        Pesan Sekarang
+                                    </button>
+                                    @endif
                             </div>
                         </form>
                     </div>
@@ -509,11 +509,12 @@
                 text: 'Anda sudah mengajukan sewa untuk hunian ini sebelumnya.'
             });
         }
+
         function showFullBookingAlert() {
             Swal.fire({
                 icon: 'info',
-                title: 'Kamar sudah penuh',
-                text: 'sudah penuh'
+                title: 'Kamar Sudah Penuh',
+                text: 'Mohon Maaf, Semua kamar telah terisi. Silakan coba pilih tempat kost/kontrakan yang lain.'
             });
         }
     </script>
