@@ -22,6 +22,8 @@ Route::get('/detail_hunianlain/{id}', [FrontController::class, 'detail_hunianlai
 Route::get('/formulir', [FrontController::class, 'formulir'])->name('frontend.formulir');
 Route::get('/promosi', [FrontController::class, 'promosi'])->name('frontend.promosi');
 Route::get('/request', [FrontController::class, 'request'])->name('frontend.request');
+Route::get('/kebijakan_privasi', [FrontController::class, 'kebijakan_privasi'])->name('frontend.kebijakan_privasi');
+Route::get('/syarat_ketentuan', [FrontController::class, 'syarat_ketentuan'])->name('frontend.syarat_ketentuan');
 Route::get('/detail/{id}', [FrontController::class, 'detail'])->name('frontend.detail');
 Route::post('/rating', [RatingController::class, 'store'])->name('rating.store');
 Route::post('bukti-kepemilikan/store', [BuktiKepemilikanKostController::class, 'store'])->name('bukti-kepemilikan.store');

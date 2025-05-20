@@ -160,10 +160,10 @@
           <div class="info_contact">
             <h4>Kebijakan</h4>
             <div class="contact_link_box">
-              <a href="">
+              <a href="{{ route('frontend.kebijakan_privasi') }}">
                 <span>Kebijakan privasi</span>
               </a>
-              <a href="">
+              <a href="{{ route('frontend.syarat_ketentuan') }}">
                 <span>Syarat dan ketentuan umum</span>
               </a>
             </div>

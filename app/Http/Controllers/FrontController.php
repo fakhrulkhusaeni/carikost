@@ -39,7 +39,7 @@ class FrontController extends Controller
 
         return view('frontend.index', compact('kosts', 'search'));
     }
-    
+
 
     public function rekomendasi(Request $request)
     {
@@ -163,7 +163,7 @@ class FrontController extends Controller
             ->where('user_id', auth()->id())
             ->where('tanggal_keluar', null)
             ->exists();
-        
+
         $ratings = Rating::where('kost_id', $kost->id)->get();
         $totalRatings = $ratings->count();
 
@@ -182,5 +182,15 @@ class FrontController extends Controller
         }
 
         return view('frontend.detail', compact('kost', 'userHasBooked', 'averageRating', 'totalRatings', 'distribution'));
+    }
+
+    public function kebijakan_privasi()
+    {
+        return view('frontend.kebijakan_privasi');
+    }
+
+    public function syarat_ketentuan()
+    {
+        return view('frontend.syarat_ketentuan');
     }
 }

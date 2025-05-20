@@ -4,6 +4,9 @@
 
 <body class="sub_page">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
     <div class="hero_area">
 
         <div class="hero_bg_box">
@@ -30,9 +33,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('frontend.index') }}">Home</a>
                             </li>
-                            <li class="nav-item active">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link" href="{{ route('frontend.request') }}">Request</a>
-                            </li>
+                            </li> -->
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('frontend.rekomendasi') }}">Rekomendasi</a>
                             </li>
@@ -68,59 +71,49 @@
     </div>
 
     <!-- why section -->
-
-    <section class="request_section layout_padding">
+    <section class="layout_padding">
         <div class="container">
-            <div class="heading_container heading_center mb-4">
-                <h2>
-                    Request <span>Tempat Kost dan Kontrakan</span>
-                </h2>
-                <p>Isi form berikut untuk mengirim permintaan Anda ke admin.</p>
+            <div class="heading_container heading_center mb-5">
+                <h2>Syarat & <span>Ketentuan</span></h2>
+                <p>Dengan menggunakan layanan kami, Anda dianggap telah membaca, memahami, dan menyetujui syarat dan ketentuan berikut</p>
             </div>
-            <div class="card shadow">
-                <div class="card-body">
-                    <form id="requestForm" action="#" method="get" onsubmit="sendToWhatsApp(event)">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nama Anda</label>
-                            <input type="text" class="form-control" id="name" placeholder="Masukkan nama Anda" required>
-                        </div>
 
-                        <div class="mb-3">
-                            <label for="type" class="form-label">Jenis Hunian</label>
-                            <select class="form-control" id="type" required>
-                                <option value="" disabled selected>Pilih jenis hunian</option>
-                                <option value="putra">Kost Putra</option>
-                                <option value="putri">Kost Putri</option>
-                                <option value="campur">Kost Campur</option>
-                                <option value="kontrakan">Kontrakan</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="location" class="form-label">Lokasi</label>
-                            <input type="text" class="form-control" id="location" placeholder="Masukkan lokasi yang diinginkan" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="budget" class="form-label">Kisaran Harga</label>
-                            <input type="number" class="form-control" id="budget" placeholder="Masukkan kisaran harga (contoh: Rp 500.000)" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="facility" class="form-label">Fasilitas</label>
-                            <textarea class="form-control" id="facility" placeholder="Masukkan fasilitas yang diinginkan" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="notes" class="form-label">Catatan Tambahan</label>
-                            <textarea class="form-control" id="notes" rows="3" placeholder="Masukkan catatan tambahan"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Kirim Permintaan</button>
-                    </form>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card shadow-sm p-4">
+
+                        <h5>1. Penggunaan Layanan</h5>
+                        <p>Pengguna wajib menggunakan website ini untuk tujuan yang sah, yaitu mencari atau mempromosikan tempat kost dan kontrakan secara jujur dan bertanggung jawab.</p>
+
+                        <h5 class="mt-3">2. Informasi Iklan</h5>
+                        <p>Setiap informasi yang dicantumkan dalam iklan, seperti harga, fasilitas, dan lokasi, merupakan tanggung jawab penuh pemilik atau pengiklan. Kami tidak menjamin keakuratan data tersebut.</p>
+
+                        <h5 class="mt-3">3. Hak Cipta</h5>
+                        <p>Seluruh konten pada website, termasuk teks, gambar, dan logo, dilindungi oleh hak cipta. Penggunaan tanpa izin tertulis dari pemilik situs tidak diperbolehkan.</p>
+
+                        <h5 class="mt-3">4. Perubahan Layanan</h5>
+                        <p>Tim pengelola berhak melakukan perubahan, pembaruan, atau penghentian sebagian atau seluruh layanan website tanpa pemberitahuan terlebih dahulu.</p>
+
+                        <h5 class="mt-3">5. Penangguhan Akun</h5>
+                        <p>Kami berhak menangguhkan atau menghapus akun pengguna yang terbukti melakukan pelanggaran, seperti menyebarkan informasi palsu atau merugikan pihak lain.</p>
+
+                        <h5 class="mt-3">6. Konten Terlarang</h5>
+                        <p>Pengguna dilarang mempublikasikan konten yang mengandung unsur penipuan, pelecehan, diskriminasi, atau hal-hal yang bertentangan dengan hukum yang berlaku.</p>
+
+                        <h5 class="mt-3">7. Tanggung Jawab</h5>
+                        <p>Kami tidak bertanggung jawab atas kerugian atau masalah yang timbul dari transaksi atau interaksi antar pengguna yang terjadi di luar kendali kami.</p>
+
+                        <h5 class="mt-3">8. Hukum yang Berlaku</h5>
+                        <p>Syarat dan ketentuan ini tunduk serta diinterpretasikan sesuai dengan hukum yang berlaku di wilayah Republik Indonesia</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- end why section -->
 
-    <!-- info section -->
 
+    <!-- info section -->
     <section class="info_section layout_padding2">
         <div class="container">
             <div class="row">
@@ -187,57 +180,8 @@
     </section>
     <!-- footer section -->
 
+
 </body>
-
-<!-- SweetAlert2 Script -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-    function sendToWhatsApp(event) {
-        event.preventDefault(); // Mencegah reload halaman
-        const name = document.getElementById("name").value.trim();
-        const facility = document.getElementById("facility").value.trim();
-        const type = document.getElementById("type").value.trim();
-        const location = document.getElementById("location").value.trim();
-        const budget = document.getElementById("budget").value.trim();
-        const notes = document.getElementById("notes").value.trim();
-
-        const adminNumber = "62895704307742"; // Ganti dengan nomor WhatsApp admin
-        let message = `Halo Admin, saya ingin mengajukan permintaan tempat kost dengan detail berikut:%0A`;
-        message += `Nama: ${name}%0A`;
-        message += `Jenis Hunian: ${type}%0A`;
-        message += `Lokasi yang Diinginkan: ${location}%0A`;
-        message += `Kisaran Harga: ${budget}%0A`;
-        message += `Fasilitas yang Diinginkan: ${facility}%0A`;
-        message += `Catatan Tambahan: ${notes || "Tidak ada"}%0A`;
-
-        // Konfirmasi dengan SweetAlert2
-        Swal.fire({
-            title: 'Konfirmasi',
-            text: 'Apakah Anda yakin ingin mengirim permintaan ini ke admin?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Kirim!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Jika user menekan "Ya, Kirim"
-                const whatsappURL = `https://wa.me/${adminNumber}?text=${encodeURIComponent(message)}`;
-                window.open(whatsappURL, "_blank");
-
-                // Tampilkan pesan sukses
-                Swal.fire(
-                    'Terkirim!',
-                    'Permintaan Anda telah berhasil dikirim. Menunggu respon dari Admin',
-                    'success'
-                );
-
-                // Clear semua input di dalam form
-                document.getElementById("requestForm").reset();
-            }
-        });
-    }
-</script>
 
 @endsection
 
@@ -261,5 +205,8 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
 </script>
 <!-- End Google Map -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
 @endpush
