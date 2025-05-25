@@ -149,6 +149,7 @@
 
                 <!-- Pemberitahuan Verifikasi -->
                 @if (!$sudahUpload)
+                <!-- Kondisi: Belum Upload -->
                 <div class="p-4 mb-2 text-sm text-yellow-800 bg-yellow-200 rounded-lg flex items-center" role="alert">
                     <span class="mr-2">&#9888;</span>
                     <div>
@@ -156,7 +157,16 @@
                         Jika tidak melakukan upload bukti kepemilikan maka tempat kost atau kontrakan Anda tidak akan tampil di website.
                     </div>
                 </div>
+                @elseif ($verifikasiDitolak)
+                <!-- Kondisi: Ditolak -->
+                <div class="p-4 mb-2 text-sm text-red-800 bg-red-200 rounded-lg flex items-center" role="alert">
+                    <span class="mr-2">&#10060;</span>
+                    <div>
+                        <strong>Verifikasi Ditolak!</strong> Bukti kepemilikan Anda ditolak. Silakan unggah ulang dokumen yang valid agar tempat kost/kontrakan Anda dapat tampil di website.
+                    </div>
+                </div>
                 @elseif ($sudahUpload && !$sudahTerverifikasi)
+                <!-- Kondisi: Sudah upload tapi belum diverifikasi -->
                 <div class="p-4 mb-2 text-sm text-green-800 bg-green-200 rounded-lg flex items-center" role="alert">
                     <span class="mr-2">&#9989;</span>
                     <div>
@@ -165,6 +175,7 @@
                     </div>
                 </div>
                 @elseif ($sudahUpload && $sudahTerverifikasi)
+                <!-- Kondisi: Terverifikasi -->
                 <div class="p-4 mb-2 text-sm text-blue-800 bg-blue-200 rounded-lg flex items-center" role="alert">
                     <span class="mr-2">&#10004;</span>
                     <div>
@@ -173,18 +184,20 @@
                 </div>
                 @endif
 
+
                 <!-- Modal Upload Bukti Kepemilikan -->
                 <div x-data="{ openModal: false }" class="flex justify-end gap-4 mt-6">
 
-                    @if (!$sudahUpload)
+                    @if (!$sudahUpload || $verifikasiDitolak)
                     <button @click="openModal = true" type="button" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                        Upload Bukti Kepemilikan
+                        {{ $verifikasiDitolak ? 'Upload Ulang Bukti Kepemilikan' : 'Upload Bukti Kepemilikan' }}
                     </button>
                     @else
                     <button type="button" onclick="showAlreadyUploadedAlert()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
                         Sudah Upload Bukti Kepemilikan
                     </button>
                     @endif
+
 
                     <div x-show="openModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
                         <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-8">

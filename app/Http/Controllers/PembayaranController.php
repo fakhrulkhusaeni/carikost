@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\NotifikasiBookingMasuk;
 use App\Mail\NotifikasiDisetujui;
+use App\Mail\NotifikasiDitolak;
 use App\Models\Kost;
 use App\Models\Riwayat;
 use App\Models\Pembayaran;
@@ -196,6 +197,10 @@ class PembayaranController extends Controller
                 'status_konfirmasi' => 'Ditolak',
             ]);
         }
+
+        // Kirim notifikasi email ke user
+        $user = $pembayaran->user;
+        Mail::to($user->email)->send(new NotifikasiDitolak($pembayaran, $user));
 
         return redirect()->route('admin.pembayaran.index')->with('error', 'Konfirmasi telah ditolak.');
     }

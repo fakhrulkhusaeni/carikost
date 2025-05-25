@@ -3,24 +3,25 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NotifikasiVerifikasiKost extends Mailable
+class NotifikasiDitolak extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $kost;
+    public $pembayaran;
     public $user;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($kost, $user)
+    public function __construct($pembayaran, $user)
     {
-        $this->kost = $kost;
+        $this->pembayaran = $pembayaran;
         $this->user = $user;
     }
 
@@ -30,7 +31,7 @@ class NotifikasiVerifikasiKost extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Verifikasi Hunian',
+            subject: 'Konfirmasi Pesanan',
         );
     }
 
@@ -40,12 +41,10 @@ class NotifikasiVerifikasiKost extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.verifikasi_kost',
+            view: 'email.konfirmasi_ditolak',
             with: [
-                'kost' => $this->kost,
+                'pembayaran' => $this->pembayaran,
                 'user' => $this->user,
-                'facilities' => $this->kost->facilities,
-                'rules' => $this->kost->rules,
             ],
         );
     }
@@ -53,7 +52,7 @@ class NotifikasiVerifikasiKost extends Mailable
     /**
      * Get the attachments for the message.
      *
-     * @return array
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
     public function attachments(): array
     {

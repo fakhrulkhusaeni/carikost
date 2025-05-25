@@ -46,7 +46,7 @@ class Kost extends Model
     {
         return $this->hasMany(Pembayaran::class);
     }
-    
+
     public function riwayat()
     {
         return $this->hasMany(Riwayat::class);
@@ -67,6 +67,16 @@ class Kost extends Model
 
         return $this->jumlah_kamar - $terisi;
     }
+
+    public function scopeTersedia($query)
+    {
+        return $query->withCount(['riwayat as kamar_terisi_count' => function ($q) {
+            $q->whereNull('tanggal_keluar')
+                ->whereIn('status_konfirmasi', ['Pending', 'Disetujui']);
+        }])
+            ->havingRaw('jumlah_kamar - kamar_terisi_count > 0');
+    }
+
 
     protected $casts = [
         'facilities' => 'array',

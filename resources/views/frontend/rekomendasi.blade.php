@@ -154,7 +154,7 @@
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox" name="facilities[]" value="{{ $facility }}"
                                                                 {{ in_array($facility, $selectedFacilities) ? 'checked' : '' }}>
-                                                            <label class="form-check-label">{{ $facility }}</label>
+                                                            <label class="form-check-label">{{ strtoupper($facility) }}</label>
                                                         </div>
                                                     </div>
                                                     @endforeach
@@ -169,6 +169,57 @@
                                             </button>
                                         </div>
                                     </div>
+
+                                    <!-- Input Bobot -->
+                                    <div class="col-12 mb-3">
+                                        <h5 class="mb-2">Bobot Kriteria (Opsional)</h5>
+                                        <p class="text-muted" style="font-size: 0.9rem;">Silakan isi bobot sesuai prioritas Anda. Total dari semua bobot harus 100%. Nilai bobot berkisar antara 0 hingga 100.</p>
+                                        <div class="row g-2">
+                                            <div class="col-md-3 col-6">
+                                                <label for="weight_location" class="form-label">Lokasi</label>
+                                                <input type="number" step="1" min="0" max="100" required
+                                                    name="weight_location"
+                                                    class="form-control"
+                                                    placeholder="Contoh: 30"
+                                                    title="Isi dengan angka 0 - 100"
+                                                    value="{{ request('weight_location', 30) }}">
+                                            </div>
+                                            <div class="col-md-3 col-6">
+                                                <label for="weight_type" class="form-label">Tipe Hunian</label>
+                                                <input type="number" step="1" min="0" max="100" required
+                                                    name="weight_type"
+                                                    class="form-control"
+                                                    placeholder="Contoh: 20"
+                                                    title="Isi dengan angka 0 - 100"
+                                                    value="{{ request('weight_type', 20) }}">
+                                            </div>
+                                            <div class="col-md-3 col-6">
+                                                <label for="weight_harga" class="form-label">Harga</label>
+                                                <input type="number" step="1" min="0" max="100" required
+                                                    name="weight_harga"
+                                                    class="form-control"
+                                                    placeholder="Contoh: 30"
+                                                    title="Isi dengan angka 0 - 100"
+                                                    value="{{ request('weight_harga', 30) }}">
+                                            </div>
+                                            <div class="col-md-3 col-6">
+                                                <label for="weight_facilities" class="form-label">Fasilitas</label>
+                                                <input type="number" step="1" min="0" max="100" required
+                                                    name="weight_facilities"
+                                                    class="form-control"
+                                                    placeholder="Contoh: 20"
+                                                    title="Isi dengan angka 0 - 100"
+                                                    value="{{ request('weight_facilities', 20) }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @if(session('error'))
+                                    <div class="alert alert-danger mt-2">
+                                        {{ session('error') }}
+                                    </div>
+                                    @endif
+
                                 </form>
                             </div>
                         </div>
@@ -196,11 +247,11 @@
                                 </ul>
 
                                 <!-- Tampilkan jumlah skor -->
-                                @isset($kost->bobotScore)
+                                <!-- @isset($kost->bobotScore)
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="badge bg-info" style="font-size: 1rem;">Skor: {{ number_format($kost->bobotScore, 2) }}</span>
                                 </div>
-                                @endisset
+                                @endisset -->
 
                                 <div class="d-flex justify-content-between align-items-center">
                                     <a href="{{ route('frontend.detail', $kost->id) }}" class="btn btn-primary">Lihat Detail</a>

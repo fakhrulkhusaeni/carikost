@@ -31,7 +31,7 @@ class NotifikasiBookingMasuk extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Notifikasi Booking Masuk',
+            subject: 'Booking Masuk',
         );
     }
 

@@ -64,6 +64,7 @@ Route::prefix(prefix: 'admin')->name('admin.')->group(function () {
     Route::middleware(['auth', 'can:manage verifikasi data'])->group(function () {
         Route::resource('verifikasi', VerifikasiController::class)->except(['store']);
         Route::post('verifikasi/{id}/verifikasi', [VerifikasiController::class, 'verifikasi'])->name('verifikasi.verifikasi');
+        Route::post('verifikasi/{id}/tolak', [VerifikasiController::class, 'tolak'])->name('verifikasi.tolak');
     });
 
     Route::middleware(['auth', 'can:manage user'])->group(function () {

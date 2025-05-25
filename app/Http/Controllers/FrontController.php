@@ -19,11 +19,10 @@ class FrontController extends Controller
     {
         $search = $request->input('search');
 
-        // Query semua kost terverifikasi, lengkap dengan rata-rata rating
+        // Query semua kost terverifikasi, lengkap dengan rata-rata rating dan kamar tersedia
         $query = Kost::withAvg('ratings', 'rating')
-            ->whereHas('verifikasi', function ($query) {
-                $query->where('status_verifikasi', 'terverifikasi');
-            });
+            ->whereHas('verifikasi', fn($q) => $q->where('status_verifikasi', 'terverifikasi'))
+            ->tersedia();
 
         // Filter pencarian jika ada
         if (!empty($search)) {
@@ -48,43 +47,50 @@ class FrontController extends Controller
         $hargaInput = $this->convertHargaToNumber($request->input('harga'));
         $facilities = $request->input('facilities', []);
 
+        // Ambil bobot dari request dalam bentuk persen (%)
+        $weightsPercent = [
+            'location' => floatval($request->input('weight_location', 30)), // contoh default: 30%
+            'type' => floatval($request->input('weight_type', 20)),
+            'harga' => floatval($request->input('weight_harga', 30)),
+            'facilities' => floatval($request->input('weight_facilities', 20)),
+        ];
+
+        // Validasi total bobot harus 100%
+        $totalWeightPercent = array_sum($weightsPercent);
+        if ($totalWeightPercent != 100) {
+            return back()->with('error', 'Total bobot harus berjumlah 100%');
+        }
+
+        // Konversi bobot persen menjadi desimal
+        $weights = array_map(fn($value) => $value / 100, $weightsPercent);
+
         // Ambil hanya kost yang sudah diverifikasi
         $kosts = Kost::with('verifikasi')
             ->whereHas('verifikasi', fn($q) => $q->where('status_verifikasi', 'terverifikasi'))
             ->get();
 
-        // Bobot untuk tiap kriteria
-        $weights = [
-            'location' => 0.3,
-            'type' => 0.2,
-            'harga' => 0.3,
-            'facilities' => 0.2,
-        ];
+        // Filter kost yang kamarnya masih tersedia
+        $kosts = $kosts->filter(fn($kost) => $kost->sisaKamar() > 0);
 
-        // Hitung skor untuk tiap kost
         $kosts = $kosts->map(function ($kost) use ($location, $type, $hargaInput, $facilities, $weights) {
             $score = 0;
 
-            // Kesesuaian lokasi
             if ($location && $kost->location == $location) {
                 $score += $weights['location'] * 100;
             }
 
-            // Kesesuaian tipe
             if ($type && $kost->type == $type) {
                 $score += $weights['type'] * 100;
             }
 
-            // Skor harga berdasarkan kedekatan nilai
             if ($hargaInput > 0) {
                 $kostHarga = $this->convertHargaToNumber($kost->harga);
-                $maxDiff = $hargaInput * 0.3; // toleransi 30%
+                $maxDiff = $hargaInput * 0.3;
                 $diff = abs($kostHarga - $hargaInput);
                 $hargaScore = $maxDiff > 0 ? max(0, 100 - ($diff / $maxDiff * 100)) : 0;
                 $score += $weights['harga'] * $hargaScore;
             }
 
-            // Skor fasilitas berdasarkan kemiripan
             $kostFacilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : (array) $kost->facilities;
             if (!empty($facilities) && is_array($kostFacilities)) {
                 $matched = collect($facilities)->intersect($kostFacilities)->count();
@@ -96,13 +102,13 @@ class FrontController extends Controller
             return $kost;
         });
 
-        // Urutkan berdasarkan skor tertinggi
         $kosts = $kosts->filter(fn($kost) => $kost->bobotScore > 0)
             ->sortByDesc('bobotScore')
             ->values();
 
         return view('frontend.rekomendasi', compact('kosts', 'facilities'));
     }
+
 
     // Mengubah harga string jadi angka
     private function convertHargaToNumber($harga)

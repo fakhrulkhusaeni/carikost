@@ -127,57 +127,76 @@
                 <!-- Buttons -->
                 <div class="flex justify-end gap-4 mt-6">
                     @php
-                    $sudahTerverifikasi = $kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi';
+                    $statusVerifikasi = $kost->verifikasi->status_verifikasi ?? null;
                     $memenuhiSyaratDokumen = $kost->buktiKepemilikan && (
                     $kost->buktiKepemilikan->siuk_imb ||
                     $kost->buktiKepemilikan->ktp_pemilik
                     );
                     @endphp
 
-                    @if (!$sudahTerverifikasi)
-                    <form action="{{ route('admin.verifikasi.verifikasi', $kost->id) }}" method="POST">
-                        @csrf
-                        <button
-                            type="submit" class="px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }}"
-                            {{ !$memenuhiSyaratDokumen ? 'disabled' : '' }}>
-                            Verifikasi
+                    <div class="flex justify-end gap-4 mt-6">
+                        <!-- Tombol Verifikasi atau Sudah Diverifikasi -->
+                        @if ($statusVerifikasi === 'terverifikasi')
+                        <button type="button" onclick="showAlreadyVerifiedAlert()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2">
+                            Sudah Diverifikasi
                         </button>
-                    </form>
-                    @else
-                    <button type="button" onclick="showAlreadyVerifiedAlert()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
-                        Sudah Diverifikasi
-                    </button>
-                    @endif
+                        @else
+                        <form action="{{ route('admin.verifikasi.verifikasi', $kost->id) }}" method="POST">
+                            @csrf
+                            <button
+                                type="submit"
+                                class="px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }}"
+                                {{ !$memenuhiSyaratDokumen ? 'disabled' : '' }}>
+                                Verifikasi
+                            </button>
+                        </form>
+                        @endif
 
+                        <!-- Tombol Tolak atau Sudah Ditolak -->
+                        @if ($statusVerifikasi === 'ditolak')
+                        <button type="button" onclick="showAlreadyRejectAlert()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center gap-2">
+                            Sudah Ditolak
+                        </button>
+                        @else
+                        <form action="{{ route('admin.verifikasi.tolak', $kost->id) }}" method="POST" class="form-tolak">
+                            @csrf
+                            <button
+                                type="submit"
+                                class="px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-400 cursor-not-allowed' }}"
+                                {{ !$memenuhiSyaratDokumen ? 'disabled' : '' }}>
+                                Tolak
+                            </button>
+                        </form>
+                        @endif
 
-                    <!-- <form action="{{ route('admin.verifikasi.destroy', $kost->id) }}" method="POST" class="inline-block delete-form">
+                        <!-- <form action="{{ route('admin.verifikasi.destroy', $kost->id) }}" method="POST" class="inline-block delete-form">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Tolak</button>
-                    </form> -->
+                        </form> -->
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
-    <!-- Inisialisasi GLightbox -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const lightbox = GLightbox({
-                selector: '.glightbox', // Select link with 'glightbox' class
-                touchNavigation: true, // Enable touch gestures
-                loop: true // Enable looping between images
+        <!-- Inisialisasi GLightbox -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const lightbox = GLightbox({
+                    selector: '.glightbox', // Select link with 'glightbox' class
+                    touchNavigation: true, // Enable touch gestures
+                    loop: true // Enable looping between images
+                });
             });
-        });
-    </script>
+        </script>
 
-    <!-- SweetAlert2 Script -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- SweetAlert2 Script -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- <script>
+        <!-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.delete-form').forEach(form => {
                 form.addEventListener('submit', function(e) {
@@ -202,17 +221,52 @@
                 });
             });
         });
-    </script> -->
+        </script> -->
 
-    <script>
-        function showAlreadyVerifiedAlert() {
-            Swal.fire({
-                icon: 'info',
-                title: 'Sudah Diverifikasi',
-                text: 'Tempat kost atau kontrakan ini telah diverifikasi sebelumnya.'
+        <script>
+            function showAlreadyVerifiedAlert() {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Sudah Diverifikasi',
+                    text: 'Tempat kost atau kontrakan ini telah diverifikasi sebelumnya.'
+                });
+            }
+
+            function showAlreadyRejectAlert() {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Sudah Ditolak',
+                    text: 'Tempat kost atau kontrakan ini telah ditolak sebelumnya.'
+                });
+            }
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const forms = document.querySelectorAll('.form-tolak');
+
+                forms.forEach(form => {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault(); // stop form submit
+
+                        Swal.fire({
+                            title: 'Tolak Kost?',
+                            text: "Apakah Anda yakin ingin menolak kost ini?",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Ya, Tolak',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit(); // lanjut submit
+                            }
+                        });
+                    });
+                });
             });
-        }
-    </script>
+        </script>
 
 
 </x-app-layout>

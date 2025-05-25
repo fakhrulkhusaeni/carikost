@@ -32,16 +32,12 @@
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if ($kost->verifikasi)
                                     @if ($kost->verifikasi->status_verifikasi === 'terverifikasi')
-                                    <span class="text-blue-600">
-                                        Terverifikasi
-                                    </span>
+                                    <span class="text-blue-600">Terverifikasi</span>
+                                    @elseif ($kost->verifikasi->status_verifikasi === 'ditolak')
+                                    <span class="text-red-500">Ditolak</span>
                                     @else
-                                    <span class="text-yellow-600">
-                                        {{ ucfirst($kost->verifikasi->status_verifikasi) }}
-                                    </span>
+                                    <span class="text-yellow-600">{{ ucfirst($kost->verifikasi->status_verifikasi) }}</span>
                                     @endif
-                                    @else
-                                    <span class="text-red-600">Belum Diverifikasi</span>
                                     @endif
                                 </td>
 

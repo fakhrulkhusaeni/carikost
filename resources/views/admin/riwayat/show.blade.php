@@ -138,7 +138,7 @@
 
                    <!-- Rating Section -->
                    <div class="p-6 max-w-sm bg-white shadow-lg rounded-lg">
-                       <h4 class="text-center text-lg font-semibold mb-4">Beri Penilaian Anda</h4>
+                       <h4 class="text-center text-lg font-semibold mb-4">Beri Penilaian Anda Setelah Menempati Kost/Kontrakan</h4>
 
                        @if ($riwayat && $riwayat->status_pembayaran === 'Berhasil')
                        <div class="flex justify-center space-x-2" id="stars">
@@ -163,15 +163,20 @@
 
                    <!-- Payment Button -->
                    <div class="flex justify-end mt-6">
-                       @if ($riwayat->status_pembayaran != 'Berhasil')
+                       @if ($riwayat->status_konfirmasi == 'Disetujui' && $riwayat->status_pembayaran != 'Berhasil')
                        <button type="button" id="btn-bayar" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2">
                            <i class="fas fa-wallet"></i>
                            Bayar Sekarang
                        </button>
-                       @else
+                       @elseif ($riwayat->status_pembayaran == 'Berhasil')
                        <button type="button" onclick="showAlreadyBayarAlert()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2">
                            <i class="fas fa-check-circle"></i>
                            Sudah Dibayar
+                       </button>
+                       @else
+                       <button type="button" disabled class="px-6 py-2 bg-gray-400 text-white rounded-lg flex items-center gap-2 cursor-not-allowed">
+                           <i class="fas fa-hourglass-half"></i>
+                           Menunggu Persetujuan
                        </button>
                        @endif
                    </div>

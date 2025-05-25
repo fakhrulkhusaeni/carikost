@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifikasiVerifikasiDitolakKost;
 use App\Mail\NotifikasiVerifikasiKost;
 use App\Models\Kost;
 use Illuminate\Support\Facades\Mail;
@@ -44,7 +45,7 @@ class VerifikasiController extends Controller
         $kost = Kost::with('verifikasi', 'user')->findOrFail($id);
 
         if ($kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi') {
-            return redirect()->route('admin.verifikasi.index')->with('error', 'Kost sudah diverifikasi sebelumnya.');
+            return redirect()->route('admin.verifikasi.index')->with('error', 'Kost/Kontrakan sudah diverifikasi sebelumnya.');
         }
 
         // Update status verifikasi
@@ -53,6 +54,23 @@ class VerifikasiController extends Controller
         // Kirim email ke user pemilik kost
         Mail::to($kost->user->email)->send(new NotifikasiVerifikasiKost($kost, $kost->user));
 
-        return redirect()->route('admin.verifikasi.index')->with('success', 'Kost berhasil diverifikasi.');
+        return redirect()->route('admin.verifikasi.index')->with('success', 'Kost/Kontrakan berhasil diverifikasi.');
+    }
+
+    public function tolak($id)
+    {
+        $kost = Kost::with('verifikasi', 'user')->findOrFail($id);
+
+        if ($kost->verifikasi && $kost->verifikasi->status_verifikasi === 'ditolak') {
+            return redirect()->route('admin.verifikasi.index')->with('error', 'Kost/Kontrakan sudah ditolak sebelumnya.');
+        }
+
+        // Update status verifikasi
+        $kost->verifikasi->update(['status_verifikasi' => 'ditolak']);
+
+        // Kirim email ke user pemilik kost
+        Mail::to($kost->user->email)->send(new NotifikasiVerifikasiDitolakKost($kost, $kost->user));
+
+        return redirect()->route('admin.verifikasi.index')->with('success', 'Kost/Kontrakan telah ditolak.');
     }
 }

@@ -74,6 +74,7 @@
                         @endif
                     </div>
                 </div>
+                
 
                 <!-- Button -->
                 <div class="col-span-1 md:col-span-2 flex justify-end mt-6 space-x-4">
@@ -83,7 +84,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        Pesanan Sudah Dikonfirmasi
+                        Sudah Disetujui
                     </button>
                     @else
                     <form action="{{ route('admin.pembayaran.approve', $pembayaran->id) }}" method="POST">
@@ -92,13 +93,21 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            Konfirmasi Pesanan
+                            Disetujui
                         </button>
                     </form>
                     @endif
 
                     <!-- Tombol Ditolak -->
-                    <!-- <form action="{{ route('admin.pembayaran.reject', $pembayaran->id) }}" method="POST">
+                    @if ($pembayaran->status_konfirmasi === 'Ditolak')
+                    <button type="button" onclick="showAlreadyRejectAlert()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Sudah Ditolak
+                    </button>
+                    @else
+                    <form action="{{ route('admin.pembayaran.reject', $pembayaran->id) }}" method="POST">
                         @csrf
                         <button type="submit" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -106,7 +115,8 @@
                             </svg>
                             Ditolak
                         </button>
-                    </form> -->
+                    </form>
+                    @endif
                 </div>
             </div>
         </div>
@@ -131,6 +141,15 @@
                 icon: 'info',
                 title: 'Sudah Disetujui',
                 text: 'Sudah disetujui dan tidak bisa disetujui lagi.',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        function showAlreadyRejectAlert() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Sudah Ditolak',
+                text: 'Sudah ditolak dan tidak bisa ditolak lagi.',
                 confirmButtonText: 'OK'
             });
         }

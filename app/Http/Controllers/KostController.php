@@ -71,6 +71,7 @@ class KostController extends Controller
 
         $sudahUpload = !is_null($bukti);
         $sudahTerverifikasi = $bukti && $bukti->kost->verifikasi->status_verifikasi === 'terverifikasi';
+        $verifikasiDitolak = $bukti && $bukti->kost->verifikasi->status_verifikasi === 'ditolak';
 
         // Ambil pengguna yang disetujui
         $penghuni = Riwayat::where('kost_id', $kost->id)
@@ -79,7 +80,7 @@ class KostController extends Controller
             ->with('user')
             ->get();
 
-        return view('admin.kost.show', compact('kost', 'sudahUpload', 'sudahTerverifikasi', 'bukti', 'penghuni'));
+        return view('admin.kost.show', compact('kost', 'sudahUpload', 'sudahTerverifikasi', 'verifikasiDitolak', 'bukti', 'penghuni'));
     }
 
     public function edit(Kost $kost)
@@ -148,7 +149,7 @@ class KostController extends Controller
         $r = Riwayat::findOrFail($id);
         $r->tanggal_keluar = Carbon::now();
         $r->save();
-        
+
         // Ambil semua pembayaran terkait user dan kost
         $pembayaranList = Pembayaran::where('user_id', $r->user_id)
             ->where('kost_id', $r->kost_id)

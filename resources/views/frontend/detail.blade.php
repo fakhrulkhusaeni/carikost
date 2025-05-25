@@ -167,7 +167,7 @@
                                     @foreach ($facilities as $facility)
                                     <li class="d-flex align-items-center mb-3">
                                         <i class="fa fa-circle text-primary" style="margin-right: 15px;"></i>
-                                        <span>{{ $facility }}</span>
+                                        <span>{{ strtoupper($facility) }}</span>
                                     </li>
                                     @endforeach
                                 </ul>
