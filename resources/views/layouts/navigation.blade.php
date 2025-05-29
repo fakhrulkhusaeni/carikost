@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('frontend.index') }}" class="text-gray-800 text-lg font-semibold">
-                        CariHunian
+                        InfoKost Bahari
                     </a>
                 </div>
 
@@ -46,7 +46,6 @@
                         {{ __('Kelola Data Pemesanan') }}
                     </x-nav-link>
                     @endunless
-
 
                     @can('manage hunian lain')
                     <x-nav-link :href="route('admin.hunian_lain.index')" :active="request()->routeIs('admin.hunian_lain.index')">
@@ -115,6 +114,42 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @can('manage user')
+            <x-responsive-nav-link :href="route('admin.pengguna.index')" :active="request()->routeIs('admin.pengguna.index')">
+                {{ __('Kelola Akun Pengguna') }}
+            </x-responsive-nav-link>
+            @endcan
+
+            @can('manage verifikasi data')
+            <x-responsive-nav-link :href="route('admin.verifikasi.index')" :active="request()->routeIs('admin.verifikasi.index')">
+                {{ __('Kelola Data Kost/Kontrakan') }}
+            </x-responsive-nav-link>
+            @endcan
+
+            @can('manage riwayat booking')
+            <x-responsive-nav-link :href="route('admin.riwayat.index')" :active="request()->routeIs('admin.riwayat.index')">
+                {{ __('Riwayat Pemesanan') }}
+            </x-responsive-nav-link>
+            @endcan
+
+            @can('manage hunian')
+            <x-responsive-nav-link :href="route('admin.kost.index')" :active="request()->routeIs('admin.kost.index')">
+                {{ __('Kelola Kost dan Kontrakan') }}
+            </x-responsive-nav-link>
+            @endcan
+
+            @unless(auth()->user()->hasRole('pencari_kost') || auth()->user()->hasRole('super_admin'))
+            <x-responsive-nav-link :href="route('admin.pembayaran.index')" :active="request()->routeIs('admin.pembayaran.index')">
+                {{ __('Kelola Data Pemesanan') }}
+            </x-responsive-nav-link>
+            @endunless
+
+            @can('manage hunian lain')
+            <x-responsive-nav-link :href="route('admin.hunian_lain.index')" :active="request()->routeIs('admin.hunian_lain.index')">
+                {{ __('Kelola Data Ruko dan Kios') }}
+            </x-responsive-nav-link>
+            @endcan
         </div>
 
         <!-- Responsive Settings Options -->

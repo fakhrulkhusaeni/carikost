@@ -13,6 +13,8 @@
             pada tanggal <strong>{{ \Carbon\Carbon::parse($pembayaran->tanggal_booking)->format('d M Y') }}</strong>.
         </p>
 
+        <p style="font-size: 16px; margin-bottom: 30px;">Silakan Melakukan Pembayaran Sekarang</p>
+
     </div>
 </body>
 </html>

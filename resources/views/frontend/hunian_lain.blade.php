@@ -14,10 +14,9 @@
     <header class="header_section">
       <div class="container-fluid">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="{{ route('frontend.index') }}">
-            <span>
-              CariHunian
-            </span>
+          <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('frontend.index') }}">
+            <img src="{{ asset('assets/icon.png') }}" alt="CariHunian Logo" style="height: 40px;" class="img-fluid">
+            <span class="fw-bold fs-5 text-white mb-0">InfoKost Bahari</span>
           </a>
 
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -122,8 +121,8 @@
                   <li><i class="bi bi-cash me-2"></i> <span class="ms-2">Harga: Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $hunianLain->harga), 0, ',', '.') }}</span></li>
                 </ul>
                 <div class="d-flex justify-content-between align-items-center">
-                  <a href="{{ route('frontend.detail_hunianlain', $hunianLain->id) }}" class="btn btn-primary">Lihat Detail</a>
                   <span class="verified text-primary" style="font-size: 0.80rem; cursor: pointer;">{{ ucfirst($hunianLain->status_verifikasi) }}</span>
+                  <a href="{{ route('frontend.detail_hunianlain', $hunianLain->id) }}" class="btn btn-primary">Lihat Detail</a>
                 </div>
               </div>
             </div>
@@ -208,7 +207,7 @@
   <section class="footer_section">
     <div class="container">
       <p>
-        &copy; <span id="displayYear"></span> Tegal Kost
+        &copy; <span id="displayYear"></span> InfoKost Bahari
       </p>
     </div>
   </section>

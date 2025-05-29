@@ -11,9 +11,9 @@
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link rel="shortcut icon" href="assets/favicon.png" type="">
+    <link rel="shortcut icon" href="assets/icon.png" type="">
 
-    <title>Cari Hunian</title>
+    <title>InfoKost Bahari</title>
 
     <!-- jQery -->
     <script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>

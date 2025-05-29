@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="assets/favicon.png" type="" />
+    <link rel="shortcut icon" href="assets/icon.png" type="" />
 
     <title>Register</title>
 
@@ -20,7 +20,7 @@
         <div class="website-logo">
             <a class="navbar-brand" href="{{ route('frontend.index') }}">
                 <span>
-                    CariHunian
+                    InfoKost Bahari
                 </span>
             </a>
         </div>
@@ -124,12 +124,12 @@
                             <!-- Account Type -->
                             <div class="form-group mb-4">
                                 <label for="account-type" class="form-label">Tipe Akun</label>
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex flex-column gap-2">
                                     <div class="form-check me-3">
                                         <input class="form-check-input" type="radio" name="account_type" id="pemilik_kost" value="pemilik_kost" required
                                             oninvalid="this.setCustomValidity('Silakan pilih tipe akun')"
                                             oninput="this.setCustomValidity('')" />
-                                        <label class="form-check-label" for="pemilik_kost">
+                                        <label class="form-check-label d-inline-flex align-items-center gap-2" for="pemilik_kost">
                                             <img src="{{ asset('assets/pemilik-kost.png') }}" alt="Pemilik Kost" style="width: 25px; height: 25px;" class="me-1">Pemilik Hunian
                                         </label>
                                     </div>
@@ -137,7 +137,7 @@
                                         <input class="form-check-input" type="radio" name="account_type" id="pencari_kost" value="pencari_kost" required
                                             oninvalid="this.setCustomValidity('Silakan pilih tipe akun')"
                                             oninput="this.setCustomValidity('')" />
-                                        <label class="form-check-label" for="pencari_kost">
+                                        <label class="form-check-label d-inline-flex align-items-center gap-2" for="pencari_kost">
                                             <img src="{{ asset('assets/pencari-kost.png') }}" alt="Pencari Kost" style="width: 25px; height: 25px;" class="me-1">Pencari Hunian
                                         </label>
                                     </div>

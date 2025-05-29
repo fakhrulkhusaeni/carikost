@@ -20,10 +20,9 @@
         <header class="header_section">
             <div class="container-fluid">
                 <nav class="navbar navbar-expand-lg custom_nav-container ">
-                    <a class="navbar-brand" href="{{ route('frontend.index') }}">
-                        <span>
-                            CariHunian
-                        </span>
+                    <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('frontend.index') }}">
+                        <img src="{{ asset('assets/icon.png') }}" alt="CariHunian Logo" style="height: 40px;" class="img-fluid">
+                        <span class="fw-bold fs-5 text-white mb-0">InfoKost Bahari</span>
                     </a>
 
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -244,7 +243,6 @@
 
 
     <!-- info section -->
-
     <section class="info_section layout_padding2">
         <div class="container">
             <div class="row">
@@ -305,7 +303,7 @@
     <section class="footer_section">
         <div class="container">
             <p>
-                &copy; <span id="displayYear"></span> Tegal Kost
+                &copy; <span id="displayYear"></span> InfoKost Bahari
             </p>
         </div>
     </section>

@@ -4,9 +4,6 @@
 
 <body class="sub_page">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
   <div class="hero_area">
 
     <div class="hero_bg_box">
@@ -17,10 +14,9 @@
     <header class="header_section">
       <div class="container-fluid">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="{{ route('frontend.index') }}">
-            <span>
-              CariHunian
-            </span>
+          <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('frontend.index') }}">
+            <img src="{{ asset('assets/icon.png') }}" alt="CariHunian Logo" style="height: 40px;" class="img-fluid">
+            <span class="fw-bold fs-5 text-white mb-0">InfoKost Bahari</span>
           </a>
 
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -148,9 +144,6 @@
   </section>
   <!-- end why section -->
 
-
-
-
   <!-- info section -->
   <section class="info_section layout_padding2">
     <div class="container">
@@ -205,14 +198,13 @@
       </div>
     </div>
   </section>
-
   <!-- end info section -->
 
   <!-- footer section -->
   <section class="footer_section">
     <div class="container">
       <p>
-        &copy; <span id="displayYear"></span> Tegal Kost
+        &copy; <span id="displayYear"></span> InfoKost Bahari
       </p>
     </div>
   </section>

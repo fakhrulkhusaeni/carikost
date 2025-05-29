@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="assets/favicon.png" type="">
+    <link rel="shortcut icon" href="assets/icon.png" type="">
 
     <title>Reset Password</title>
 
@@ -20,7 +20,7 @@
         <div class="website-logo">
             <a class="navbar-brand" href="{{ route('frontend.index') }}">
                 <span>
-                    Cari Hunian
+                    InfoKost Bahari
                 </span>
             </a>
         </div>
