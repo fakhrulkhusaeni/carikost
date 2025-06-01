@@ -5,6 +5,9 @@
         </h2>
     </x-slot>
 
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.css" rel="stylesheet">
+
     <div class="py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden p-10 shadow-sm sm:rounded-lg">
@@ -190,148 +193,142 @@
                         </button>
                     </div>
                 </form>
-
-
-                <!-- SweetAlert2 CSS -->
-                <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.css" rel="stylesheet">
-
-                <!-- SweetAlert2 JS -->
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.js"></script>
-
-
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        // Tambah fasilitas
-                        document.getElementById('add-facility').addEventListener('click', () => {
-                            const container = document.getElementById('fasilitas-container');
-                            const inputHTML = `
-                                <div class="flex items-center gap-2">
-                                    <input type="text" name="fasilitas[]" class="w-full border border-slate-300 rounded-lg" placeholder="Masukkan fasilitas" required>
-                                    <button type="button" class="remove-facility bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
-                                </div>`;
-                            container.insertAdjacentHTML('beforeend', inputHTML);
-                        });
-
-                        // Hapus fasilitas
-                        document.getElementById('fasilitas-container').addEventListener('click', (event) => {
-                            if (event.target.classList.contains('remove-facility')) {
-                                event.target.closest('div').remove();
-                            }
-                        });
-
-
-                        // Tambah detail hunian
-                        document.getElementById('add-detail').addEventListener('click', () => {
-                            const container = document.getElementById('detail-hunian-container');
-                            const inputHTML = `
-                                <div class="flex items-center gap-2">
-                                    <input type="text" name="detail_hunian[]" class="w-full border border-slate-300 rounded-lg" placeholder="Masukkan detail hunian" required>
-                                    <button type="button" class="remove-detail bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
-                                </div>`;
-                            container.insertAdjacentHTML('beforeend', inputHTML);
-                        });
-
-                        // Hapus detail hunian
-                        document.getElementById('detail-hunian-container').addEventListener('click', (event) => {
-                            if (event.target.classList.contains('remove-detail')) {
-                                event.target.closest('div').remove();
-                            }
-                        });
-
-
-                        // Tambah foto hunian
-                        document.getElementById('add-foto').addEventListener('click', () => {
-                            const container = document.getElementById('foto-container');
-
-                            // Hitung jumlah foto yang sudah ada (img) dan input file baru
-                            const existingPhotos = container.querySelectorAll('img').length;
-                            const addedInputs = container.querySelectorAll('input[type="file"]').length;
-
-                            const totalPhotos = existingPhotos + addedInputs;
-
-                            if (totalPhotos < 10) {
-                                const inputHTML = `
-                                    <div class="flex items-center gap-2">
-                                        <input type="file" name="foto[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
-                                        <button type="button" class="remove-photo bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
-                                    </div>`;
-                                container.insertAdjacentHTML('beforeend', inputHTML);
-                            } else {
-                                Swal.fire({
-                                    title: 'Maksimal 10 Foto Hunian!',
-                                    text: 'Anda sudah mencapai batas maksimum foto yang dapat diunggah.',
-                                    icon: 'warning',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        });
-
-                        // Hapus foto
-                        document.addEventListener('click', (event) => {
-                            if (event.target.classList.contains('remove-photo')) {
-                                event.target.closest('div').remove();
-                            }
-                        });
-
-                        // Tambah foto bukti
-                        document.getElementById('add-bukti').addEventListener('click', () => {
-                            const container = document.getElementById('bukti-container');
-
-                            // Hitung jumlah bukti yang sudah ada (img) dan input file baru
-                            const existingBukti = container.querySelectorAll('img').length;
-                            const addedInputs = container.querySelectorAll('input[type="file"]').length;
-
-                            const totalBukti = existingBukti + addedInputs;
-
-                            if (totalBukti < 5) {
-                                const inputHTML = `
-                                    <div class="flex items-center gap-2">
-                                        <input type="file" name="bukti_kepemilikan[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
-                                        <button type="button" class="remove-bukti bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
-                                    </div>`;
-                                container.insertAdjacentHTML('beforeend', inputHTML);
-                            } else {
-                                Swal.fire({
-                                    title: 'Maksimal 5 Bukti Kepemilikan!',
-                                    text: 'Anda sudah mencapai batas maksimum bukti kepemilikan yang dapat diunggah.',
-                                    icon: 'warning',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        });
-
-                        // Hapus foto bukti
-                        document.addEventListener('click', (event) => {
-                            if (event.target.classList.contains('remove-bukti')) {
-                                event.target.closest('div').remove();
-                            }
-                        });
-
-                    });
-                </script>
-
-                <script>
-                    // Mengambil elemen input harga
-                    const hargaInput = document.getElementById('harga');
-
-                    // Format input untuk menambahkan "Rp" dan pemisah ribuan
-                    hargaInput.addEventListener('input', function(e) {
-                        let value = hargaInput.value;
-
-                        // Menghapus semua karakter non-numerik kecuali titik (.) untuk desimal
-                        value = value.replace(/[^0-9]/g, '');
-
-                        // Menambahkan "Rp" di depan dan format pemisah ribuan
-                        if (value) {
-                            value = 'Rp ' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                        }
-
-                        // Menampilkan kembali nilai dengan format yang benar
-                        hargaInput.value = value;
-                    });
-                </script>
-
             </div>
         </div>
     </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tambah fasilitas
+            document.getElementById('add-facility').addEventListener('click', () => {
+                const container = document.getElementById('fasilitas-container');
+                const inputHTML = `
+                <div class="flex items-center gap-2">
+                    <input type="text" name="fasilitas[]" class="w-full border border-slate-300 rounded-lg" placeholder="Masukkan fasilitas" required>
+                    <button type="button" class="remove-facility bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                </div>`;
+                container.insertAdjacentHTML('beforeend', inputHTML);
+            });
+
+            // Hapus fasilitas
+            document.getElementById('fasilitas-container').addEventListener('click', (event) => {
+                if (event.target.classList.contains('remove-facility')) {
+                    event.target.closest('div').remove();
+                }
+            });
+
+            // Tambah detail hunian
+            document.getElementById('add-detail').addEventListener('click', () => {
+                const container = document.getElementById('detail-hunian-container');
+                const inputHTML = `
+                <div class="flex items-center gap-2">
+                    <input type="text" name="detail_hunian[]" class="w-full border border-slate-300 rounded-lg" placeholder="Masukkan detail hunian" required>
+                    <button type="button" class="remove-detail bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                </div>`;
+                container.insertAdjacentHTML('beforeend', inputHTML);
+            });
+
+            // Hapus detail hunian
+            document.getElementById('detail-hunian-container').addEventListener('click', (event) => {
+                if (event.target.classList.contains('remove-detail')) {
+                    event.target.closest('div').remove();
+                }
+            });
+
+
+            // Tambah foto hunian
+            document.getElementById('add-foto').addEventListener('click', () => {
+                const container = document.getElementById('foto-container');
+
+                // Hitung jumlah foto yang sudah ada (img) dan input file baru
+                const existingPhotos = container.querySelectorAll('img').length;
+                const addedInputs = container.querySelectorAll('input[type="file"]').length;
+
+                const totalPhotos = existingPhotos + addedInputs;
+
+                if (totalPhotos < 10) {
+                    const inputHTML = `
+                    <div class="flex items-center gap-2">
+                        <input type="file" name="foto[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
+                        <button type="button" class="remove-photo bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', inputHTML);
+                } else {
+                    Swal.fire({
+                        title: 'Maksimal 10 Foto Hunian!',
+                        text: 'Anda sudah mencapai batas maksimum foto yang dapat diunggah.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+
+            // Hapus foto
+            document.addEventListener('click', (event) => {
+                if (event.target.classList.contains('remove-photo')) {
+                    event.target.closest('div').remove();
+                }
+            });
+
+            // Tambah foto bukti
+            document.getElementById('add-bukti').addEventListener('click', () => {
+                const container = document.getElementById('bukti-container');
+
+                // Hitung jumlah bukti yang sudah ada (img) dan input file baru
+                const existingBukti = container.querySelectorAll('img').length;
+                const addedInputs = container.querySelectorAll('input[type="file"]').length;
+
+                const totalBukti = existingBukti + addedInputs;
+
+                if (totalBukti < 5) {
+                    const inputHTML = `
+                    <div class="flex items-center gap-2">
+                        <input type="file" name="bukti_kepemilikan[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
+                        <button type="button" class="remove-bukti bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', inputHTML);
+                } else {
+                    Swal.fire({
+                        title: 'Maksimal 5 Bukti Kepemilikan!',
+                        text: 'Anda sudah mencapai batas maksimum bukti kepemilikan yang dapat diunggah.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+
+            // Hapus foto bukti
+            document.addEventListener('click', (event) => {
+                if (event.target.classList.contains('remove-bukti')) {
+                    event.target.closest('div').remove();
+                }
+            });
+
+        });
+    </script>
+
+    <script>
+        // Mengambil elemen input harga
+        const hargaInput = document.getElementById('harga');
+
+        // Format input untuk menambahkan "Rp" dan pemisah ribuan
+        hargaInput.addEventListener('input', function(e) {
+            let value = hargaInput.value;
+
+            // Menghapus semua karakter non-numerik kecuali titik (.) untuk desimal
+            value = value.replace(/[^0-9]/g, '');
+
+            // Menambahkan "Rp" di depan dan format pemisah ribuan
+            if (value) {
+                value = 'Rp ' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
+
+            // Menampilkan kembali nilai dengan format yang benar
+            hargaInput.value = value;
+        });
+    </script>
+
 </x-app-layout>

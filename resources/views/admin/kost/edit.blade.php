@@ -5,6 +5,9 @@
         </h2>
     </x-slot>
 
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.css" rel="stylesheet">
+
     <div class="py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden p-10 shadow-sm sm:rounded-lg">
@@ -95,17 +98,39 @@
 
                     <div class="mt-4">
                         <x-input-label for="facilities" :value="__('Fasilitas')" />
-                        <div id="facilities-container" class="flex flex-col gap-y-2">
-                            @foreach(old('facilities', $kost->facilities ?? []) as $facility)
-                            <div class="flex items-center gap-2">
-                                <x-text-input name="facilities[]" class="w-full" type="text" value="{{ $facility }}" placeholder="Masukkan fasilitas" />
-                                <button type="button" class="remove-facility bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+
+                        <select id="facilityDropdown" class="form-control mt-2 py-3 rounded-lg pl-3 w-full border border-slate-300">
+                            <option value="" disabled selected>Pilih Fasilitas</option>
+                        </select>
+
+                        <!-- Checkbox Fasilitas -->
+                        <div id="checkboxContainer" class="mt-3 p-4 border rounded-md">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+                                @php
+                                $allFacilities = [
+                                "Kamar Mandi Dalam", "Air Panas", "Lemari Baju", "AC",
+                                "Kursi", "Meja", "TV", "Kasur", "Mesin Cuci", "Dapur Bersama", "Parkir Mobil",
+                                "Kloset Duduk", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV", "Dispenser", "Kulkas", "Teras",
+                                "Ruang Tamu", "Ruang Makan", "Tempat Jemur", "Kamar Mandi Luar", "Mushola"
+                                ];
+                                $selectedFacilities = old('facilities', $kost->facilities ?? []);
+                                @endphp
+
+                                @foreach($allFacilities as $facility)
+                                <div class="col-md-6 col-12 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="facilities[]" value="{{ $facility }}"
+                                            {{ in_array($facility, $selectedFacilities) ? 'checked' : '' }}>
+                                        <label class="form-check-label">{{ strtoupper($facility) }}</label>
+                                    </div>
+                                </div>
+                                @endforeach
                             </div>
-                            @endforeach
                         </div>
-                        <button type="button" id="add-facility" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded">Tambah Fasilitas</button>
+
                         <x-input-error :messages="$errors->get('facilities')" class="mt-2" />
                     </div>
+
 
                     <div class="mt-4">
                         <x-input-label for="rules" :value="__('Peraturan')" />
@@ -142,97 +167,99 @@
                         </button>
                     </div>
                 </form>
-
-
-                <!-- SweetAlert2 CSS -->
-                <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.css" rel="stylesheet">
-
-                <!-- SweetAlert2 JS -->
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.js"></script>
-
-
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        // Tambah fasilitas
-                        document.getElementById('add-facility').addEventListener('click', () => {
-                            const container = document.getElementById('facilities-container');
-                            const inputHTML = `
-                                <div class="flex items-center gap-2">
-                                    <input type="text" name="facilities[]" class="w-full border border-slate-300 rounded-lg" placeholder="Masukkan fasilitas" required>
-                                    <button type="button" class="remove-facility bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
-                                </div>`;
-                            container.insertAdjacentHTML('beforeend', inputHTML);
-                        });
-
-                        // Tambah peraturan
-                        document.getElementById('add-rule').addEventListener('click', () => {
-                            const container = document.getElementById('rules-container');
-                            const inputHTML = `
-                                <div class="flex items-center gap-2">
-                                    <input type="text" name="rules[]" class="w-full border border-slate-300 rounded-lg" placeholder="Masukkan peraturan" required>
-                                    <button type="button" class="remove-rule bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
-                                </div>`;
-                            container.insertAdjacentHTML('beforeend', inputHTML);
-                        });
-
-                        // Tambah foto
-                        document.getElementById('add-foto').addEventListener('click', () => {
-                            const container = document.getElementById('foto-container');
-
-                            // Hitung jumlah foto yang sudah ada (img) dan input file baru
-                            const existingPhotos = container.querySelectorAll('img').length;
-                            const addedInputs = container.querySelectorAll('input[type="file"]').length;
-
-                            const totalPhotos = existingPhotos + addedInputs;
-
-                            if (totalPhotos < 10) {
-                                const inputHTML = `
-                                    <div class="flex items-center gap-2">
-                                        <input type="file" name="foto[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
-                                        <button type="button" class="remove-photo bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
-                                    </div>`;
-                                container.insertAdjacentHTML('beforeend', inputHTML);
-                            } else {
-                                Swal.fire({
-                                    title: 'Maksimal 10 Foto Hunian!',
-                                    text: 'Anda sudah mencapai batas maksimum foto yang dapat diunggah.',
-                                    icon: 'warning',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        });
-
-                        // Hapus elemen (fasilitas, peraturan, atau foto)
-                        document.addEventListener('click', (event) => {
-                            if (event.target.classList.contains('remove-facility') || event.target.classList.contains('remove-rule') || event.target.classList.contains('remove-photo')) {
-                                event.target.parentElement.remove();
-                            }
-                        });
-                    });
-                </script>
-
-                <script>
-                    // Mengambil elemen input harga
-                    const hargaInput = document.getElementById('harga');
-
-                    // Format input untuk menambahkan "Rp" dan pemisah ribuan
-                    hargaInput.addEventListener('input', function(e) {
-                        let value = hargaInput.value;
-
-                        // Menghapus semua karakter non-numerik kecuali titik (.) untuk desimal
-                        value = value.replace(/[^0-9]/g, '');
-
-                        // Menambahkan "Rp" di depan dan format pemisah ribuan
-                        if (value) {
-                            value = 'Rp ' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                        }
-
-                        // Menampilkan kembali nilai dengan format yang benar
-                        hargaInput.value = value;
-                    });
-                </script>
-
             </div>
         </div>
     </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tambah fasilitas
+            // document.getElementById('add-facility').addEventListener('click', () => {
+            //     const container = document.getElementById('facilities-container');
+            //     const inputHTML = `
+            //     <div class="flex items-center gap-2">
+            //         <input type="text" name="facilities[]" class="w-full border border-slate-300 rounded-lg" placeholder="Masukkan fasilitas" required>
+            //         <button type="button" class="remove-facility bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+            //     </div>`;
+            //     container.insertAdjacentHTML('beforeend', inputHTML);
+            // });
+
+            // Tambah peraturan
+            document.getElementById('add-rule').addEventListener('click', () => {
+                const container = document.getElementById('rules-container');
+                const inputHTML = `
+                <div class="flex items-center gap-2">
+                    <input type="text" name="rules[]" class="w-full border border-slate-300 rounded-lg" placeholder="Masukkan peraturan" required>
+                    <button type="button" class="remove-rule bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                </div>`;
+                container.insertAdjacentHTML('beforeend', inputHTML);
+            });
+
+            // Tambah foto
+            document.getElementById('add-foto').addEventListener('click', () => {
+                const container = document.getElementById('foto-container');
+
+                // Hitung jumlah foto yang sudah ada (img) dan input file baru
+                const existingPhotos = container.querySelectorAll('img').length;
+                const addedInputs = container.querySelectorAll('input[type="file"]').length;
+
+                const totalPhotos = existingPhotos + addedInputs;
+
+                if (totalPhotos < 10) {
+                    const inputHTML = `
+                    <div class="flex items-center gap-2">
+                        <input type="file" name="foto[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
+                        <button type="button" class="remove-photo bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', inputHTML);
+                } else {
+                    Swal.fire({
+                        title: 'Maksimal 10 Foto Hunian!',
+                        text: 'Anda sudah mencapai batas maksimum foto yang dapat diunggah.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+
+            // Hapus elemen (fasilitas, peraturan, atau foto)
+            document.addEventListener('click', (event) => {
+                if (event.target.classList.contains('remove-facility') || event.target.classList.contains('remove-rule') || event.target.classList.contains('remove-photo')) {
+                    event.target.parentElement.remove();
+                }
+            });
+        });
+    </script>
+
+    <script>
+        // Mengambil elemen input harga
+        const hargaInput = document.getElementById('harga');
+
+        // Format input untuk menambahkan "Rp" dan pemisah ribuan
+        hargaInput.addEventListener('input', function(e) {
+            let value = hargaInput.value;
+
+            // Menghapus semua karakter non-numerik kecuali titik (.) untuk desimal
+            value = value.replace(/[^0-9]/g, '');
+
+            // Menambahkan "Rp" di depan dan format pemisah ribuan
+            if (value) {
+                value = 'Rp ' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
+
+            // Menampilkan kembali nilai dengan format yang benar
+            hargaInput.value = value;
+        });
+    </script>
+
+    <script>
+        document.getElementById('facilityDropdown').addEventListener('click', function() {
+            let container = document.getElementById('checkboxContainer');
+            container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+
 </x-app-layout>

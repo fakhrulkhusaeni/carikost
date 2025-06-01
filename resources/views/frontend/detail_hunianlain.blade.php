@@ -146,7 +146,7 @@
                                     @foreach ($fasilitas as $facility)
                                     <li class="d-flex align-items-center mb-3">
                                         <i class="fa fa-circle text-primary" style="margin-right: 15px;"></i>
-                                        <span>{{ $facility }}</span>
+                                        <span>{{ ucwords($facility) }}</span>
                                     </li>
                                     @endforeach
                                 </ul>
@@ -163,7 +163,7 @@
                                     @foreach ($detail_hunian as $details)
                                     <li class="d-flex align-items-center mb-3">
                                         <i class="fa fa-circle text-primary" style="margin-right: 15px;"></i>
-                                        <span>{{ $details }}</span>
+                                        <span>{{ ucwords($details) }}</span>
                                     </li>
                                     @endforeach
                                 </ul>
@@ -202,7 +202,7 @@
                         <!-- Status Hunian -->
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-tag text-primary" style="margin-right: 10px;"></i>
-                            <span>Status: {{ strtoupper($hunianLain->status) }}</span>
+                            <span>Status: <strong>{{ strtoupper($hunianLain->status) }}</strong></span>
                         </div>
 
                         <!-- Lokasi Kecamatan -->

@@ -5,6 +5,9 @@
         </h2>
     </x-slot>
 
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.css" rel="stylesheet">
+
     <div class="py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden p-10 shadow-sm sm:rounded-lg">
@@ -95,10 +98,36 @@
 
                     <div class="mt-4">
                         <x-input-label for="facilities" :value="__('Fasilitas')" />
-                        <div id="facilities-container" class="flex flex-col gap-y-2">
-                            <!-- Input fasilitas baru akan ditambahkan di sini -->
+
+                        <select id="facilityDropdown" class="form-control mt-2 py-3 rounded-lg pl-3 w-full border border-slate-300">
+                            <option value="" disabled selected>Pilih Fasilitas</option>
+                        </select>
+
+                        <!-- Checkbox Fasilitas dalam Dua Kolom -->
+                        <div id="checkboxContainer" class="mt-3 p-4 border rounded-md" style="display: none;">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+                                @php
+                                $allFacilities = [
+                                "Kamar Mandi Dalam", "Air Panas", "Lemari Baju", "AC",
+                                "Kursi", "Meja", "TV", "Kasur", "Mesin Cuci", "Dapur Bersama", "Parkir Mobil",
+                                "Kloset Duduk", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV", "Dispenser", "Kulkas", "Teras",
+                                "Ruang Tamu", "Ruang Makan", "Tempat Jemur", "Kamar Mandi Luar", "Mushola"
+                                ];
+                                $selectedFacilities = $facilities ?? []; // Pastikan array selalu tersedia
+                                @endphp
+
+                                @foreach($allFacilities as $facility)
+                                <div class="col-md-6 col-12 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="facilities[]" value="{{ $facility }}"
+                                            {{ in_array($facility, $selectedFacilities) ? 'checked' : '' }}>
+                                        <label class="form-check-label">{{ strtoupper($facility) }}</label>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
                         </div>
-                        <button type="button" id="add-facility" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded">Tambah Fasilitas</button>
+
                         <x-input-error :messages="$errors->get('facilities')" class="mt-2" />
                     </div>
 
@@ -126,134 +155,136 @@
                         </button>
                     </div>
                 </form>
-
-                <!-- SweetAlert2 CSS -->
-                <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.css" rel="stylesheet">
-
-                <!-- SweetAlert2 JS -->
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.js"></script>
-
-
-                <script>
-                    document.getElementById('add-facility').addEventListener('click', function() {
-                        const facilityDiv = document.createElement('div');
-                        facilityDiv.className = 'flex items-center gap-x-2 mt-2';
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.name = 'facilities[]';
-                        input.placeholder = 'Masukkan fasilitas hunian Anda';
-                        input.className = 'block w-full p-2 border border-gray-300 rounded';
-                        const deleteButton = document.createElement('button');
-                        deleteButton.type = 'button';
-                        deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
-                        deleteButton.textContent = 'Hapus';
-                        deleteButton.addEventListener('click', function() {
-                            facilityDiv.remove();
-                        });
-                        facilityDiv.appendChild(input);
-                        facilityDiv.appendChild(deleteButton);
-                        document.getElementById('facilities-container').appendChild(facilityDiv);
-                    });
-
-                    document.getElementById('add-rule').addEventListener('click', function() {
-                        const ruleDiv = document.createElement('div');
-                        ruleDiv.className = 'flex items-center gap-x-2 mt-2';
-
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.name = 'rules[]';
-                        input.placeholder = 'Masukkan tata tertib hunian Anda';
-                        input.className = 'block w-full p-2 border border-gray-300 rounded';
-
-                        const deleteButton = document.createElement('button');
-                        deleteButton.type = 'button';
-                        deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
-                        deleteButton.textContent = 'Hapus';
-                        deleteButton.addEventListener('click', function() {
-                            ruleDiv.remove();
-                        });
-
-                        ruleDiv.appendChild(input);
-                        ruleDiv.appendChild(deleteButton);
-                        document.getElementById('rules-container').appendChild(ruleDiv);
-                    });
-
-
-                    document.getElementById('add-foto').addEventListener('click', function() {
-                        const fotoContainer = document.getElementById('foto-container');
-                        const currentFotos = fotoContainer.querySelectorAll('input[type="file"]').length;
-
-                        // Batasi penambahan foto hingga 10
-                        if (currentFotos < 10) {
-                            // Membuat div baru untuk foto dan tombol hapus
-                            const fotoDiv = document.createElement('div');
-                            fotoDiv.className = 'flex items-center gap-x-2 mt-2';
-
-                            // Membuat input file
-                            const input = document.createElement('input');
-                            input.type = 'file';
-                            input.name = 'foto[]';
-                            input.className = 'block w-full p-2 border border-gray-300 rounded';
-                            input.accept = 'image/*';
-
-                            // Membuat tombol hapus
-                            const deleteButton = document.createElement('button');
-                            deleteButton.type = 'button';
-                            deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
-                            deleteButton.textContent = 'Hapus';
-
-                            // Menambahkan event untuk tombol hapus
-                            deleteButton.addEventListener('click', function() {
-                                fotoDiv.remove();
-                            });
-
-                            // Menambahkan input dan tombol hapus ke dalam div fotoDiv
-                            fotoDiv.appendChild(input);
-                            fotoDiv.appendChild(deleteButton);
-
-                            // Menambahkan div fotoDiv ke dalam foto-container
-                            fotoContainer.appendChild(fotoDiv);
-                        } else {
-                            // Menampilkan pop-up SweetAlert2 jika sudah mencapai batas 10 foto
-                            Swal.fire({
-                                title: 'Maksimal 10 Foto!',
-                                text: 'Anda sudah mencapai batas maksimum foto yang dapat diunggah.',
-                                icon: 'warning',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    });
-                </script>
-
-                <script>
-                    const hargaInput = document.getElementById('harga');
-
-                    hargaInput.addEventListener('input', function(e) {
-                        let angka = e.target.value.replace(/[^0-9]/g, '');
-                        if (!angka) {
-                            e.target.value = '';
-                            return;
-                        }
-
-                        e.target.value = formatRupiah(angka);
-                    });
-
-                    function formatRupiah(angka) {
-                        let number_string = angka.toString(),
-                            sisa = number_string.length % 3,
-                            rupiah = number_string.substr(0, sisa),
-                            ribuan = number_string.substr(sisa).match(/\d{3}/g);
-
-                        if (ribuan) {
-                            let separator = sisa ? '.' : '';
-                            rupiah += separator + ribuan.join('.');
-                        }
-
-                        return 'Rp ' + rupiah;
-                    }
-                </script>
-
             </div>
         </div>
     </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.js"></script>
+
+    <script>
+        // document.getElementById('add-facility').addEventListener('click', function() {
+        //     const facilityDiv = document.createElement('div');
+        //     facilityDiv.className = 'flex items-center gap-x-2 mt-2';
+        //     const input = document.createElement('input');
+        //     input.type = 'text';
+        //     input.name = 'facilities[]';
+        //     input.placeholder = 'Masukkan fasilitas hunian Anda';
+        //     input.className = 'block w-full p-2 border border-gray-300 rounded';
+        //     const deleteButton = document.createElement('button');
+        //     deleteButton.type = 'button';
+        //     deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
+        //     deleteButton.textContent = 'Hapus';
+        //     deleteButton.addEventListener('click', function() {
+        //         facilityDiv.remove();
+        //     });
+        //     facilityDiv.appendChild(input);
+        //     facilityDiv.appendChild(deleteButton);
+        //     document.getElementById('facilities-container').appendChild(facilityDiv);
+        // });
+
+        document.getElementById('add-rule').addEventListener('click', function() {
+            const ruleDiv = document.createElement('div');
+            ruleDiv.className = 'flex items-center gap-x-2 mt-2';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'rules[]';
+            input.placeholder = 'Masukkan tata tertib hunian Anda';
+            input.className = 'block w-full p-2 border border-gray-300 rounded';
+
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
+            deleteButton.textContent = 'Hapus';
+            deleteButton.addEventListener('click', function() {
+                ruleDiv.remove();
+            });
+
+            ruleDiv.appendChild(input);
+            ruleDiv.appendChild(deleteButton);
+            document.getElementById('rules-container').appendChild(ruleDiv);
+        });
+
+        document.getElementById('add-foto').addEventListener('click', function() {
+            const fotoContainer = document.getElementById('foto-container');
+            const currentFotos = fotoContainer.querySelectorAll('input[type="file"]').length;
+
+            // Batasi penambahan foto hingga 10
+            if (currentFotos < 10) {
+                // Membuat div baru untuk foto dan tombol hapus
+                const fotoDiv = document.createElement('div');
+                fotoDiv.className = 'flex items-center gap-x-2 mt-2';
+
+                // Membuat input file
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.name = 'foto[]';
+                input.className = 'block w-full p-2 border border-gray-300 rounded';
+                input.accept = 'image/*';
+
+                // Membuat tombol hapus
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
+                deleteButton.textContent = 'Hapus';
+
+                // Menambahkan event untuk tombol hapus
+                deleteButton.addEventListener('click', function() {
+                    fotoDiv.remove();
+                });
+
+                // Menambahkan input dan tombol hapus ke dalam div fotoDiv
+                fotoDiv.appendChild(input);
+                fotoDiv.appendChild(deleteButton);
+
+                // Menambahkan div fotoDiv ke dalam foto-container
+                fotoContainer.appendChild(fotoDiv);
+            } else {
+                // Menampilkan pop-up SweetAlert2 jika sudah mencapai batas 10 foto
+                Swal.fire({
+                    title: 'Maksimal 10 Foto!',
+                    text: 'Anda sudah mencapai batas maksimum foto yang dapat diunggah.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    </script>
+
+    <script>
+        const hargaInput = document.getElementById('harga');
+
+        hargaInput.addEventListener('input', function(e) {
+            let angka = e.target.value.replace(/[^0-9]/g, '');
+            if (!angka) {
+                e.target.value = '';
+                return;
+            }
+
+            e.target.value = formatRupiah(angka);
+        });
+
+        function formatRupiah(angka) {
+            let number_string = angka.toString(),
+                sisa = number_string.length % 3,
+                rupiah = number_string.substr(0, sisa),
+                ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+            if (ribuan) {
+                let separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            return 'Rp ' + rupiah;
+        }
+    </script>
+
+    <script>
+        document.getElementById('facilityDropdown').addEventListener('click', function() {
+            let container = document.getElementById('checkboxContainer');
+            container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+
 </x-app-layout>

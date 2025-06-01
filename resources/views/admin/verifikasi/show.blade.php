@@ -142,6 +142,9 @@
                         </button>
                         @else
                         <form action="{{ route('admin.verifikasi.verifikasi', $kost->id) }}" method="POST">
+                            @if ($statusVerifikasi === 'ditolak')
+                            <!--  -->
+                            @else
                             @csrf
                             <button
                                 type="submit"
@@ -149,6 +152,7 @@
                                 {{ !$memenuhiSyaratDokumen ? 'disabled' : '' }}>
                                 Verifikasi
                             </button>
+                            @endif
                         </form>
                         @endif
 
@@ -159,6 +163,9 @@
                         </button>
                         @else
                         <form action="{{ route('admin.verifikasi.tolak', $kost->id) }}" method="POST" class="form-tolak">
+                            @if ($statusVerifikasi === 'terverifikasi')
+                            <!--  -->
+                            @else
                             @csrf
                             <button
                                 type="submit"
@@ -166,6 +173,7 @@
                                 {{ !$memenuhiSyaratDokumen ? 'disabled' : '' }}>
                                 Tolak
                             </button>
+                            @endif
                         </form>
                         @endif
 

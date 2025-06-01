@@ -77,6 +77,9 @@
                 
 
                 <!-- Button -->
+                @if ($pembayaran->tanggal_keluar || $pembayaran->status_konfirmasi === 'Ditolak' || $pembayaran->status_konfirmasi === 'Disetujui')
+                <!--  -->
+                @else
                 <div class="col-span-1 md:col-span-2 flex justify-end mt-6 space-x-4">
                     <!-- Tombol Disetujui -->
                     @if ($pembayaran->status_konfirmasi === 'Disetujui')
@@ -118,6 +121,8 @@
                     </form>
                     @endif
                 </div>
+                @endif
+
             </div>
         </div>
     </div>

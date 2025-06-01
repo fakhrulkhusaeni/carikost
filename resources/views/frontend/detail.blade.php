@@ -159,17 +159,24 @@
                                 <hr class="my-4">
 
                                 <h4 class="mb-3">Fasilitas</h4>
-                                <ul class="list-unstyled">
-                                    @php
-                                    $facilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : $kost->facilities;
-                                    @endphp
-                                    @foreach ($facilities as $facility)
-                                    <li class="d-flex align-items-center mb-3">
-                                        <i class="fa fa-circle text-primary" style="margin-right: 15px;"></i>
-                                        <span>{{ strtoupper($facility) }}</span>
-                                    </li>
+                                @php
+                                $facilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : $kost->facilities;
+                                $chunks = array_chunk($facilities, ceil(count($facilities) / 2));
+                                @endphp
+                                <div class="row">
+                                    @foreach ($chunks as $chunk)
+                                    <div class="col-md-6">
+                                        <ul class="list-unstyled">
+                                            @foreach ($chunk as $facility)
+                                            <li class="d-flex align-items-center mb-3">
+                                                <i class="fa fa-circle text-primary me-2"></i>
+                                                <span>{{ strtoupper($facility) }}</span>
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                     @endforeach
-                                </ul>
+                                </div>
 
                                 <hr class="my-4">
 
@@ -181,7 +188,7 @@
                                     @foreach ($rules as $rule)
                                     <li class="d-flex align-items-center mb-3">
                                         <i class="fa fa-circle text-primary" style="margin-right: 10px;"></i>
-                                        <span>{{ $rule }}</span>
+                                        <span>{{ ucwords($rule) }}</span>
                                     </li>
                                     @endforeach
                                 </ul>

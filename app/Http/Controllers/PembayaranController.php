@@ -54,6 +54,7 @@ class PembayaranController extends Controller
         $existingBooking = Riwayat::where('kost_id', $validated['kost_id'])
             ->where('user_id', auth()->id())
             ->where("tanggal_keluar", null)
+            ->where('status_konfirmasi', '!=', 'Ditolak')
             ->exists();
 
         if ($existingBooking) {

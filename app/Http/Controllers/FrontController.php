@@ -24,12 +24,22 @@ class FrontController extends Controller
             ->whereHas('verifikasi', fn($q) => $q->where('status_verifikasi', 'terverifikasi'))
             ->tersedia();
 
-        // Filter pencarian jika ada
+        // Filter pencarian
         if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', '%' . $search . '%')
-                    ->orWhere('location', 'like', '%' . $search . '%')
-                    ->orWhere('type', 'like', '%' . $search . '%');
+            $keywords = explode(' ', $search);
+
+            $query->where(function ($q) use ($keywords) {
+                foreach ($keywords as $word) {
+                    $q->where(function ($subQuery) use ($word) {
+                        $subQuery->where('nama', 'like', "%$word%")
+                            ->orWhere('location', 'like', "%$word%")
+                            ->orWhere('type', 'like', "%$word%")
+                            ->orWhere('alamat', 'like', "%$word%")
+                            ->orWhere('facilities', 'like', "%$word%")
+                            ->orWhere('rules', 'like', "%$word%")
+                            ->orWhere('deskripsi', 'like', "%$word%");
+                    });
+                }
             });
         }
 
@@ -67,6 +77,7 @@ class FrontController extends Controller
         // Ambil hanya kost yang sudah diverifikasi
         $kosts = Kost::with('verifikasi')
             ->whereHas('verifikasi', fn($q) => $q->where('status_verifikasi', 'terverifikasi'))
+            ->when($location, fn($q) => $q->where('location', $location))
             ->get();
 
         // Filter kost yang kamarnya masih tersedia
@@ -131,10 +142,20 @@ class FrontController extends Controller
         $query = HunianLain::query();
 
         if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('location', 'like', '%' . $search . '%')
-                    ->orWhere('tipe_hunian', 'like', '%' . $search . '%')
-                    ->orWhere('status', 'like', '%' . $search . '%');
+            $keywords = explode(' ', $search);
+
+            $query->where(function ($q) use ($keywords) {
+                foreach ($keywords as $word) {
+                    $q->where(function ($subQuery) use ($word) {
+                        $subQuery->where('location', 'like', "%$word%")
+                            ->orWhere('tipe_hunian', 'like', "%$word%")
+                            ->orWhere('alamat', 'like', "%$word%")
+                            ->orWhere('status', 'like', "%$word%")
+                            ->orWhere('fasilitas', 'like', "%$word%")
+                            ->orWhere('detail_hunian', 'like', "%$word%")
+                            ->orWhere('deskripsi', 'like', "%$word%");
+                    });
+                }
             });
         }
 
@@ -168,6 +189,7 @@ class FrontController extends Controller
         $userHasBooked = auth()->check() && $c = Riwayat::where('kost_id', $kost->id)
             ->where('user_id', auth()->id())
             ->where('tanggal_keluar', null)
+            ->where('status_konfirmasi', '!=', 'Ditolak')
             ->exists();
 
         $ratings = Rating::where('kost_id', $kost->id)->get();

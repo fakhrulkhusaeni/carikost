@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/fontawesome-all.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/iofrm-style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/iofrm-theme7.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}" />
 </head>
 
 <body>

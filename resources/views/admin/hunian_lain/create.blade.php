@@ -5,6 +5,9 @@
         </h2>
     </x-slot>
 
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.css" rel="stylesheet">
+
     <div class="py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden p-10 shadow-sm sm:rounded-lg">
@@ -165,181 +168,176 @@
                         </button>
                     </div>
                 </form>
-
-
-                <!-- SweetAlert2 CSS -->
-                <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.css" rel="stylesheet">
-
-                <!-- SweetAlert2 JS -->
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.js"></script>
-
-
-                <script>
-                    document.getElementById('add-facility').addEventListener('click', function() {
-                        const facilityDiv = document.createElement('div');
-                        facilityDiv.className = 'flex items-center gap-x-2 mt-2';
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.name = 'fasilitas[]';
-                        input.placeholder = 'Masukkan fasilitas hunian';
-                        input.className = 'block w-full p-2 border border-gray-300 rounded';
-                        const deleteButton = document.createElement('button');
-                        deleteButton.type = 'button';
-                        deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
-                        deleteButton.textContent = 'Hapus';
-                        deleteButton.addEventListener('click', function() {
-                            facilityDiv.remove();
-                        });
-                        facilityDiv.appendChild(input);
-                        facilityDiv.appendChild(deleteButton);
-                        document.getElementById('facilities-container').appendChild(facilityDiv);
-                    });
-
-                    document.getElementById('add-detail-hunian').addEventListener('click', function() {
-                        const detailDiv = document.createElement('div');
-                        detailDiv.className = 'flex items-center gap-x-2 mt-2';
-
-                        // Membuat input untuk detail hunian
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.name = 'detail_hunian[]';
-                        input.placeholder = 'Masukkan detail hunian';
-                        input.className = 'block w-full p-2 border border-gray-300 rounded';
-
-                        // Membuat tombol hapus
-                        const deleteButton = document.createElement('button');
-                        deleteButton.type = 'button';
-                        deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
-                        deleteButton.textContent = 'Hapus';
-
-                        deleteButton.addEventListener('click', function() {
-                            detailDiv.remove();
-                        });
-
-                        detailDiv.appendChild(input);
-                        detailDiv.appendChild(deleteButton);
-                        document.getElementById('detail-hunian-container').appendChild(detailDiv);
-                    });
-
-
-                    document.getElementById('add-foto').addEventListener('click', function() {
-                        const fotoContainer = document.getElementById('foto-container');
-                        const currentFotos = fotoContainer.querySelectorAll('input[type="file"]').length;
-
-                        // Batasi penambahan foto hingga 10
-                        if (currentFotos < 10) {
-                            // Membuat div baru untuk foto dan tombol hapus
-                            const fotoDiv = document.createElement('div');
-                            fotoDiv.className = 'flex items-center gap-x-2 mt-2';
-
-                            // Membuat input file
-                            const input = document.createElement('input');
-                            input.type = 'file';
-                            input.name = 'foto[]';
-                            input.className = 'block w-full p-2 border border-gray-300 rounded';
-                            input.accept = 'image/*';
-
-                            // Membuat tombol hapus
-                            const deleteButton = document.createElement('button');
-                            deleteButton.type = 'button';
-                            deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
-                            deleteButton.textContent = 'Hapus';
-
-                            // Menambahkan event untuk tombol hapus
-                            deleteButton.addEventListener('click', function() {
-                                fotoDiv.remove();
-                            });
-
-                            // Menambahkan input dan tombol hapus ke dalam div fotoDiv
-                            fotoDiv.appendChild(input);
-                            fotoDiv.appendChild(deleteButton);
-
-                            // Menambahkan div fotoDiv ke dalam foto-container
-                            fotoContainer.appendChild(fotoDiv);
-                        } else {
-                            // Menampilkan pop-up SweetAlert2 jika sudah mencapai batas 10 foto
-                            Swal.fire({
-                                title: 'Maksimal 10 Foto!',
-                                text: 'Anda sudah mencapai batas maksimum foto yang dapat diunggah.',
-                                icon: 'warning',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    });
-
-                    document.getElementById('add-bukti').addEventListener('click', function() {
-                        const buktiContainer = document.getElementById('bukti-container');
-                        const currentBukti = buktiContainer.querySelectorAll('input[type="file"]').length;
-
-                        // Batasi hingga 5 file bukti kepemilikan
-                        if (currentBukti < 5) {
-                            // Membuat div baru untuk file dan tombol hapus
-                            const buktiDiv = document.createElement('div');
-                            buktiDiv.className = 'flex items-center gap-x-2 mt-2';
-
-                            // Input file
-                            const input = document.createElement('input');
-                            input.type = 'file';
-                            input.name = 'bukti_kepemilikan[]';
-                            input.className = 'block w-full p-2 border border-gray-300 rounded';
-                            input.accept = 'image/*,application/pdf';
-
-                            // Tombol hapus
-                            const deleteButton = document.createElement('button');
-                            deleteButton.type = 'button';
-                            deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
-                            deleteButton.textContent = 'Hapus';
-
-                            // Event hapus input
-                            deleteButton.addEventListener('click', function() {
-                                buktiDiv.remove();
-                            });
-
-                            // Masukkan ke DOM
-                            buktiDiv.appendChild(input);
-                            buktiDiv.appendChild(deleteButton);
-                            buktiContainer.appendChild(buktiDiv);
-                        } else {
-                            // Jika lebih dari 5, tampilkan alert
-                            Swal.fire({
-                                title: 'Maksimal 5 File!',
-                                text: 'Anda sudah mencapai batas maksimum file bukti kepemilikan.',
-                                icon: 'warning',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    });
-                </script>
-
-                <script>
-                    const hargaInput = document.getElementById('harga');
-
-                    hargaInput.addEventListener('input', function(e) {
-                        let angka = e.target.value.replace(/[^0-9]/g, '');
-                        if (!angka) {
-                            e.target.value = '';
-                            return;
-                        }
-
-                        e.target.value = formatRupiah(angka);
-                    });
-
-                    function formatRupiah(angka) {
-                        let number_string = angka.toString(),
-                            sisa = number_string.length % 3,
-                            rupiah = number_string.substr(0, sisa),
-                            ribuan = number_string.substr(sisa).match(/\d{3}/g);
-
-                        if (ribuan) {
-                            let separator = sisa ? '.' : '';
-                            rupiah += separator + ribuan.join('.');
-                        }
-
-                        return 'Rp ' + rupiah;
-                    }
-                </script>
-
             </div>
         </div>
     </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.js"></script>
+
+    <script>
+        document.getElementById('add-facility').addEventListener('click', function() {
+            const facilityDiv = document.createElement('div');
+            facilityDiv.className = 'flex items-center gap-x-2 mt-2';
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'fasilitas[]';
+            input.placeholder = 'Masukkan fasilitas hunian';
+            input.className = 'block w-full p-2 border border-gray-300 rounded';
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
+            deleteButton.textContent = 'Hapus';
+            deleteButton.addEventListener('click', function() {
+                facilityDiv.remove();
+            });
+            facilityDiv.appendChild(input);
+            facilityDiv.appendChild(deleteButton);
+            document.getElementById('facilities-container').appendChild(facilityDiv);
+        });
+
+        document.getElementById('add-detail-hunian').addEventListener('click', function() {
+            const detailDiv = document.createElement('div');
+            detailDiv.className = 'flex items-center gap-x-2 mt-2';
+
+            // Membuat input untuk detail hunian
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'detail_hunian[]';
+            input.placeholder = 'Masukkan detail hunian';
+            input.className = 'block w-full p-2 border border-gray-300 rounded';
+
+            // Membuat tombol hapus
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
+            deleteButton.textContent = 'Hapus';
+
+            deleteButton.addEventListener('click', function() {
+                detailDiv.remove();
+            });
+
+            detailDiv.appendChild(input);
+            detailDiv.appendChild(deleteButton);
+            document.getElementById('detail-hunian-container').appendChild(detailDiv);
+        });
+
+
+        document.getElementById('add-foto').addEventListener('click', function() {
+            const fotoContainer = document.getElementById('foto-container');
+            const currentFotos = fotoContainer.querySelectorAll('input[type="file"]').length;
+
+            // Batasi penambahan foto hingga 10
+            if (currentFotos < 10) {
+                // Membuat div baru untuk foto dan tombol hapus
+                const fotoDiv = document.createElement('div');
+                fotoDiv.className = 'flex items-center gap-x-2 mt-2';
+
+                // Membuat input file
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.name = 'foto[]';
+                input.className = 'block w-full p-2 border border-gray-300 rounded';
+                input.accept = 'image/*';
+
+                // Membuat tombol hapus
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
+                deleteButton.textContent = 'Hapus';
+
+                // Menambahkan event untuk tombol hapus
+                deleteButton.addEventListener('click', function() {
+                    fotoDiv.remove();
+                });
+
+                // Menambahkan input dan tombol hapus ke dalam div fotoDiv
+                fotoDiv.appendChild(input);
+                fotoDiv.appendChild(deleteButton);
+
+                // Menambahkan div fotoDiv ke dalam foto-container
+                fotoContainer.appendChild(fotoDiv);
+            } else {
+                // Menampilkan pop-up SweetAlert2 jika sudah mencapai batas 10 foto
+                Swal.fire({
+                    title: 'Maksimal 10 Foto!',
+                    text: 'Anda sudah mencapai batas maksimum foto yang dapat diunggah.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+
+        document.getElementById('add-bukti').addEventListener('click', function() {
+            const buktiContainer = document.getElementById('bukti-container');
+            const currentBukti = buktiContainer.querySelectorAll('input[type="file"]').length;
+
+            // Batasi hingga 5 file bukti kepemilikan
+            if (currentBukti < 5) {
+                // Membuat div baru untuk file dan tombol hapus
+                const buktiDiv = document.createElement('div');
+                buktiDiv.className = 'flex items-center gap-x-2 mt-2';
+
+                // Input file
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.name = 'bukti_kepemilikan[]';
+                input.className = 'block w-full p-2 border border-gray-300 rounded';
+                input.accept = 'image/*,application/pdf';
+
+                // Tombol hapus
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
+                deleteButton.textContent = 'Hapus';
+
+                // Event hapus input
+                deleteButton.addEventListener('click', function() {
+                    buktiDiv.remove();
+                });
+
+                // Masukkan ke DOM
+                buktiDiv.appendChild(input);
+                buktiDiv.appendChild(deleteButton);
+                buktiContainer.appendChild(buktiDiv);
+            } else {
+                // Jika lebih dari 5, tampilkan alert
+                Swal.fire({
+                    title: 'Maksimal 5 File!',
+                    text: 'Anda sudah mencapai batas maksimum file bukti kepemilikan.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    </script>
+
+    <script>
+        const hargaInput = document.getElementById('harga');
+
+        hargaInput.addEventListener('input', function(e) {
+            let angka = e.target.value.replace(/[^0-9]/g, '');
+            if (!angka) {
+                e.target.value = '';
+                return;
+            }
+
+            e.target.value = formatRupiah(angka);
+        });
+
+        function formatRupiah(angka) {
+            let number_string = angka.toString(),
+                sisa = number_string.length % 3,
+                rupiah = number_string.substr(0, sisa),
+                ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+            if (ribuan) {
+                let separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            return 'Rp ' + rupiah;
+        }
+    </script>
+
 </x-app-layout>
