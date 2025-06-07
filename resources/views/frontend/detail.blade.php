@@ -144,12 +144,14 @@
                             </div>
 
                             <!-- Bagian Kost -->
-                            <div class="d-flex align-items-center mb-5">
+                            <div class="d-flex align-items-center mb-3">
                                 <div class="text-start">
                                     <h4 class="mb-2" style="font-weight: bold;">{{ $kost->nama }}</h4>
                                     <span>{{ ucfirst($kost->type) }}</span>
                                 </div>
                             </div>
+
+                            <hr class="my-4">
 
                             <!-- Bagian Deskripsi -->
                             <div class="mb-5">

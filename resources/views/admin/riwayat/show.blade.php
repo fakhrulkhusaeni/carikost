@@ -66,6 +66,39 @@
                        </button>
                    </div>
 
+                   <hr class="border-t border-gray-300 my-3">
+
+                   <!-- Booking Information -->
+                   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                       <p class="mb-3"><span class="font-semibold">Tanggal Mulai Sewa:</span> {{ \Carbon\Carbon::parse($riwayat->tanggal_booking)->translatedFormat('l, d F Y') }}</p>
+                       <p class="mb-3"><span class="font-semibold">Tanggal Keluar:</span> {{ $riwayat->tanggal_keluar ? \Carbon\Carbon::parse($riwayat->tanggal_keluar)->translatedFormat('l, d F Y') : "-" }}</p>
+                       <div>
+                           <p class="mb-3">
+                               <span class="font-semibold">Status Konfirmasi:</span>
+                               @if($riwayat->status_konfirmasi == 'Disetujui')
+                               <span class="text-green-600">Disetujui</span>
+                               @elseif($riwayat->status_konfirmasi == 'Ditolak')
+                               <span class="text-red-600">Ditolak</span>
+                               @else
+                               <span class="text-yellow-600">Pending</span>
+                               @endif
+                           </p>
+
+                           @if($riwayat->status_konfirmasi == 'Ditolak' && $riwayat->catatan_penolakan)
+                           <div class="bg-red-100 text-red-700 border border-red-300 rounded-md p-3">
+                               <strong>Catatan Penolakan:</strong>
+                               <p class="mt-2">{{ $riwayat->catatan_penolakan }}</p>
+                           </div>
+                           @endif
+                       </div>
+
+                       <p><span class="font-semibold">Status Pembayaran:</span>
+                           <span class="text-{{ $riwayat->status_pembayaran == 'Berhasil' ? 'green' : 'yellow' }}-600">{{$riwayat->status_pembayaran}}</span>
+                       </p>
+                   </div>
+
+                   <hr class="border-t border-gray-300 my-3">
+
                    <!-- Kost Details -->
                    <div class="space-y-4">
                        <h4 class="text-3xl font-bold text-gray-900">{{ $riwayat->kost->nama }}</h4>
@@ -104,61 +137,52 @@
                        </div>
                    </div>
 
-                   <!-- Booking Information -->
-                   <div>
-                       <p class="mb-3"><span class="font-semibold">Tanggal Mulai Sewa:</span> {{ \Carbon\Carbon::parse($riwayat->tanggal_booking)->translatedFormat('l, d F Y') }}</p>
-                       <p class="mb-3"><span class="font-semibold">Tanggal Keluar:</span> {{ $riwayat->tanggal_keluar ? \Carbon\Carbon::parse($riwayat->tanggal_keluar)->translatedFormat('l, d F Y') : "-" }}</p>
-                       <p class="mb-3"><span class="font-semibold">Status Konfirmasi:</span>
-                           @if($riwayat->status_konfirmasi == 'Disetujui')
-                           <span class="text-green-600">Disetujui</span>
-                           @elseif($riwayat->status_konfirmasi == 'Ditolak')
-                           <span class="text-red-600">Ditolak</span>
-                           @else
-                           <span class="text-yellow-600">Pending</span>
-                           @endif
-                       </p>
-                       <p class="mb-3"><span class="font-semibold">Status Pembayaran:</span>
-                           <span class="text-{{ $riwayat->status_pembayaran == 'Berhasil' ? 'green' : 'yellow' }}-600">{{$riwayat->status_pembayaran}}</span>
-                       </p>
-                       <p class="mb-3"><span class="font-semibold">Bukti Identitas:</span>
-                           <br>
-                           @if (pathinfo($riwayat->kartu_identitas, PATHINFO_EXTENSION) == 'pdf')
-                           <a href="{{ asset('storage/' . $riwayat->kartu_identitas) }}" target="_blank" class="text-blue-600 hover:underline">
-                               Lihat Kartu Identitas (PDF)
-                           </a>
-                           @else
-                           <a href="{{ asset('storage/' . $riwayat->kartu_identitas) }}" class="glightbox">
-                               <img src="{{ asset('storage/' . $riwayat->kartu_identitas) }}"
-                                   alt="Kartu Identitas"
-                                   class="mt-2 w-full max-w-lg border rounded-lg shadow cursor-pointer">
-                           </a>
-                           @endif
-                       </p>
-                   </div>
+                   <hr class="border-t border-gray-300 my-3">
 
                    <!-- Rating Section -->
-                   <div class="p-6 max-w-sm bg-white shadow-lg rounded-lg">
-                       <h4 class="text-center text-lg font-semibold mb-4">Beri Penilaian Anda Setelah Menempati Kost/Kontrakan</h4>
+                   <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-center">
+                       <!-- Bukti Identitas -->
+                       <div>
+                           <p class="mb-3">
+                               <span class="font-semibold">Bukti Identitas:</span><br>
+                               @if (pathinfo($riwayat->kartu_identitas, PATHINFO_EXTENSION) == 'pdf')
+                               <a href="{{ asset('storage/' . $riwayat->kartu_identitas) }}" target="_blank" class="text-blue-600 hover:underline">
+                                   Lihat Kartu Identitas (PDF)
+                               </a>
+                               @else
+                               <a href="{{ asset('storage/' . $riwayat->kartu_identitas) }}" class="glightbox">
+                                   <img src="{{ asset('storage/' . $riwayat->kartu_identitas) }}"
+                                       alt="Kartu Identitas"
+                                       class="mt-2 w-full max-w-xs border rounded-lg shadow cursor-pointer">
+                               </a>
+                               @endif
+                           </p>
+                       </div>
 
-                       @if ($riwayat && $riwayat->status_pembayaran === 'Berhasil')
-                       <div class="flex justify-center space-x-2" id="stars">
-                           @for ($i = 1; $i <= 5; $i++)
-                               <i class="fa fa-star cursor-pointer text-gray-300 text-3xl transition duration-200" data-value="{{ $i }}"></i>
-                               @endfor
+                       <!-- Rating Section (tanpa card) -->
+                       <div class="flex flex-col items-center">
+                           <h4 class="text-center text-base font-semibold mb-2">Beri Penilaian Anda Setelah Menempati<br> Tempat Kost/Kontrakan</h4>
+
+                           @if ($riwayat && $riwayat->status_pembayaran === 'Berhasil')
+                           <div class="flex justify-center space-x-2" id="stars">
+                               @for ($i = 1; $i <= 5; $i++)
+                                   <i class="fa fa-star cursor-pointer text-gray-300 text-2xl transition duration-200" data-value="{{ $i }}"></i>
+                                   @endfor
+                           </div>
+                           <p id="rating-value" class="text-center mt-2 text-gray-600 text-sm">Nilai: 0</p>
+                           <input type="hidden" name="kost_id" id="kost_id" value="{{ $riwayat->kost->id }}">
+                           <input type="hidden" name="rating" id="rating" value="0">
+                           <button id="submit-rating" class="mt-3 px-3 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 block mx-auto">Kirim Rating</button>
+                           @else
+                           <div class="flex justify-center space-x-2" id="stars-disabled">
+                               @for ($i = 1; $i <= 5; $i++)
+                                   <i class="fa fa-star text-gray-300 text-2xl transition duration-200"></i>
+                                   @endfor
+                           </div>
+                           <p class="text-center mt-2 text-gray-600 text-sm">Nilai: 0</p>
+                           <button type="button" onclick="showPaymentAlert()" class="mt-3 px-3 py-2 bg-gray-400 text-white text-sm rounded cursor-not-allowed block mx-auto">Kirim Rating</button>
+                           @endif
                        </div>
-                       <p id="rating-value" class="text-center mt-2 text-gray-600">Nilai: 0</p>
-                       <input type="hidden" name="kost_id" id="kost_id" value="{{ $riwayat->kost->id }}">
-                       <input type="hidden" name="rating" id="rating" value="0">
-                       <button id="submit-rating" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition block mx-auto">Kirim Rating</button>
-                       @else
-                       <div class="flex justify-center space-x-2" id="stars-disabled">
-                           @for ($i = 1; $i <= 5; $i++)
-                               <i class="fa fa-star text-gray-300 text-3xl transition duration-200"></i>
-                               @endfor
-                       </div>
-                       <p class="text-center mt-2 text-gray-600">Nilai: 0</p>
-                       <button type="button" onclick="showPaymentAlert()" class="mt-4 px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed block mx-auto">Kirim Rating</button>
-                       @endif
                    </div>
 
                    <!-- Payment Button -->

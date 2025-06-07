@@ -57,51 +57,50 @@ class FrontController extends Controller
         $hargaInput = $this->convertHargaToNumber($request->input('harga'));
         $facilities = $request->input('facilities', []);
 
-        // Ambil bobot dari request dalam bentuk persen (%)
         $weightsPercent = [
-            'location' => floatval($request->input('weight_location', 30)), // contoh default: 30%
+            'location' => floatval($request->input('weight_location', 30)),
             'type' => floatval($request->input('weight_type', 20)),
             'harga' => floatval($request->input('weight_harga', 30)),
             'facilities' => floatval($request->input('weight_facilities', 20)),
         ];
 
-        // Validasi total bobot harus 100%
         $totalWeightPercent = array_sum($weightsPercent);
         if ($totalWeightPercent != 100) {
             return back()->with('error', 'Total bobot harus berjumlah 100%');
         }
 
-        // Konversi bobot persen menjadi desimal
         $weights = array_map(fn($value) => $value / 100, $weightsPercent);
 
-        // Ambil hanya kost yang sudah diverifikasi
         $kosts = Kost::with('verifikasi')
             ->whereHas('verifikasi', fn($q) => $q->where('status_verifikasi', 'terverifikasi'))
             ->when($location, fn($q) => $q->where('location', $location))
-            ->get();
-
-        // Filter kost yang kamarnya masih tersedia
-        $kosts = $kosts->filter(fn($kost) => $kost->sisaKamar() > 0);
+            ->when($type, fn($q) => $q->where('type', $type))
+            ->get()
+            ->filter(fn($kost) => $kost->sisaKamar() > 0);
 
         $kosts = $kosts->map(function ($kost) use ($location, $type, $hargaInput, $facilities, $weights) {
             $score = 0;
 
-            if ($location && $kost->location == $location) {
+            // Lokasi
+            if ($location && strtolower($kost->location) == strtolower($location)) {
                 $score += $weights['location'] * 100;
             }
 
-            if ($type && $kost->type == $type) {
+            // Tipe
+            if ($type && strtolower($kost->type) == strtolower($type)) {
                 $score += $weights['type'] * 100;
             }
 
+            // Harga
             if ($hargaInput > 0) {
                 $kostHarga = $this->convertHargaToNumber($kost->harga);
-                $maxDiff = $hargaInput * 0.3;
-                $diff = abs($kostHarga - $hargaInput);
-                $hargaScore = $maxDiff > 0 ? max(0, 100 - ($diff / $maxDiff * 100)) : 0;
+                $hargaDiff = abs($kostHarga - $hargaInput);
+                $maxDiff = $hargaInput * 1.5;
+                $hargaScore = max(0, 100 - ($hargaDiff / $maxDiff) * 100);
                 $score += $weights['harga'] * $hargaScore;
             }
 
+            // Fasilitas
             $kostFacilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : (array) $kost->facilities;
             if (!empty($facilities) && is_array($kostFacilities)) {
                 $matched = collect($facilities)->intersect($kostFacilities)->count();
@@ -109,16 +108,15 @@ class FrontController extends Controller
                 $score += $weights['facilities'] * $facilityScore;
             }
 
-            $kost->bobotScore = round($score, 2);
+            $kost->bobotScore = min(round($score, 2), 100);
             return $kost;
         });
 
-        $kosts = $kosts->filter(fn($kost) => $kost->bobotScore > 0)
-            ->sortByDesc('bobotScore')
-            ->values();
+        $kosts = $kosts->sortByDesc('bobotScore')->values();
 
         return view('frontend.rekomendasi', compact('kosts', 'facilities'));
     }
+
 
 
     // Mengubah harga string jadi angka

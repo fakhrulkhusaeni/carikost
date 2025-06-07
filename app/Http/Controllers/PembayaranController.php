@@ -22,7 +22,7 @@ class PembayaranController extends Controller
         $pembayarans = Pembayaran::whereHas('kost', function ($query) {
             $query->where('user_id', auth()->user()->id);
         })
-            ->orderBy('tanggal_booking', 'asc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return view('admin.pembayaran.index', compact('pembayarans'));
@@ -172,8 +172,14 @@ class PembayaranController extends Controller
         return redirect()->route('admin.pembayaran.index')->with('success', 'Konfirmasi telah disetujui.');
     }
 
-    public function reject($id)
+    public function reject(Request $request, $id)
     {
+
+        // Validasi input catatan penolakan
+        $request->validate([
+            'catatan_penolakan' => 'required|string|max:1000',
+        ]);
+
         // Menemukan pembayaran berdasarkan ID
         $pembayaran = Pembayaran::findOrFail($id);
 
@@ -182,9 +188,10 @@ class PembayaranController extends Controller
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menolak ini.');
         }
 
-        // Update status pembayaran menjadi Ditolak
+        // Update status dan catatan penolakan
         $pembayaran->update([
             'status_konfirmasi' => 'Ditolak',
+            'catatan_penolakan' => $request->catatan_penolakan,
         ]);
 
         // Update riwayat konfirmasi
@@ -196,6 +203,7 @@ class PembayaranController extends Controller
         if ($riwayat) {
             $riwayat->update([
                 'status_konfirmasi' => 'Ditolak',
+                'catatan_penolakan' => $request->catatan_penolakan,
             ]);
         }
 

@@ -171,8 +171,17 @@
 
                                     <!-- Input Bobot -->
                                     <div class="col-12 mb-3">
-                                        <h5 class="mb-2">Bobot Kriteria (Opsional)</h5>
-                                        <p class="text-muted" style="font-size: 0.9rem;">Silakan isi bobot sesuai prioritas Anda. Total dari semua bobot harus 100%. Nilai bobot berkisar antara 0 hingga 100.</p>
+                                        <h5 class="mb-2">Bobot Kriteria</h5>
+                                        <span class="text-dark" style="font-size: 0.9rem;">
+                                            Silakan isi bobot sesuai prioritas Anda. Total dari semua bobot harus 100%. Nilai bobot setiap kriteria berkisar antara 0 hingga 100.
+                                        </span>
+                                        <strong class="mt-3 mb-2 d-block">Ketentuan bobot:</strong>
+                                        <div class="d-flex flex-wrap mb-3">
+                                            <span style="margin-right: 30px;">0 – 30 : Cukup Penting</span>
+                                            <span style="margin-right: 30px;">31 – 60 : Penting</span>
+                                            <span>61 – 100 : Sangat Penting</span>
+                                        </div>
+
                                         <div class="row g-2">
                                             <div class="col-md-3 col-6">
                                                 <label for="weight_location" class="form-label">Lokasi</label>
@@ -246,11 +255,11 @@
                                 </ul>
 
                                 <!-- Tampilkan jumlah skor -->
-                                <!-- @isset($kost->bobotScore)
+                                @isset($kost->bobotScore)
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="badge bg-info" style="font-size: 1rem;">Skor: {{ number_format($kost->bobotScore, 2) }}</span>
                                 </div>
-                                @endisset -->
+                                @endisset
 
                                 <div class="d-flex justify-content-between align-items-center">
                                     @if ($kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi')
@@ -412,6 +421,23 @@
             return 'Rp ' + rupiah;
         }
     </script>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const loc = parseInt(document.querySelector('[name="weight_location"]').value) || 0;
+            const type = parseInt(document.querySelector('[name="weight_type"]').value) || 0;
+            const harga = parseInt(document.querySelector('[name="weight_harga"]').value) || 0;
+            const fasilitas = parseInt(document.querySelector('[name="weight_facilities"]').value) || 0;
+
+            const total = loc + type + harga + fasilitas;
+
+            if (total !== 100) {
+                e.preventDefault();
+                alert('Total bobot harus sama dengan 100%. Saat ini: ' + total + '%.');
+            }
+        });
+    </script>
+
 
 </body>
 

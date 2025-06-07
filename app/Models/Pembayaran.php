@@ -14,6 +14,7 @@ class Pembayaran extends Model
         'user_id',
         'tanggal_booking',
         'status_konfirmasi',
+        'catatan_penolakan',
         'status_pembayaran',
         'kartu_identitas',
         'nominal',

@@ -36,7 +36,11 @@ class DashboardController extends Controller
 
             return view('dashboard.pemilik', compact('totalSaldo', 'totalKost', 'totalPemesanan'));
         } elseif ($user->hasRole('pencari_kost')) {
-            return view('dashboard.pencari');
+
+            // Hitung total riwayat pesanan user
+            $totalRiwayatPesanan = Pembayaran::where('user_id', $user->id)->count();
+
+            return view('dashboard.pencari', compact('totalRiwayatPesanan'));
         } else {
             abort(403, 'Role tidak dikenali.');
         }
