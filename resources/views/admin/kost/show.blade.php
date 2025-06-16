@@ -24,25 +24,58 @@
                 </div>
 
                 <!-- Photo Gallery -->
-                <div x-data="{ currentIndex: 0, images: {{ json_encode(json_decode($kost->foto, true)) }} }" class="relative w-full">
-                    <div class="relative w-full overflow-hidden rounded-lg shadow">
-                        <!-- Menampilkan hanya satu gambar aktif -->
-                        <a :href="'{{ asset('storage/') }}/' + images[currentIndex]" class="glightbox" data-gallery="kost-gallery">
-                            <img :src="'{{ asset('storage/') }}/' + images[currentIndex]" class="w-full h-[400px] object-cover rounded-lg" alt="Foto Hunian">
-                        </a>
-
-                        <!-- Menyertakan semua gambar ke dalam glightbox agar bisa dibuka dalam galeri -->
-                        <template x-for="(image, index) in images" :key="index">
-                            <a :href="'{{ asset('storage/') }}/' + image" class="hidden glightbox" data-gallery="kost-gallery"></a>
-                        </template>
+                <div
+                    x-data="{
+                        currentIndex: 0,
+                        images: {{ json_encode(json_decode($kost->foto, true)) }},
+                        interval: null,
+                        startAutoplay() {
+                            this.interval = setInterval(() => this.next(), 5000);
+                        },
+                        stopAutoplay() {
+                            clearInterval(this.interval);
+                        },
+                        next() {
+                            this.currentIndex = (this.currentIndex + 1) % this.images.length;
+                        },
+                        prev() {
+                            this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+                        }
+                    }"
+                    x-init="startAutoplay()"
+                    @mouseover="stopAutoplay()"
+                    @mouseleave="startAutoplay()"
+                    class="relative w-full overflow-hidden">
+                    <!-- Container Carousel -->
+                    <div class="relative w-full h-[500px] rounded-lg shadow overflow-hidden">
+                        <div
+                            class="flex transition-transform duration-700 ease-in-out"
+                            :style="`transform: translateX(-${currentIndex * 100}%);`">
+                            <!-- Gambar-gambar -->
+                            <template x-for="(image, index) in images" :key="index">
+                                <div class="min-w-full h-[500px]">
+                                    <a
+                                        :href="'{{ asset('storage/') }}/' + image"
+                                        class="glightbox"
+                                        data-gallery="kost-gallery">
+                                        <img
+                                            :src="'{{ asset('storage/') }}/' + image"
+                                            class="w-full h-full object-cover rounded-lg"
+                                            alt="Foto Hunian">
+                                    </a>
+                                </div>
+                            </template>
+                        </div>
                     </div>
 
-                    <!-- Navigasi Gambar -->
-                    <button @click="currentIndex = (currentIndex - 1 + images.length) % images.length"
+                    <!-- Tombol Navigasi -->
+                    <button
+                        @click="prev()"
                         class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
                         &#10094;
                     </button>
-                    <button @click="currentIndex = (currentIndex + 1) % images.length"
+                    <button
+                        @click="next()"
                         class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
                         &#10095;
                     </button>

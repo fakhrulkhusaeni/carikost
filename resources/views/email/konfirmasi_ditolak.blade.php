@@ -11,8 +11,8 @@
         <h2 style="margin-bottom: 20px;">Halo {{ $user->name }},</h2>
 
         <p style="font-size: 16px; line-height: 1.6;">
-            Kami mohon maaf, Anda telah ditolak untuk menempati kost/kontrakan <strong>{{ $pembayaran->kost->nama }}</strong>
-            pada tanggal <strong>{{ \Carbon\Carbon::parse($pembayaran->tanggal_booking)->format('d M Y') }}</strong>.
+            Mohon maaf, Anda telah ditolak untuk menempati kost atau kontrakan <strong>{{ $pembayaran->kost->nama }}</strong>
+            pada tanggal <strong>{{ \Carbon\Carbon::parse($pembayaran->tanggal_booking)->locale('id')->translatedFormat('d F Y') }}</strong>.
         </p>
 
         @if($pembayaran->status_konfirmasi == 'Ditolak' && $pembayaran->catatan_penolakan)

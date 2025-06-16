@@ -16,60 +16,8 @@
 
         </div>
 
-        <!-- header section strats -->
-        <header class="header_section">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-lg custom_nav-container ">
-                    <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('frontend.index') }}">
-                        <img src="{{ asset('assets/icon.png') }}" alt="CariHunian Logo" style="height: 40px;" class="img-fluid">
-                        <span class="fw-bold fs-5 text-white mb-0">InfoKost Bahari</span>
-                    </a>
+        <x-navbar />
 
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav  ">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.index') }}">Home</a>
-                            </li>
-                            <!-- <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.request') }}">Request</a>
-                            </li> -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.rekomendasi') }}">Rekomendasi</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Iklan</a>
-                            </li>
-
-                            @auth
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('dashboard') }}" style="color: #7CFC00;">{{ explode(' ', Auth::user()->name)[0] }}</a>
-                            </li>
-                            @endauth
-
-                            @guest
-                            <li class="nav-item">
-                                <a href="{{ route('login') }}">
-                                    <button class="btn btn-primary">
-                                        <i class="fa fa-user" aria-hidden="true"></i> Login
-                                    </button>
-                                </a>
-                            </li>
-                            @endguest
-
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </header>
-        <!-- end header section -->
     </div>
 
 
@@ -82,7 +30,7 @@
                         <!-- Left Content -->
                         <div class="col-12">
                             <h4 class="mb-4 text-center">Foto Hunian</h4>
-                            <div id="kostCarousel" class="carousel slide" data-bs-ride="carousel" style="margin: auto;">
+                            <div id="kostCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" style="margin: auto;">
                                 <div class="carousel-inner">
                                     @php
                                     $images = json_decode($kost->foto, true);
@@ -183,61 +131,30 @@
                                 <hr class="my-4">
 
                                 <h4 class="mb-3">Peraturan</h4>
-                                <ul class="list-unstyled">
-                                    @php
-                                    $rules = is_string($kost->rules) ? json_decode($kost->rules, true) : $kost->rules;
-                                    @endphp
-                                    @foreach ($rules as $rule)
-                                    <li class="d-flex align-items-center mb-3">
-                                        <i class="fa fa-circle text-primary" style="margin-right: 10px;"></i>
-                                        <span>{{ ucwords($rule) }}</span>
-                                    </li>
+                                @php
+                                $rules = is_string($kost->rules) ? json_decode($kost->rules, true) : $kost->rules;
+                                $ruleChunks = array_chunk($rules, ceil(count($rules) / 2));
+                                @endphp
+                                <div class="row">
+                                    @foreach ($ruleChunks as $chunk)
+                                    <div class="col-md-6">
+                                        <ul class="list-unstyled">
+                                            @foreach ($chunk as $rule)
+                                            <li class="d-flex align-items-center mb-3">
+                                                <i class="fa fa-circle text-primary me-2"></i>
+                                                <span>{{ ucwords($rule) }}</span>
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                     @endforeach
-                                </ul>
+                                </div>
                             </div>
 
                             <hr class="my-4">
 
-                            <!-- Bagian Rating -->
-                            <h4 class="mb-3">Rating Masyarakat</h4>
-                            <div class="d-flex align-items-center mb-4">
-                                <div class="text-center" style="margin-right: 30px;">
-                                    <h2 style="font-weight: bold;">{{ number_format($averageRating ?? 0, 1) }}</h2> <!-- Rata-rata rating -->
-                                    <div class="text-warning">
-                                        @php
-                                        $rating = $averageRating ?? 0;
-                                        @endphp
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <=floor($rating)) <!-- Bintang penuh -->
-                                            <i class="fa fa-star"></i>
-                                            @elseif ($i - 0.5 <= $rating) <!-- Setengah bintang -->
-                                                <i class="fa fa-star-half-o"></i>
-                                                @else <!-- Bintang kosong -->
-                                                <i class="fa fa-star-o"></i>
-                                                @endif
-                                                @endfor
-                                    </div>
-                                    <small>{{ $totalRatings ?? 0 }} Penilaian</small> <!-- Jumlah penilaian -->
-                                </div>
-                                <div style="flex-grow: 1;">
-                                    <ul class="list-unstyled mb-0">
-                                        @foreach ([5, 4, 3, 2, 1] as $bintang)
-                                        <li class="d-flex align-items-center mb-2">
-                                            <span style="width: 20px; font-weight: bold;">{{ $bintang }}</span>
-                                            <div class="progress flex-grow-1 mx-2" style="height: 8px;">
-                                                <div class="progress-bar bg-warning" role="progressbar"
-                                                    style="width: {{ $totalRatings > 0 ? (($distribution[$bintang] ?? 0) / $totalRatings) * 100 : 0 }}%;"
-                                                    aria-valuenow="{{ $distribution[$bintang] ?? 0 }}"
-                                                    aria-valuemin="0"
-                                                    aria-valuemax="100">
-                                                </div>
-                                            </div>
-                                            <span>{{ $distribution[$bintang] ?? 0 }}</span>
-                                        </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
+                            <h4 class="mb-3">Lokasi Hunian</h4>
+                            <div id="map" style="height: 400px; border-radius: 8px;"></div>
                         </div>
                     </div>
                 </div>
@@ -299,7 +216,7 @@
                             <!-- Tanggal Booking -->
                             <div class="card-item mb-3">
                                 <label for="booking-date" class="form-label">Pilih Tanggal Mulai Sewa:</label>
-                                <input type="date" class="form-control" id="booking-date" name="tanggal_booking" required>
+                                <input type="date" class="form-control" id="booking-date" name="tanggal_booking" onkeydown="return false" required>
                             </div>
 
                             <!-- Hidden Kost ID -->
@@ -334,6 +251,48 @@
                             </div>
                         </form>
                     </div>
+
+                    <!-- Card Rating -->
+                    <div class="card shadow rounded bg-white p-4 mb-4 wow slideInUp" data-wow-delay="0.2s">
+                        <h4 class="mb-3">Rating Masyarakat</h4>
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="text-center" style="margin-right: 30px;">
+                                <h2 style="font-weight: bold;">{{ number_format($averageRating ?? 0, 1) }}</h2>
+                                <div class="text-warning">
+                                    @php $rating = $averageRating ?? 0; @endphp
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <=floor($rating))
+                                        <i class="fa fa-star"></i>
+                                        @elseif ($i - 0.5 <= $rating)
+                                            <i class="fa fa-star-half-o"></i>
+                                            @else
+                                            <i class="fa fa-star-o"></i>
+                                            @endif
+                                            @endfor
+                                </div>
+                                <small>{{ $totalRatings ?? 0 }} Penilaian</small>
+                            </div>
+                            <div style="flex-grow: 1;">
+                                <ul class="list-unstyled mb-0">
+                                    @foreach ([5, 4, 3, 2, 1] as $bintang)
+                                    <li class="d-flex align-items-center mb-2">
+                                        <span style="width: 20px; font-weight: bold;">{{ $bintang }}</span>
+                                        <div class="progress flex-grow-1 mx-2" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                style="width: {{ $totalRatings > 0 ? (($distribution[$bintang] ?? 0) / $totalRatings) * 100 : 0 }}%;"
+                                                aria-valuenow="{{ $distribution[$bintang] ?? 0 }}"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                        <span>{{ $distribution[$bintang] ?? 0 }}</span>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
 
                     @if(session('error'))
                     <div class="alert alert-danger">{{ session('error') }}</div>
@@ -548,6 +507,27 @@
                 });
             });
         }
+    </script>
+
+    <!-- Tambahkan Leaflet JS & CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const latitude = {{ $kost->latitude ?? -6.9 }};
+            const longitude = {{ $kost->longitude ?? 109.1 }};
+
+            const map = L.map('map').setView([latitude, longitude], 16);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            L.marker([latitude, longitude]).addTo(map)
+                .bindPopup("{{ $kost->nama }}<br>{{ $kost->alamat }}")
+                .openPopup();
+        });
     </script>
 
 </body>

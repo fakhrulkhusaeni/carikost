@@ -15,7 +15,7 @@
         <ul style="font-size: 16px; padding-left: 20px; margin-bottom: 20px;">
             <li><strong>Nama:</strong> {{ $user->name }}</li>
             <li><strong>Email:</strong> {{ $user->email }}</li>
-            <li><strong>No. Telepon:</strong> {{ $user->phone }}</li>
+            <li><strong>Nomor Telepon:</strong> {{ $user->phone }}</li>
             <li><strong>Jenis Kelamin:</strong> {{ $user->gender }}</li>
         </ul>
 

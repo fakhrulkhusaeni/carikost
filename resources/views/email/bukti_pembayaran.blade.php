@@ -17,8 +17,9 @@
         </p>
 
         <ul style="font-size: 16px; line-height: 1.6; padding-left: 20px; margin-top: 10px; margin-bottom: 20px;">
-            <li><strong>Nama Kost:</strong> {{ $riwayat->kost->nama }}</li>
-            <li><strong>Tanggal Pembayaran:</strong> {{ $riwayat->created_at->format('d-m-Y H:i') }}</li>
+            <li><strong>Nama Hunian:</strong> {{ $riwayat->kost->nama }}</li>
+            <li><strong>Tanggal Pembayaran:</strong> {{ \Carbon\Carbon::parse($riwayat->created_at)->locale('id')->translatedFormat('d F Y H:i') }}</li>
+            <li><strong>Nominal Pembayaran:</strong> Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $riwayat->nominal), 0, ',', '.') }} / bulan</li>
         </ul>
 
         <p style="font-size: 16px; line-height: 1.6;">

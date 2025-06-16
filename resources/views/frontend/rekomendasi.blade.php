@@ -10,60 +10,8 @@
 
         </div>
 
-        <!-- header section strats -->
-        <header class="header_section">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-lg custom_nav-container ">
-                    <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('frontend.index') }}">
-                        <img src="{{ asset('assets/icon.png') }}" alt="CariHunian Logo" style="height: 40px;" class="img-fluid">
-                        <span class="fw-bold fs-5 text-white mb-0">InfoKost Bahari</span>
-                    </a>
+        <x-navbar />
 
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class=""> </span>
-                    </button>
-
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav  ">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.index') }}">Home</a>
-                            </li>
-                            <!-- <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.request') }}">Request</a>
-                            </li> -->
-                            <li class="nav-item active">
-                                <a class="nav-link" href="{{ route('frontend.rekomendasi') }}">Rekomendasi</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Hunian Lain</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Iklan</a>
-                            </li>
-
-                            @auth
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('dashboard') }}" style="color: #7CFC00;">{{ explode(' ', Auth::user()->name)[0] }}</a>
-                            </li>
-                            @endauth
-
-                            @guest
-                            <li class="nav-item">
-                                <a href="{{ route('login') }}">
-                                    <button class="btn btn-primary">
-                                        <i class="fa fa-user" aria-hidden="true"></i> Login
-                                    </button>
-                                </a>
-                            </li>
-                            @endguest
-
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </header>
-        <!-- end header section -->
     </div>
 
     <!-- service section -->
@@ -140,10 +88,10 @@
                                                 <div class="row">
                                                     @php
                                                     $allFacilities = [
-                                                    "Kamar Mandi Dalam", "Air Panas", "Lemari Baju", "AC",
+                                                    "Kamar Mandi Dalam", "Air Panas", "Shower", "Lemari Baju", "AC",
                                                     "Kursi", "Meja", "TV", "Kasur", "Mesin Cuci", "Dapur Bersama", "Parkir Mobil",
-                                                    "Kloset Duduk", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV", "Dispenser", "Kulkas", "Teras",
-                                                    "Ruang Tamu", "Ruang Makan", "Tempat Jemur", "Kamar Mandi Luar", "Mushola"
+                                                    "Kloset Duduk", "Kloset Jongkok", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV", "Dispenser", "Kulkas", "Teras",
+                                                    "Ruang Tamu", "Ruang Makan", "Tempat Jemuran", "Kamar Mandi Luar", "Mushola"
                                                     ];
                                                     $selectedFacilities = $facilities ?? []; // Pastikan array selalu ada
                                                     @endphp
@@ -175,14 +123,15 @@
                                         <span class="text-dark" style="font-size: 0.9rem;">
                                             Silakan isi bobot sesuai prioritas Anda. Total dari semua bobot harus 100%. Nilai bobot setiap kriteria berkisar antara 0 hingga 100.
                                         </span>
-                                        <strong class="mt-3 mb-2 d-block">Ketentuan bobot:</strong>
+                                        
+                                        <!-- <strong class="mt-3 mb-2 d-block">Ketentuan bobot:</strong>
                                         <div class="d-flex flex-wrap mb-3">
                                             <span style="margin-right: 30px;">0 – 30 : Cukup Penting</span>
                                             <span style="margin-right: 30px;">31 – 60 : Penting</span>
                                             <span>61 – 100 : Sangat Penting</span>
-                                        </div>
+                                        </div> -->
 
-                                        <div class="row g-2">
+                                        <div class="row g-2 mt-3">
                                             <div class="col-md-3 col-6">
                                                 <label for="weight_location" class="form-label">Lokasi</label>
                                                 <input type="number" step="1" min="0" max="100" required

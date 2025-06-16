@@ -29,7 +29,7 @@
             <div class="img-holder">
                 <div class="bg"></div>
                 <div class="info-holder">
-                    <img src="{{ asset('assets/logo.png') }}" alt="Graphic" />
+                    <img src="{{ asset('assets/logo-login.png') }}" alt="Graphic" />
                 </div>
             </div>
             <div class="form-holder">

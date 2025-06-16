@@ -24,34 +24,60 @@
                 </div>
 
                 <!-- Photo Gallery -->
-                <div x-data="{ currentIndex: 0 }" class="relative w-full">
-                    <div class="relative w-full overflow-hidden rounded-lg shadow">
-                        @php
-                        $images = json_decode($kost->foto, true);
-                        @endphp
-
-                        <template x-for="(image, index) in {{ json_encode($images) }}" :key="index">
-                            <div x-show="currentIndex === index" class="w-full">
-                                <a :href="'{{ asset('storage/') }}/' + image" class="glightbox" data-gallery="kost-gallery">
-                                    <img :src="'{{ asset('storage/') }}/' + image" class="w-full h-[400px] object-cover rounded-lg" alt="Foto Hunian">
-                                </a>
-                            </div>
-                        </template>
+                <div
+                    x-data="{
+                        currentIndex: 0,
+                        images: {{ json_encode(json_decode($kost->foto, true)) }},
+                        interval: null,
+                        startAutoplay() {
+                            this.interval = setInterval(() => this.next(), 5000);
+                        },
+                        stopAutoplay() {
+                            clearInterval(this.interval);
+                        },
+                        next() {
+                            this.currentIndex = (this.currentIndex + 1) % this.images.length;
+                        },
+                        prev() {
+                            this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+                        }
+                    }"
+                    x-init="startAutoplay()"
+                    @mouseover="stopAutoplay()"
+                    @mouseleave="startAutoplay()"
+                    class="relative w-full overflow-hidden">
+                    <!-- Container Carousel -->
+                    <div class="relative w-full h-[500px] rounded-lg shadow overflow-hidden">
+                        <div
+                            class="flex transition-transform duration-700 ease-in-out"
+                            :style="`transform: translateX(-${currentIndex * 100}%);`">
+                            <!-- Gambar-gambar -->
+                            <template x-for="(image, index) in images" :key="index">
+                                <div class="min-w-full h-[500px]">
+                                    <a
+                                        :href="'{{ asset('storage/') }}/' + image"
+                                        class="glightbox"
+                                        data-gallery="kost-gallery">
+                                        <img
+                                            :src="'{{ asset('storage/') }}/' + image"
+                                            class="w-full h-full object-cover rounded-lg"
+                                            alt="Foto Hunian">
+                                    </a>
+                                </div>
+                            </template>
+                        </div>
                     </div>
 
-                    <!-- Navigasi Gambar -->
-                    <button @click="currentIndex = (currentIndex - 1 + {{ count($images) }}) % {{ count($images) }}"
+                    <!-- Tombol Navigasi -->
+                    <button
+                        @click="prev()"
                         class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
+                        &#10094;
                     </button>
-
-                    <button @click="currentIndex = (currentIndex + 1) % {{ count($images) }}"
+                    <button
+                        @click="next()"
                         class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
+                        &#10095;
                     </button>
                 </div>
 

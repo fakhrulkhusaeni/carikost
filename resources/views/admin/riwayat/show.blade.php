@@ -36,33 +36,60 @@
                    </div>
 
                    <!-- Photo Gallery -->
-                   <div x-data="{ currentIndex: 0 }" class="relative w-full mt-4">
-                       <div class="relative w-full overflow-hidden rounded-lg shadow">
-                           @php
-                           $images = json_decode($riwayat->kost->foto, true);
-                           @endphp
-                           <template x-for="(image, index) in {{ json_encode($images) }}" :key="index">
-                               <div x-show="currentIndex === index" class="w-full">
-                                   <a :href="'{{ asset('storage/') }}/' + image" class="glightbox" data-gallery="kost-gallery">
-                                       <img :src="'{{ asset('storage/') }}/' + image" class="w-full h-[400px] object-cover rounded-lg" alt="Foto Hunian">
-                                   </a>
-                               </div>
-                           </template>
+                   <div
+                       x-data="{
+                            currentIndex: 0,
+                            images: {{ json_encode(json_decode($riwayat->kost->foto, true)) }},
+                            interval: null,
+                            startAutoplay() {
+                                this.interval = setInterval(() => this.next(), 5000);
+                            },
+                            stopAutoplay() {
+                                clearInterval(this.interval);
+                            },
+                            next() {
+                                this.currentIndex = (this.currentIndex + 1) % this.images.length;
+                            },
+                            prev() {
+                                this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+                            }
+                        }"
+                       x-init="startAutoplay()"
+                       @mouseover="stopAutoplay()"
+                       @mouseleave="startAutoplay()"
+                       class="relative w-full overflow-hidden">
+                       <!-- Container Carousel -->
+                       <div class="relative w-full h-[500px] rounded-lg shadow overflow-hidden">
+                           <div
+                               class="flex transition-transform duration-700 ease-in-out"
+                               :style="`transform: translateX(-${currentIndex * 100}%);`">
+                               <!-- Gambar-gambar -->
+                               <template x-for="(image, index) in images" :key="index">
+                                   <div class="min-w-full h-[500px]">
+                                       <a
+                                           :href="'{{ asset('storage/') }}/' + image"
+                                           class="glightbox"
+                                           data-gallery="kost-gallery">
+                                           <img
+                                               :src="'{{ asset('storage/') }}/' + image"
+                                               class="w-full h-full object-cover rounded-lg"
+                                               alt="Foto Hunian">
+                                       </a>
+                                   </div>
+                               </template>
+                           </div>
                        </div>
 
-                       <!-- Navigasi Gambar -->
-                       <button @click="currentIndex = (currentIndex - 1 + {{ count($images) }}) % {{ count($images) }}"
+                       <!-- Tombol Navigasi -->
+                       <button
+                           @click="prev()"
                            class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
-                           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                           </svg>
+                           &#10094;
                        </button>
-
-                       <button @click="currentIndex = (currentIndex + 1) % {{ count($images) }}"
+                       <button
+                           @click="next()"
                            class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
-                           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                           </svg>
+                           &#10095;
                        </button>
                    </div>
 
@@ -205,10 +232,62 @@
                        @endif
                    </div>
 
+                   <!-- Modal Pilihan Metode Pembayaran -->
+                   <!-- <div id="metodePembayaranModal" class="fixed inset-0 hidden bg-black bg-opacity-50 z-50 flex justify-center items-center">
+                       <div class="bg-white rounded-xl w-full max-w-md mx-4 p-6 shadow-2xl relative">
+                           <button onclick="tutupModal()" class="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-200 transition">
+                               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 hover:text-red-500 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                               </svg>
+                           </button>
+
+                           <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Pilih Pembayaran</h2>
+
+                           <div class="flex flex-col gap-4">
+                               <button id="btn-bayar" class="flex items-center p-4 border border-gray-300 rounded-xl hover:shadow-md transition bg-white hover:bg-gray-100">
+                                   <div class="w-10 h-10 flex-shrink-0">
+                                       <img src="{{ asset('assets/transfer.png') }}" alt="Transfer Icon" class="w-full h-full object-contain">
+                                   </div>
+                                   <div class="ml-4 text-left">
+                                       <p class="text-lg font-semibold text-gray-800">Transfer</p>
+                                       <p class="text-sm text-gray-600">Pembayaran melalui transfer bank otomatis dan terverifikasi</p>
+                                   </div>
+                               </button>
+
+                               <button class="flex items-center p-4 border border-gray-300 rounded-xl hover:shadow-md transition bg-white hover:bg-gray-100">
+                                   <div class="w-10 h-10 flex-shrink-0">
+                                       <img src="{{ asset('assets/cash.png') }}" alt="Cash Icon" class="w-full h-full object-contain">
+                                   </div>
+                                   <div class="ml-4 text-left">
+                                       <p class="text-lg font-semibold text-gray-800">Cash</p>
+                                       <p class="text-sm text-gray-600">Pembayaran dilakukan secara langsung ke pemilik hunian</p>
+                                   </div>
+                               </button>
+                           </div>
+                       </div>
+                   </div> -->
+
                </div>
            </div>
        </div>
 
+       <!-- <script>
+           function bukaModal() {
+               const modal = document.getElementById('metodePembayaranModal');
+               modal.classList.remove('hidden');
+               modal.classList.add('flex');
+           }
+
+           function tutupModal() {
+               const modal = document.getElementById('metodePembayaranModal');
+               modal.classList.add('hidden');
+               modal.classList.remove('flex');
+           }
+
+           function showAlreadyBayarAlert() {
+               alert("Pembayaran sudah berhasil.");
+           }
+       </script> -->
 
        <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
        <script>

@@ -20,6 +20,8 @@ class Kost extends Model
         'facilities',
         'rules',
         'foto',
+        'latitude', 
+        'longitude',
         'user_id', // Foreign key
     ];
 

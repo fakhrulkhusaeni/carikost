@@ -44,12 +44,18 @@ class KostController extends Controller
             'rules.*' => 'string|max:255',
             'foto' => 'required|array',
             'foto.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
         ]);
 
         $data = $request->except('foto');
 
         // Tambahkan user_id ke data
         $data['user_id'] = auth()->id();
+
+        $data['latitude'] = $request->latitude;
+        $data['longitude'] = $request->longitude;
 
         if ($request->hasFile('foto')) {
             $fotoPaths = [];

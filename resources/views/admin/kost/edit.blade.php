@@ -91,6 +91,22 @@
                     </div>
 
                     <div class="mt-4">
+                        <x-input-label for="map" :value="__('Tentukan Lokasi Hunian di Peta')" />
+
+                        <!-- Tombol lokasi saat ini -->
+                        <button type="button" id="lokasiSekarang" class="btn btn-sm btn-primary mt-2 mb-2">
+                            Gunakan Lokasi Saat Ini
+                        </button>
+
+                        <div id="map" style="height: 400px;" class="rounded border border-slate-300"></div>
+
+                        <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $kost->latitude) }}">
+                        <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $kost->longitude) }}">
+
+                        <p class="text-sm text-gray-600 mt-2">Klik pada peta untuk memilih lokasi hunian.</p>
+                    </div>
+
+                    <div class="mt-4">
                         <x-input-label for="harga" :value="__('Harga (per bulan)')" />
                         <x-text-input id="harga" class="block mt-1 w-full" type="text" name="harga" :value="old('harga', $kost->harga)" required />
                         <x-input-error :messages="$errors->get('harga')" class="mt-2" />
@@ -108,10 +124,10 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
                                 @php
                                 $allFacilities = [
-                                "Kamar Mandi Dalam", "Air Panas", "Lemari Baju", "AC",
+                                "Kamar Mandi Dalam", "Air Panas", "Shower", "Lemari Baju", "AC",
                                 "Kursi", "Meja", "TV", "Kasur", "Mesin Cuci", "Dapur Bersama", "Parkir Mobil",
-                                "Kloset Duduk", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV", "Dispenser", "Kulkas", "Teras",
-                                "Ruang Tamu", "Ruang Makan", "Tempat Jemur", "Kamar Mandi Luar", "Mushola"
+                                "Kloset Duduk", "Kloset Jongkok", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV", "Dispenser", "Kulkas", "Teras",
+                                "Ruang Tamu", "Ruang Makan", "Tempat Jemuran", "Kamar Mandi Luar", "Mushola"
                                 ];
                                 $selectedFacilities = old('facilities', $kost->facilities ?? []);
                                 @endphp
@@ -159,6 +175,10 @@
                         </div>
                         <button type="button" id="add-foto" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded">Tambah Foto</button>
                         <x-input-error :messages="$errors->get('foto')" class="mt-2" />
+                        <!-- Keterangan tegas mengenai orientasi landscape -->
+                        <p class="text-sm text-gray-600 mt-1">
+                            *Foto hunian <strong>di sarankan menggunakan orientasi landscape</strong> agar tampilan sesuai di aplikasi.
+                        </p>
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
@@ -208,7 +228,7 @@
 
                 const totalPhotos = existingPhotos + addedInputs;
 
-                if (totalPhotos < 10) {
+                if (totalPhotos < 15) {
                     const inputHTML = `
                     <div class="flex items-center gap-2">
                         <input type="file" name="foto[]" class="w-full border border-slate-300 rounded-lg" accept="image/*" required>
@@ -217,7 +237,7 @@
                     container.insertAdjacentHTML('beforeend', inputHTML);
                 } else {
                     Swal.fire({
-                        title: 'Maksimal 10 Foto Hunian!',
+                        title: 'Maksimal 15 Foto Hunian!',
                         text: 'Anda sudah mencapai batas maksimum foto yang dapat diunggah.',
                         icon: 'warning',
                         confirmButtonText: 'OK'
@@ -261,5 +281,63 @@
             container.style.display = container.style.display === 'none' ? 'block' : 'none';
         });
     </script>
+
+    <!-- Leaflet CSS & JS (CDN) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        let defaultLat = -6.869969;
+        let defaultLng = 109.125595;
+
+        let lat = parseFloat(document.getElementById('latitude').value) || defaultLat;
+        let lng = parseFloat(document.getElementById('longitude').value) || defaultLng;
+
+        let map = L.map('map').setView([lat, lng], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker = L.marker([lat, lng], {
+            draggable: true
+        }).addTo(map);
+
+        // Saat marker digeser
+        marker.on('dragend', function (e) {
+            let posisi = marker.getLatLng();
+            document.getElementById('latitude').value = posisi.lat;
+            document.getElementById('longitude').value = posisi.lng;
+        });
+
+        // Saat map diklik
+        map.on('click', function (e) {
+            let posisi = e.latlng;
+            marker.setLatLng(posisi);
+            document.getElementById('latitude').value = posisi.lat;
+            document.getElementById('longitude').value = posisi.lng;
+        });
+
+        // Tombol lokasi saat ini
+        document.getElementById('lokasiSekarang').addEventListener('click', function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (posisi) {
+                    let lat = posisi.coords.latitude;
+                    let lng = posisi.coords.longitude;
+
+                    map.setView([lat, lng], 16);
+                    marker.setLatLng([lat, lng]);
+                    document.getElementById('latitude').value = lat;
+                    document.getElementById('longitude').value = lng;
+                }, function () {
+                    alert('Gagal mendapatkan lokasi. Pastikan izin lokasi diaktifkan.');
+                });
+            } else {
+                alert("Browser tidak mendukung Geolocation.");
+            }
+        });
+    </script>
+
+
 
 </x-app-layout>
