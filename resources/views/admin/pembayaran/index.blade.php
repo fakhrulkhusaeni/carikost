@@ -13,6 +13,19 @@
             <div class="bg-white shadow-lg rounded-lg overflow-hidden">
                 <!-- Membuat tabel bisa digulir pada layar kecil -->
                 <div class="overflow-x-auto">
+
+                    <div class="py-4 flex justify-end px-4">
+                        <form method="GET" action="{{ route('admin.pembayaran.index') }}" class="flex items-center w-full sm:w-96">
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                placeholder="Cari data pemesanan...">
+                            <button type="submit"
+                                class="ml-3 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                                Cari
+                            </button>
+                        </form>
+                    </div>
+
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-white-100">
                             <tr>

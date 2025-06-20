@@ -14,6 +14,19 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-lg rounded-lg overflow-hidden">
                 <div class="overflow-x-auto">
+
+                    <div class="py-4 flex justify-end px-4">
+                        <form method="GET" action="{{ route('admin.pengguna.index') }}" class="flex items-center w-full sm:w-96">
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                placeholder="Cari pengguna...">
+                            <button type="submit"
+                                class="ml-3 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                                Cari
+                            </button>
+                        </form>
+                    </div>
+
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-white-100">
                             <tr>
@@ -26,7 +39,7 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach ($users as $user)
+                            @forelse ($users as $user)
                             <tr>
                                 <td class="px-6 py-4 text-sm text-gray-900 text-center">{{ $user->name }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-900 text-center">{{ $user->gender }}</td>
@@ -48,15 +61,21 @@
                                     <form action="{{ route('admin.pengguna.destroy', $user->id) }}" method="POST" class="delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition duration-300">
                                             Hapus
                                         </button>
                                     </form>
 
-                                    <a href="{{ route('admin.pengguna.show', $user->id) }}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Detail</a>
+                                    <a href="{{ route('admin.pengguna.show', $user->id) }}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition duration-300">
+                                        Detail
+                                    </a>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 text-sm text-gray-900 text-center">Data tidak ditemukan.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

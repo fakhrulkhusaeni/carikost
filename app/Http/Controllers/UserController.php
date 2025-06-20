@@ -10,13 +10,31 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('roles')
-            ->get()
-            ->filter(function ($user) {
-                return !$user->roles->contains('name', 'super_admin');
+        $search = $request->input('search');
+
+        // Mulai query builder
+        $query = User::with('roles')->whereDoesntHave('roles', function ($q) {
+            $q->where('name', 'super_admin');
+        });
+
+        // Tambahkan pencarian jika ada input
+        if (!empty($search)) {
+            $keywords = explode(' ', $search);
+
+            $query->where(function ($q) use ($keywords) {
+                foreach ($keywords as $word) {
+                    $q->where(function ($subQuery) use ($word) {
+                        $subQuery->where('name', 'like', "%$word%")
+                            ->orWhere('email', 'like', "%$word%")
+                            ->orWhere('phone', 'like', "%$word%");
+                    });
+                }
             });
+        }
+
+        $users = $query->orderBy('name')->get();
 
         return view('admin.pengguna.index', compact('users'));
     }

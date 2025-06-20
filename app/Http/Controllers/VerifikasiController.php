@@ -12,16 +12,36 @@ use Illuminate\Http\Request;
 class VerifikasiController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil data kost beserta status verifikasinya, urutkan dari yang terbaru
-        $kosts = Kost::with('verifikasi', 'user')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $search = $request->input('search');
+
+        // Inisialisasi query builder
+        $query = Kost::with('verifikasi', 'user');
+
+        // Tambahkan pencarian jika ada keyword
+        if (!empty($search)) {
+            $keywords = explode(' ', $search);
+
+            $query->whereHas('user', function ($q) use ($keywords) {
+                foreach ($keywords as $word) {
+                    $q->where(function ($subQuery) use ($word) {
+                        $subQuery->where('name', 'like', "%$word%")
+                            ->orWhere('email', 'like', "%$word%")
+                            ->orWhere('phone', 'like', "%$word%")
+                            ->orWhere('nama', 'like', "%$word%")
+                            ->orWhere('location', 'like', "%$word%")
+                            ->orWhere('alamat', 'like', "%$word%");
+                    });
+                }
+            });
+        }
+
+        // Eksekusi query dengan urutan terbaru
+        $kosts = $query->orderBy('created_at', 'desc')->get();
 
         return view('admin.verifikasi.index', compact('kosts'));
     }
-
 
     public function show($id)
     {

@@ -11,6 +11,19 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-lg rounded-lg overflow-hidden">
                 <div class="overflow-x-auto">
+
+                    <div class="py-4 flex justify-end px-4">
+                        <form method="GET" action="{{ route('admin.verifikasi.index') }}" class="flex items-center w-full sm:w-96">
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                placeholder="Cari data kost dan kontrakan...">
+                            <button type="submit"
+                                class="ml-3 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                                Cari
+                            </button>
+                        </form>
+                    </div>
+
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-white-100">
                             <tr>

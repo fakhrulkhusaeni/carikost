@@ -17,17 +17,35 @@ class PembayaranController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pembayarans = Pembayaran::whereHas('kost', function ($query) {
-            $query->where('user_id', auth()->user()->id);
-        })
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $search = $request->input('search');
+
+        // Inisialisasi query pembayaran milik kost user yang sedang login
+        $query = Pembayaran::whereHas('kost', function ($q) {
+            $q->where('user_id', auth()->user()->id);
+        });
+
+        // Pencarian berdasarkan nama user (pembayar)
+        if (!empty($search)) {
+            $keywords = explode(' ', $search);
+
+            $query->where(function ($q) use ($keywords) {
+                foreach ($keywords as $word) {
+                    $q->whereHas('user', function ($userQuery) use ($word) {
+                        $userQuery->where('name', 'like', "%$word%")
+                            ->orWhere('email', 'like', "%$word%")
+                            ->orWhere('phone', 'like', "%$word%");
+                    });
+                }
+            });
+        }
+
+        $pembayarans = $query->orderBy('created_at', 'desc')->get();
 
         return view('admin.pembayaran.index', compact('pembayarans'));
     }
-
+    
 
     public function store(Request $request)
     {
