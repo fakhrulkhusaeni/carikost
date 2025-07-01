@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('hunian_lains', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_pemilik');
+            $table->string('nama_pemilik', 50);
             $table->text('deskripsi');
-            $table->string('tipe_hunian');
-            $table->string('harga');
-            $table->string('status');
-            $table->string('location');
-            $table->string('alamat');
-            $table->string('telepon');
-            $table->string('status_verifikasi');
+            $table->string('tipe_hunian', 10);
+            $table->string('harga', 15);
+            $table->string('status', 10);
+            $table->string('location', 20);
+            $table->text('alamat');
+            $table->string('telepon', 13);
+            $table->string('status_verifikasi', 15);
             $table->json('detail_hunian');
             $table->json('fasilitas');
             $table->json('foto');

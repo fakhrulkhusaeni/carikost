@@ -31,7 +31,7 @@ class KostController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string',
             'deskripsi' => 'required|string',
             'type' => 'required|string',
             'jumlah_kamar' => 'required|integer',
@@ -97,7 +97,7 @@ class KostController extends Controller
     public function update(Request $request, Kost $kost)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string',
             'deskripsi' => 'required|string',
             'type' => 'required|string',
             'jumlah_kamar' => 'required|integer',

@@ -10,14 +10,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
+        <div class="py-12 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 sm:p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
 
                 <!-- Owner Details -->
-                <div class="flex items-center gap-4">
+                <div class="flex flex-col sm:flex-row items-center gap-4">
                     <img class="border rounded-full w-20 h-20" src="{{ asset('storage/' . $kost->user->avatar) }}" alt="Foto Pemilik Kost">
-                    <div class="text-start">
+                    <div class="text-center sm:text-start">
                         <h5 class="mb-1 font-medium">Dikelola Oleh <span class="font-semibold">{{ $kost->user->name }}</span></h5>
                         <span class="text-gray-500">{{ $kost->user->email }}</span>
                     </div>
@@ -47,13 +47,13 @@
                     @mouseleave="startAutoplay()"
                     class="relative w-full overflow-hidden">
                     <!-- Container Carousel -->
-                    <div class="relative w-full h-[500px] rounded-lg shadow overflow-hidden">
+                    <div class="relative w-full h-[250px] sm:h-[400px] md:h-[500px] rounded-lg shadow overflow-hidden">
                         <div
                             class="flex transition-transform duration-700 ease-in-out"
                             :style="`transform: translateX(-${currentIndex * 100}%);`">
                             <!-- Gambar-gambar -->
                             <template x-for="(image, index) in images" :key="index">
-                                <div class="min-w-full h-[500px]">
+                                <div class="min-w-full h-60 sm:h-[400px] md:h-[500px]">
                                     <a
                                         :href="'{{ asset('storage/') }}/' + image"
                                         class="glightbox"
@@ -83,10 +83,10 @@
 
                 <!-- Kost Details -->
                 <div>
-                    <h4 class="text-3xl font-bold text-gray-900 mb-3">{{ $kost->nama }}</h4>
-                    <p class="text-gray-700">{!! nl2br(e($kost->deskripsi)) !!}</p>
+                    <h4 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">{{ $kost->nama }}</h4>
+                    <p class="text-gray-700 text-sm sm:text-base">{!! nl2br(e($kost->deskripsi)) !!}</p>
 
-                    <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm sm:text-base">
                         <div><span class="font-semibold">Tipe:</span> {{ $kost->type }}</div>
                         <div><span class="font-semibold">Jumlah Kamar:</span> {{ $kost->jumlah_kamar }}</div>
                         <div><span class="font-semibold">Lokasi Kecamatan:</span> {{ $kost->location }}</div>
@@ -96,7 +96,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mt-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm sm:text-base">
                     <!-- Facilities -->
                     <div>
                         <span class="font-semibold">Fasilitas:</span>
@@ -122,7 +122,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="text-sm sm:text-base">
                     <span class="font-semibold">Bukti Kepemilikan:</span>
 
                     @if($kost->buktiKepemilikan)
@@ -151,7 +151,7 @@
 
 
                 <!-- Buttons -->
-                <div class="flex justify-end gap-4 mt-6">
+                <div class="flex flex-col sm:flex-row justify-end gap-4 mt-6">
                     @php
                     $statusVerifikasi = $kost->verifikasi->status_verifikasi ?? null;
                     $memenuhiSyaratDokumen = $kost->buktiKepemilikan && (
@@ -160,10 +160,10 @@
                     );
                     @endphp
 
-                    <div class="flex justify-end gap-4 mt-6">
+                    <div class="flex flex-col sm:flex-row justify-end gap-4 mt-6">
                         <!-- Tombol Verifikasi atau Sudah Diverifikasi -->
                         @if ($statusVerifikasi === 'terverifikasi')
-                        <button type="button" onclick="showAlreadyVerifiedAlert()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2">
+                        <button type="button" onclick="showAlreadyVerifiedAlert()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center justify-center gap-2 w-full sm:w-auto">
                             Sudah Diverifikasi
                         </button>
                         @else
@@ -174,7 +174,7 @@
                             @csrf
                             <button
                                 type="submit"
-                                class="px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }}"
+                                class="items-center justify-center px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }}"
                                 {{ !$memenuhiSyaratDokumen ? 'disabled' : '' }}>
                                 Verifikasi
                             </button>
@@ -184,7 +184,7 @@
 
                         <!-- Tombol Tolak atau Sudah Ditolak -->
                         @if ($statusVerifikasi === 'ditolak')
-                        <button type="button" onclick="showAlreadyRejectAlert()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center gap-2">
+                        <button type="button" onclick="showAlreadyRejectAlert()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center justify-center gap-2 w-full sm:w-auto">
                             Sudah Ditolak
                         </button>
                         @else
@@ -195,7 +195,7 @@
                             @csrf
                             <button
                                 type="submit"
-                                class="px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-400 cursor-not-allowed' }}"
+                                class="items-center justify-center px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-400 cursor-not-allowed' }}"
                                 {{ !$memenuhiSyaratDokumen ? 'disabled' : '' }}>
                                 Tolak
                             </button>

@@ -22,22 +22,22 @@
 
        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
-       <div class="py-12">
-           <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-               <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
+       <div class="py-12 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 sm:p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
 
-                   <!-- Owner Details -->
-                   <div class="flex items-center gap-4">
-                       <img class="border rounded-full w-20 h-20" src="{{ asset('storage/' . $riwayat->kost->user->avatar) }}" alt="Foto Pemilik Kost">
-                       <div class="text-start">
-                           <h5 class="mb-1 font-medium">Dikelola Oleh <span class="font-semibold">{{ $riwayat->kost->user->name }}</span></h5>
-                           <span class="text-gray-500">{{ $riwayat->kost->user->email }}</span>
-                       </div>
-                   </div>
+                    <!-- Owner Details -->
+                    <div class="flex flex-col sm:flex-row items-center gap-4">
+                        <img class="border rounded-full w-20 h-20 object-cover" src="{{ asset('storage/' . $riwayat->kost->user->avatar) }}" alt="Foto Pemilik Kost">
+                        <div class="text-center sm:text-start">
+                            <h5 class="mb-1 font-medium">Dikelola Oleh <span class="font-semibold">{{ $riwayat->kost->user->name }}</span></h5>
+                            <span class="text-gray-500">{{ $riwayat->kost->user->email }}</span>
+                        </div>
+                    </div>
 
-                   <!-- Photo Gallery -->
-                   <div
-                       x-data="{
+                    <!-- Photo Gallery -->
+                    <div
+                        x-data="{
                             currentIndex: 0,
                             images: {{ json_encode(json_decode($riwayat->kost->foto, true)) }},
                             interval: null,
@@ -54,222 +54,187 @@
                                 this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
                             }
                         }"
-                       x-init="startAutoplay()"
-                       @mouseover="stopAutoplay()"
-                       @mouseleave="startAutoplay()"
-                       class="relative w-full overflow-hidden">
-                       <!-- Container Carousel -->
-                       <div class="relative w-full h-[500px] rounded-lg shadow overflow-hidden">
-                           <div
-                               class="flex transition-transform duration-700 ease-in-out"
-                               :style="`transform: translateX(-${currentIndex * 100}%);`">
-                               <!-- Gambar-gambar -->
-                               <template x-for="(image, index) in images" :key="index">
-                                   <div class="min-w-full h-[500px]">
-                                       <a
-                                           :href="'{{ asset('storage/') }}/' + image"
-                                           class="glightbox"
-                                           data-gallery="kost-gallery">
-                                           <img
-                                               :src="'{{ asset('storage/') }}/' + image"
-                                               class="w-full h-full object-cover rounded-lg"
-                                               alt="Foto Hunian">
-                                       </a>
-                                   </div>
-                               </template>
-                           </div>
-                       </div>
+                        x-init="startAutoplay()"
+                        @mouseover="stopAutoplay()"
+                        @mouseleave="startAutoplay()"
+                        class="relative w-full overflow-hidden">
+                        <div class="relative w-full h-[250px] sm:h-[400px] md:h-[500px] rounded-lg shadow overflow-hidden">
+                            <div
+                                class="flex transition-transform duration-700 ease-in-out"
+                                :style="`transform: translateX(-${currentIndex * 100}%);`">
+                                <template x-for="(image, index) in images" :key="index">
+                                    <div class="min-w-full h-60 sm:h-[400px] md:h-[500px]">
+                                        <a
+                                            :href="'{{ asset('storage/') }}/' + image"
+                                            class="glightbox"
+                                            data-gallery="kost-gallery">
+                                            <img
+                                                :src="'{{ asset('storage/') }}/' + image"
+                                                class="w-full h-full object-cover rounded-lg"
+                                                alt="Foto Hunian">
+                                        </a>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
 
-                       <!-- Tombol Navigasi -->
-                       <button
-                           @click="prev()"
-                           class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
-                           &#10094;
-                       </button>
-                       <button
-                           @click="next()"
-                           class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
-                           &#10095;
-                       </button>
-                   </div>
+                        <!-- Tombol Navigasi -->
+                        <button
+                            @click="prev()"
+                            class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
+                            &#10094;
+                        </button>
+                        <button
+                            @click="next()"
+                            class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
+                            &#10095;
+                        </button>
+                    </div>
 
-                   <hr class="border-t border-gray-300 my-3">
+                    <hr class="border-t border-gray-300 my-3">
 
-                   <!-- Booking Information -->
-                   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                       <p class="mb-3"><span class="font-semibold">Tanggal Mulai Sewa:</span> {{ \Carbon\Carbon::parse($riwayat->tanggal_booking)->translatedFormat('l, d F Y') }}</p>
-                       <p class="mb-3"><span class="font-semibold">Tanggal Keluar:</span> {{ $riwayat->tanggal_keluar ? \Carbon\Carbon::parse($riwayat->tanggal_keluar)->translatedFormat('l, d F Y') : "-" }}</p>
-                       <div>
-                           <p class="mb-3">
-                               <span class="font-semibold">Status Konfirmasi:</span>
-                               @if($riwayat->status_konfirmasi == 'Disetujui')
-                               <span class="text-green-600">Disetujui</span>
-                               @elseif($riwayat->status_konfirmasi == 'Ditolak')
-                               <span class="text-red-600">Ditolak</span>
-                               @else
-                               <span class="text-yellow-600">Pending</span>
-                               @endif
-                           </p>
+                    <!-- Booking Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <p><span class="font-semibold">Tanggal Mulai Sewa:</span> {{ \Carbon\Carbon::parse($riwayat->tanggal_booking)->translatedFormat('l, d F Y') }}</p>
+                        <p><span class="font-semibold">Tanggal Keluar:</span> {{ $riwayat->tanggal_keluar ? \Carbon\Carbon::parse($riwayat->tanggal_keluar)->translatedFormat('l, d F Y') : '-' }}</p>
+                        <div>
+                            <p>
+                                <span class="font-semibold">Status Konfirmasi:</span>
+                                @if($riwayat->status_konfirmasi == 'Disetujui')
+                                <span class="text-green-600">Disetujui</span>
+                                @elseif($riwayat->status_konfirmasi == 'Ditolak')
+                                <span class="text-red-600">Ditolak</span>
+                                @else
+                                <span class="text-yellow-600">Pending</span>
+                                @endif
+                            </p>
 
-                           @if($riwayat->status_konfirmasi == 'Ditolak' && $riwayat->catatan_penolakan)
-                           <div class="bg-red-100 text-red-700 border border-red-300 rounded-md p-3">
-                               <strong>Catatan Penolakan:</strong>
-                               <p class="mt-2">{{ $riwayat->catatan_penolakan }}</p>
-                           </div>
-                           @endif
-                       </div>
+                            @if($riwayat->status_konfirmasi == 'Ditolak' && $riwayat->catatan_penolakan)
+                            <div class="bg-red-100 text-red-700 border border-red-300 rounded-md p-3 mt-2">
+                                <strong>Catatan Penolakan:</strong>
+                                <p class="mt-1">{{ $riwayat->catatan_penolakan }}</p>
+                            </div>
+                            @endif
+                        </div>
 
-                       <p><span class="font-semibold">Status Pembayaran:</span>
-                           <span class="text-{{ $riwayat->status_pembayaran == 'Berhasil' ? 'green' : 'yellow' }}-600">{{$riwayat->status_pembayaran}}</span>
-                       </p>
-                   </div>
+                        <p>
+                            <span class="font-semibold">Status Pembayaran:</span>
+                            <span class="text-{{ $riwayat->status_pembayaran == 'Berhasil' ? 'green' : 'yellow' }}-600">{{ $riwayat->status_pembayaran }}</span>
+                        </p>
+                    </div>
 
-                   <hr class="border-t border-gray-300 my-3">
+                    <hr class="border-t border-gray-300 my-3">
 
-                   <!-- Kost Details -->
-                   <div class="space-y-4">
-                       <h4 class="text-3xl font-bold text-gray-900">{{ $riwayat->kost->nama }}</h4>
-                       <p class="text-gray-700">{!! nl2br(e($riwayat->kost->deskripsi)) !!}</p>
-                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                           <p><span class="font-semibold">Tipe:</span> {{ $riwayat->kost->type }}</p>
-                           <p><span class="font-semibold">Jumlah Kamar:</span> {{ $riwayat->kost->jumlah_kamar }}</p>
-                           <p><span class="font-semibold">Lokasi Kecamatan:</span> {{ $riwayat->kost->location }}</p>
-                           <p><span class="font-semibold">Alamat Lengkap:</span> {{ $riwayat->kost->alamat }}</p>
-                           <p><span class="font-semibold">Harga:</span> Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $riwayat->kost->harga), 0, ',', '.') }}/bulan</p>
-                           <p><span class="font-semibold">Nomor Telepon:</span> {{ $riwayat->kost->user->phone }}</p>
-                       </div>
-                   </div>
+                    <!-- Kost Details -->
+                    <div class="space-y-4">
+                        <h4 class="text-xl sm:text-3xl font-bold text-gray-900">{{ $riwayat->kost->nama }}</h4>
+                        <p class="text-gray-700">{!! nl2br(e($riwayat->kost->deskripsi)) !!}</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <p><span class="font-semibold">Tipe:</span> {{ $riwayat->kost->type }}</p>
+                            <p><span class="font-semibold">Jumlah Kamar:</span> {{ $riwayat->kost->jumlah_kamar }}</p>
+                            <p><span class="font-semibold">Lokasi Kecamatan:</span> {{ $riwayat->kost->location }}</p>
+                            <p><span class="font-semibold">Alamat Lengkap:</span> {{ $riwayat->kost->alamat }}</p>
+                            <p><span class="font-semibold">Harga:</span> Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $riwayat->kost->harga), 0, ',', '.') }}/bulan</p>
+                            <p><span class="font-semibold">Nomor Telepon:</span> {{ $riwayat->kost->user->phone }}</p>
+                        </div>
+                    </div>
 
-                   <!-- Facilities & Rules -->
-                   <div class="grid grid-cols-2 gap-4">
-                       <div>
-                           <span class="font-semibold">Fasilitas:</span>
-                           <ul class="list-disc pl-6 text-gray-600 mt-1">
-                               @forelse ($riwayat->kost->facilities as $facility)
-                               <li>{{ $facility }}</li>
-                               @empty
-                               <li>Fasilitas tidak tersedia</li>
-                               @endforelse
-                           </ul>
-                       </div>
-                       <div>
-                           <span class="font-semibold">Peraturan:</span>
-                           <ul class="list-disc pl-6 text-gray-600 mt-1">
-                               @forelse ($riwayat->kost->rules as $rule)
-                               <li>{{ $rule }}</li>
-                               @empty
-                               <li>Peraturan tidak tersedia</li>
-                               @endforelse
-                           </ul>
-                       </div>
-                   </div>
+                    <!-- Facilities & Rules -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <span class="font-semibold">Fasilitas:</span>
+                            <ul class="list-disc pl-6 text-gray-600 mt-1">
+                                @forelse ($riwayat->kost->facilities as $facility)
+                                <li>{{ $facility }}</li>
+                                @empty
+                                <li>Fasilitas tidak tersedia</li>
+                                @endforelse
+                            </ul>
+                        </div>
+                        <div>
+                            <span class="font-semibold">Peraturan:</span>
+                            <ul class="list-disc pl-6 text-gray-600 mt-1">
+                                @forelse ($riwayat->kost->rules as $rule)
+                                <li>{{ $rule }}</li>
+                                @empty
+                                <li>Peraturan tidak tersedia</li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    </div>
 
-                   <hr class="border-t border-gray-300 my-3">
+                    <hr class="border-t border-gray-300 my-3">
 
-                   <!-- Rating Section -->
-                   <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-center">
-                       <!-- Bukti Identitas -->
-                       <div>
-                           <p class="mb-3">
-                               <span class="font-semibold">Bukti Identitas:</span><br>
-                               @if (pathinfo($riwayat->kartu_identitas, PATHINFO_EXTENSION) == 'pdf')
-                               <a href="{{ asset('storage/' . $riwayat->kartu_identitas) }}" target="_blank" class="text-blue-600 hover:underline">
-                                   Lihat Kartu Identitas (PDF)
-                               </a>
-                               @else
-                               <a href="{{ asset('storage/' . $riwayat->kartu_identitas) }}" class="glightbox">
-                                   <img src="{{ asset('storage/' . $riwayat->kartu_identitas) }}"
-                                       alt="Kartu Identitas"
-                                       class="mt-2 w-full max-w-xs border rounded-lg shadow cursor-pointer">
-                               </a>
-                               @endif
-                           </p>
-                       </div>
+                    <!-- Rating & Identitas -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+                        <!-- Bukti Identitas -->
+                        <div class="w-full sm:w-1/2">
+                            <p class="mb-3">
+                                <span class="font-semibold">Bukti Identitas:</span><br>
+                                @if (pathinfo($riwayat->kartu_identitas, PATHINFO_EXTENSION) == 'pdf')
+                                <a href="{{ asset('storage/' . $riwayat->kartu_identitas) }}" target="_blank" class="text-blue-600 hover:underline">
+                                    Lihat Kartu Identitas (PDF)
+                                </a>
+                                @else
+                                <a href="{{ asset('storage/' . $riwayat->kartu_identitas) }}" class="glightbox">
+                                    <img src="{{ asset('storage/' . $riwayat->kartu_identitas) }}"
+                                        alt="Kartu Identitas"
+                                        class="mt-2 w-full max-w-xs border rounded-lg shadow cursor-pointer">
+                                </a>
+                                @endif
+                            </p>
+                        </div>
 
-                       <!-- Rating Section (tanpa card) -->
-                       <div class="flex flex-col items-center">
-                           <h4 class="text-center text-base font-semibold mb-2">Beri Penilaian Anda Setelah Menempati<br> Tempat Kost/Kontrakan</h4>
+                        <!-- Rating -->
+                        <div class="w-full sm:w-1/2 flex flex-col items-center">
+                            <h4 class="text-center text-base font-semibold mb-2">Beri Penilaian Anda Setelah Menempati<br> Tempat Kost/Kontrakan</h4>
 
-                           @if ($riwayat && $riwayat->status_pembayaran === 'Berhasil')
-                           <div class="flex justify-center space-x-2" id="stars">
-                               @for ($i = 1; $i <= 5; $i++)
-                                   <i class="fa fa-star cursor-pointer text-gray-300 text-2xl transition duration-200" data-value="{{ $i }}"></i>
-                                   @endfor
-                           </div>
-                           <p id="rating-value" class="text-center mt-2 text-gray-600 text-sm">Nilai: 0</p>
-                           <input type="hidden" name="kost_id" id="kost_id" value="{{ $riwayat->kost->id }}">
-                           <input type="hidden" name="rating" id="rating" value="0">
-                           <button id="submit-rating" class="mt-3 px-3 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 block mx-auto">Kirim Rating</button>
-                           @else
-                           <div class="flex justify-center space-x-2" id="stars-disabled">
-                               @for ($i = 1; $i <= 5; $i++)
-                                   <i class="fa fa-star text-gray-300 text-2xl transition duration-200"></i>
-                                   @endfor
-                           </div>
-                           <p class="text-center mt-2 text-gray-600 text-sm">Nilai: 0</p>
-                           <button type="button" onclick="showPaymentAlert()" class="mt-3 px-3 py-2 bg-gray-400 text-white text-sm rounded cursor-not-allowed block mx-auto">Kirim Rating</button>
-                           @endif
-                       </div>
-                   </div>
+                            @if ($riwayat && $riwayat->status_pembayaran === 'Berhasil')
+                            <div class="flex justify-center space-x-2" id="stars">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <i class="fa fa-star cursor-pointer text-gray-300 text-2xl transition duration-200" data-value="{{ $i }}"></i>
+                                @endfor
+                            </div>
+                            <p id="rating-value" class="text-center mt-2 text-gray-600 text-sm">Nilai: 0</p>
+                            <input type="hidden" name="kost_id" id="kost_id" value="{{ $riwayat->kost->id }}">
+                            <input type="hidden" name="rating" id="rating" value="0">
+                            <button id="submit-rating" class="mt-3 px-3 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 w-full sm:w-auto">Kirim Rating</button>
+                            @else
+                            <div class="flex justify-center space-x-2" id="stars-disabled">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <i class="fa fa-star text-gray-300 text-2xl transition duration-200"></i>
+                                @endfor
+                            </div>
+                            <p class="text-center mt-2 text-gray-600 text-sm">Nilai: 0</p>
+                            <button type="button" onclick="showPaymentAlert()" class="mt-3 px-3 py-2 bg-gray-400 text-white text-sm rounded cursor-not-allowed w-full sm:w-auto">Kirim Rating</button>
+                            @endif
+                        </div>
+                    </div>
 
-                   <!-- Payment Button -->
-                   <div class="flex justify-end mt-6">
-                       @if ($riwayat->status_konfirmasi == 'Disetujui' && $riwayat->status_pembayaran != 'Berhasil')
-                       <button type="button" id="btn-bayar" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2">
-                           <i class="fas fa-wallet"></i>
-                           Bayar Sekarang
-                       </button>
-                       @elseif ($riwayat->status_pembayaran == 'Berhasil')
-                       <button type="button" onclick="showAlreadyBayarAlert()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2">
-                           <i class="fas fa-check-circle"></i>
-                           Sudah Dibayar
-                       </button>
-                       @else
-                       <button type="button" disabled class="px-6 py-2 bg-gray-400 text-white rounded-lg flex items-center gap-2 cursor-not-allowed">
-                           <i class="fas fa-hourglass-half"></i>
-                           Menunggu Persetujuan
-                       </button>
-                       @endif
-                   </div>
+                    <!-- Payment Button -->
+                    <div class="flex flex-col sm:flex-row justify-end gap-4 mt-6">
+                        @if ($riwayat->status_konfirmasi == 'Disetujui' && $riwayat->status_pembayaran != 'Berhasil')
+                        <button type="button" id="btn-bayar" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center justify-center gap-2 w-full sm:w-auto">
+                            <i class="fas fa-wallet"></i>
+                            Bayar Sekarang
+                        </button>
+                        @elseif ($riwayat->status_pembayaran == 'Berhasil')
+                        <button type="button" onclick="showAlreadyBayarAlert()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center justify-center gap-2 w-full sm:w-auto">
+                            <i class="fas fa-check-circle"></i>
+                            Sudah Dibayar
+                        </button>
+                        @else
+                        <button type="button" disabled class="px-6 py-2 bg-gray-400 text-white rounded-lg flex items-center justify-center gap-2 cursor-not-allowed w-full sm:w-auto">
+                            <i class="fas fa-hourglass-half"></i>
+                            Menunggu Persetujuan
+                        </button>
+                        @endif
+                    </div>
 
-                   <!-- Modal Pilihan Metode Pembayaran -->
-                   <!-- <div id="metodePembayaranModal" class="fixed inset-0 hidden bg-black bg-opacity-50 z-50 flex justify-center items-center">
-                       <div class="bg-white rounded-xl w-full max-w-md mx-4 p-6 shadow-2xl relative">
-                           <button onclick="tutupModal()" class="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-200 transition">
-                               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 hover:text-red-500 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                               </svg>
-                           </button>
+                </div>
+            </div>
+        </div>
 
-                           <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Pilih Pembayaran</h2>
-
-                           <div class="flex flex-col gap-4">
-                               <button id="btn-bayar" class="flex items-center p-4 border border-gray-300 rounded-xl hover:shadow-md transition bg-white hover:bg-gray-100">
-                                   <div class="w-10 h-10 flex-shrink-0">
-                                       <img src="{{ asset('assets/transfer.png') }}" alt="Transfer Icon" class="w-full h-full object-contain">
-                                   </div>
-                                   <div class="ml-4 text-left">
-                                       <p class="text-lg font-semibold text-gray-800">Transfer</p>
-                                       <p class="text-sm text-gray-600">Pembayaran melalui transfer bank otomatis dan terverifikasi</p>
-                                   </div>
-                               </button>
-
-                               <button class="flex items-center p-4 border border-gray-300 rounded-xl hover:shadow-md transition bg-white hover:bg-gray-100">
-                                   <div class="w-10 h-10 flex-shrink-0">
-                                       <img src="{{ asset('assets/cash.png') }}" alt="Cash Icon" class="w-full h-full object-contain">
-                                   </div>
-                                   <div class="ml-4 text-left">
-                                       <p class="text-lg font-semibold text-gray-800">Cash</p>
-                                       <p class="text-sm text-gray-600">Pembayaran dilakukan secara langsung ke pemilik hunian</p>
-                                   </div>
-                               </button>
-                           </div>
-                       </div>
-                   </div> -->
-
-               </div>
-           </div>
-       </div>
 
        <!-- <script>
            function bukaModal() {

@@ -27,7 +27,7 @@ class HunianLainController extends Controller
     {
         // Validasi input dari pengguna
         $validated = $request->validate([
-            'nama_pemilik' => 'required|string|max:255',
+            'nama_pemilik' => 'required|string',
             'deskripsi' => 'required|string',
             'tipe_hunian' => 'required|string',
             'harga' => 'required|string',
@@ -91,7 +91,7 @@ class HunianLainController extends Controller
     public function update(Request $request, HunianLain $hunianLain)
     {
         $validated = $request->validate([
-            'nama_pemilik' => 'required|string|max:255',
+            'nama_pemilik' => 'required|string',
             'deskripsi' => 'required|string',
             'tipe_hunian' => 'required|string',
             'harga' => 'required|string',

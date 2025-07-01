@@ -31,13 +31,13 @@ class RegisteredUserController extends Controller
     {
         // Validasi input, termasuk avatar, phone, dan account_type, gender
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'name' => ['required', 'string', 'max:50'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:25', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg'], // Validasi avatar
-            'phone' => ['required', 'string', 'max:15', 'unique:' . User::class], // Validasi nomor telepon
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
+            'phone' => ['required', 'regex:/^[0-9]{10,13}$/', 'unique:' . User::class],
             'account_type' => ['required'],
-            'gender' => ['nullable', 'string', 'in:laki-laki,perempuan'],
+            'gender' => ['nullable', 'string', 'in:laki-laki,perempuan', 'max:14'],
         ], [
             'email.unique' => 'Email sudah digunakan.',
             'phone.unique' => 'Nomor telepon sudah digunakan.',

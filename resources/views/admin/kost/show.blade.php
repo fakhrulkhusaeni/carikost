@@ -10,16 +10,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
+    <div class="py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 sm:p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
 
                 <!-- Owner Details -->
-                <div class="flex items-center gap-4">
-                    <img class="border rounded-full w-20 h-20" src="{{ asset('storage/' . $kost->user->avatar) }}" alt="Foto Pemilik Kost">
-                    <div class="text-start">
-                        <h5 class="mb-1 font-medium">Dikelola Oleh <span class="font-semibold">{{ $kost->user->name }}</span></h5>
-                        <span class="text-gray-500">{{ $kost->user->email }}</span>
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <img class="border rounded-full w-20 h-20 object-cover" src="{{ asset('storage/' . $kost->user->avatar) }}" alt="Foto Pemilik Kost">
+                    <div class="text-center sm:text-start">
+                        <h5 class="mb-1 font-medium text-sm sm:text-base">Dikelola Oleh <span class="font-semibold">{{ $kost->user->name }}</span></h5>
+                        <span class="text-gray-500 text-sm">{{ $kost->user->email }}</span>
                     </div>
                 </div>
 
@@ -46,20 +46,13 @@
                     @mouseover="stopAutoplay()"
                     @mouseleave="startAutoplay()"
                     class="relative w-full overflow-hidden">
-                    <!-- Container Carousel -->
-                    <div class="relative w-full h-[500px] rounded-lg shadow overflow-hidden">
-                        <div
-                            class="flex transition-transform duration-700 ease-in-out"
+                    <div class="relative w-full h-60 sm:h-[400px] md:h-[500px] rounded-lg shadow overflow-hidden">
+                        <div class="flex transition-transform duration-700 ease-in-out"
                             :style="`transform: translateX(-${currentIndex * 100}%);`">
-                            <!-- Gambar-gambar -->
                             <template x-for="(image, index) in images" :key="index">
-                                <div class="min-w-full h-[500px]">
-                                    <a
-                                        :href="'{{ asset('storage/') }}/' + image"
-                                        class="glightbox"
-                                        data-gallery="kost-gallery">
-                                        <img
-                                            :src="'{{ asset('storage/') }}/' + image"
+                                <div class="min-w-full h-60 sm:h-[400px] md:h-[500px]">
+                                    <a :href="'{{ asset('storage/') }}/' + image" class="glightbox" data-gallery="kost-gallery">
+                                        <img :src="'{{ asset('storage/') }}/' + image"
                                             class="w-full h-full object-cover rounded-lg"
                                             alt="Foto Hunian">
                                     </a>
@@ -68,7 +61,7 @@
                         </div>
                     </div>
 
-                    <!-- Tombol Navigasi -->
+                    <!-- Navigasi -->
                     <button
                         @click="prev()"
                         class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
@@ -81,13 +74,12 @@
                     </button>
                 </div>
 
-
                 <!-- Kost Details -->
                 <div>
-                    <h4 class="text-3xl font-bold text-gray-900 mb-3">{{ $kost->nama }}</h4>
-                    <p class="text-gray-700">{!! nl2br(e($kost->deskripsi)) !!}</p>
+                    <h4 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">{{ $kost->nama }}</h4>
+                    <p class="text-gray-700 text-sm sm:text-base">{!! nl2br(e($kost->deskripsi)) !!}</p>
 
-                    <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm sm:text-base">
                         <div><span class="font-semibold">Tipe:</span> {{ $kost->type }}</div>
                         <div><span class="font-semibold">Jumlah Kamar:</span> {{ $kost->jumlah_kamar }}</div>
                         <div><span class="font-semibold">Lokasi Kecamatan:</span> {{ $kost->location }}</div>
@@ -97,8 +89,8 @@
                     </div>
                 </div>
 
-                <!-- Facilities & Rules -->
-                <div class="grid grid-cols-2 gap-4 mt-4">
+                <!-- Fasilitas dan Peraturan -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm sm:text-base">
                     <div>
                         <span class="font-semibold">Fasilitas:</span>
                         <ul class="mt-1 text-gray-600 list-disc pl-6">
@@ -121,25 +113,16 @@
                     </div>
                 </div>
 
-                <div>
+                <!-- Bukti Kepemilikan -->
+                <div class="text-sm sm:text-base">
                     <span class="font-semibold">Bukti Kepemilikan:</span>
-
                     @if ($bukti)
                     <ul class="mt-2 text-blue-600 list-disc pl-6">
                         @if ($bukti->siuk_imb)
-                        <li>
-                            <a href="{{ asset('storage/' . $bukti->siuk_imb) }}" target="_blank" class="underline hover:text-blue-800">
-                                Lihat Surat Izin Usaha Kost/Kontrakan
-                            </a>
-                        </li>
+                        <li><a href="{{ asset('storage/' . $bukti->siuk_imb) }}" target="_blank" class="underline hover:text-blue-800">Lihat Surat Izin Usaha Kost/Kontrakan</a></li>
                         @endif
-
                         @if ($bukti->ktp_pemilik)
-                        <li>
-                            <a href="{{ asset('storage/' . $bukti->ktp_pemilik) }}" target="_blank" class="underline hover:text-blue-800">
-                                Lihat KTP Pemilik
-                            </a>
-                        </li>
+                        <li><a href="{{ asset('storage/' . $bukti->ktp_pemilik) }}" target="_blank" class="underline hover:text-blue-800">Lihat KTP Pemilik</a></li>
                         @endif
                     </ul>
                     @else
@@ -147,121 +130,102 @@
                     @endif
                 </div>
 
-                <div class="mb-4">
+                <!-- Daftar Penghuni -->
+                <div class="text-sm sm:text-base">
                     <span class="font-semibold block mb-3">Daftar Penghuni ({{ $penghuni->count() }}):</span>
-
                     @forelse ($penghuni as $item)
-                    <div class="flex justify-between items-center mb-3">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-y-3 sm:gap-0">
                         <div class="flex flex-row items-center gap-x-3">
-                            <img src="{{ asset('storage/' . $item->user->avatar) }}" alt="User Avatar" class="rounded-full object-cover w-[70px] h-[70px]">
+                            <img src="{{ asset('storage/' . $item->user->avatar) }}" alt="User Avatar" class="rounded-full object-cover w-[60px] h-[60px]">
                             <div class="flex flex-col">
-                                <h4 class="text-indigo-950 text-l font-bold">
-                                    {{ $item->user->name }}
-                                </h4>
-                                <p class="text-slate-500 text-sm">
-                                    {{ $item->user->phone }}
-                                </p>
+                                <h4 class="text-indigo-950 font-bold">{{ $item->user->name }}</h4>
+                                <p class="text-slate-500 text-sm">{{ $item->user->phone }}</p>
                             </div>
                         </div>
-
-                        <!-- Tombol Aksi -->
-                        <div class="flex gap-x-2">
-                            <form action="{{ route('admin.kost.keluar', $item->id) }}" method="POST" class="form-keluar">
-                                @csrf
-                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-md">
-                                    Keluar
-                                </button>
-                            </form>
-                        </div>
+                        <form action="{{ route('admin.kost.keluar', $item->id) }}" method="POST" class="form-keluar">
+                            @csrf
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-md">Keluar</button>
+                        </form>
                     </div>
                     @empty
                     <p class="text-gray-500">Belum ada daftar penghuni.</p>
                     @endforelse
                 </div>
 
-
-                <!-- Pemberitahuan Verifikasi -->
-                @if (!$sudahUpload)
-                <!-- Kondisi: Belum Upload -->
-                <div class="p-4 mb-2 text-sm text-yellow-800 bg-yellow-200 rounded-lg flex items-center" role="alert">
-                    <span class="mr-2">&#9888;</span>
-                    <div>
-                        <strong>Perhatian!</strong> Tempat kost atau kontrakan Anda belum terverifikasi. Segera upload bukti kepemilikan untuk proses verifikasi. <br>
-                        Jika tidak melakukan upload bukti kepemilikan maka tempat kost atau kontrakan Anda tidak akan tampil di website.
+                <!-- Alert Verifikasi -->
+                <div class="text-sm">
+                    @if (!$sudahUpload)
+                    <div class="p-4 mb-2 text-yellow-800 bg-yellow-200 rounded-lg flex items-start sm:items-center gap-2" role="alert">
+                        <span>&#9888;</span>
+                        <div>
+                            <strong>Perhatian!</strong> Tempat kost atau kontrakan belum terverifikasi. Upload bukti kepemilikan segera agar tampil di website.
+                        </div>
                     </div>
-                </div>
-                @elseif ($verifikasiDitolak)
-                <!-- Kondisi: Ditolak -->
-                <div class="p-4 mb-2 text-sm text-red-800 bg-red-200 rounded-lg flex items-center" role="alert">
-                    <span class="mr-2">&#10060;</span>
-                    <div>
-                        <strong>Verifikasi Ditolak!</strong> Bukti kepemilikan Anda ditolak. Silakan unggah ulang dokumen yang valid agar tempat kost/kontrakan Anda dapat tampil di website.
+                    @elseif ($verifikasiDitolak)
+                    <div class="p-4 mb-2 text-red-800 bg-red-200 rounded-lg flex items-start sm:items-center gap-2" role="alert">
+                        <span>&#10060;</span>
+                        <div>
+                            <strong>Verifikasi Ditolak!</strong> Upload ulang dokumen yang valid agar kost atau kontrakan Anda dapat tampil di website.
+                        </div>
                     </div>
-                </div>
-                @elseif ($sudahUpload && !$sudahTerverifikasi)
-                <!-- Kondisi: Sudah upload tapi belum diverifikasi -->
-                <div class="p-4 mb-2 text-sm text-green-800 bg-green-200 rounded-lg flex items-center" role="alert">
-                    <span class="mr-2">&#9989;</span>
-                    <div>
-                        <strong>Terima kasih!</strong> Bukti kepemilikan sudah berhasil diupload dan sedang dalam proses verifikasi oleh Admin. <br>
-                        Tempat kost atau Kontrakan Anda akan segera tampil di website.
+                    @elseif ($sudahUpload && !$sudahTerverifikasi)
+                    <div class="p-4 mb-2 text-green-800 bg-green-200 rounded-lg flex items-start sm:items-center gap-2" role="alert">
+                        <span>&#9989;</span>
+                        <div>
+                            <strong>Terima kasih!</strong> Dokumen Anda sedang diverifikasi oleh Admin.
+                        </div>
                     </div>
-                </div>
-                @elseif ($sudahUpload && $sudahTerverifikasi)
-                <!-- Kondisi: Terverifikasi -->
-                <div class="p-4 mb-2 text-sm text-blue-800 bg-blue-200 rounded-lg flex items-center" role="alert">
-                    <span class="mr-2">&#10004;</span>
-                    <div>
-                        <strong>Sudah Terverifikasi!</strong> Tempat kost atau kontrakan Anda telah diverifikasi dan sekarang sudah tampil di website.
+                    @elseif ($sudahUpload && $sudahTerverifikasi)
+                    <div class="p-4 mb-2 text-blue-800 bg-blue-200 rounded-lg flex items-start sm:items-center gap-2" role="alert">
+                        <span>&#10004;</span>
+                        <div>
+                            <strong>Sudah Terverifikasi!</strong> Kost atau kontrakan Anda telah tampil di website.
+                        </div>
                     </div>
+                    @endif
                 </div>
-                @endif
 
-
-                <!-- Modal Upload Bukti Kepemilikan -->
-                <div x-data="{ openModal: false }" class="flex justify-end gap-4 mt-6">
-
+                <!-- Upload Bukti -->
+                <div x-data="{ openModal: false }" class="flex flex-col sm:flex-row justify-end gap-4 mt-6">
                     @if (!$sudahUpload || $verifikasiDitolak)
-                    <button @click="openModal = true" type="button" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
+                    <button @click="openModal = true" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm">
                         {{ $verifikasiDitolak ? 'Upload Ulang Bukti Kepemilikan' : 'Upload Bukti Kepemilikan' }}
                     </button>
                     @else
-                    <button type="button" onclick="showAlreadyUploadedAlert()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center">
+                    <button onclick="showAlreadyUploadedAlert()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm">
                         Sudah Upload Bukti Kepemilikan
                     </button>
                     @endif
 
-
+                    <!-- Modal -->
                     <div x-show="openModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-                        <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-8">
+                        <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 sm:p-8">
                             <h2 class="text-lg font-semibold mb-4">Upload Bukti Kepemilikan</h2>
                             <form method="POST" action="{{ route('bukti-kepemilikan.store') }}" enctype="multipart/form-data">
                                 @csrf
-
                                 <input type="hidden" name="kost_id" value="{{ $kost->id }}">
-
                                 <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Surat Izin Usaha Kost/Kontrakan</label>
-                                    <input type="file" name="siuk_imb" accept=".pdf,.jpg,.png" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                    <label class="block text-sm font-medium">Surat Izin Usaha Kost/Kontrakan</label>
+                                    <input type="file" name="siuk_imb" accept=".pdf,.jpg,.png" class="mt-1 w-full border-gray-300 rounded-md shadow-sm" required>
                                 </div>
                                 <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">KTP Pemilik</label>
-                                    <input type="file" name="ktp_pemilik" accept=".pdf,.jpg,.png" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                    <label class="block text-sm font-medium">KTP Pemilik</label>
+                                    <input type="file" name="ktp_pemilik" accept=".pdf,.jpg,.png" class="mt-1 w-full border-gray-300 rounded-md shadow-sm" required>
                                 </div>
                                 <p class="text-xs text-gray-500 mb-4">Format: PDF, JPG, PNG (Max 5MB per file)</p>
                                 <div class="flex justify-end gap-2">
                                     <button type="button" @click="openModal = false" class="px-4 py-2 bg-gray-400 text-white rounded">Batal</button>
-                                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                        Kirim
-                                    </button>
+                                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Kirim</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
+
 
 
     <!-- Tambahkan Alpine.js -->

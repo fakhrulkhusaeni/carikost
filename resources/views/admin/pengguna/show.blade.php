@@ -7,13 +7,13 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-4 lg:px-6">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-
+        <div class="py-12 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 sm:p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
+                
                 <!-- Owner Details -->
                 <div class="flex items-center gap-4">
-                    <img class="border rounded-full w-20 h-20" src="{{ asset('storage/' . $user->avatar) }}" alt="Foto Pemilik Kost">
+                    <img class="flex-shrink-0 border rounded-full w-20 h-20 mr-5" src="{{ asset('storage/' . $user->avatar) }}" alt="Foto Pemilik Kost">
                     <div class="text-start">
                         <h5 class="mb-1 font-medium"><span class="font-semibold">{{ $user->name }}</span></h5>
                         <span class="text-gray-500"> @foreach ($user->roles as $role)

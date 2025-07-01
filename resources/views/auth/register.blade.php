@@ -77,7 +77,9 @@
                             @enderror
 
                             <!-- Phone Number -->
-                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" type="text" name="phone" placeholder="Nomor Telepon" value="{{ old('phone') }}" required
+                            <input style="outline: 1px solid gray; border-radius: 5px;" class="form-control mb-4" inputmode="numeric" type="text" pattern="[0-9]*"
+                                maxlength="13" name="phone" placeholder="Nomor Telepon" value="{{ old('phone') }}" required
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                 oninvalid="this.setCustomValidity('Silakan isi nomor telepon')"
                                 oninput="this.setCustomValidity('')" />
                             @error('phone')

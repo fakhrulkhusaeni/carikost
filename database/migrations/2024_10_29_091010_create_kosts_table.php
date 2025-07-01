@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('kosts', function (Blueprint $table) {
             $table->id();
-            $table->string('nama'); // Nama Kost/Kontrakan
+            $table->string('nama', 25); // Nama Kost/Kontrakan
             $table->text('deskripsi'); // Deskripsi
             $table->enum('type', ['putra', 'putri', 'campur', 'kontrakan']); // Jenis Kost
             $table->integer('jumlah_kamar'); // Jumlah Kamar
-            $table->string('location'); // Lokasi Kecamatan
+            $table->string('location', 20); // Lokasi Kecamatan
             $table->text('alamat'); // Alamat
-            $table->string('harga'); // Harga (per bulan)
+            $table->string('harga', 15); // Harga (per bulan)
             $table->json('facilities'); // Fasilitas
             $table->json('rules'); // Peraturan Kost/Kontrakan
             $table->json('foto'); // Foto Hunian

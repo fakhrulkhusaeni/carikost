@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('riwayats', function (Blueprint $table) {
-            $table->string('nominal')->nullable()->after('status_pembayaran');
+            $table->string('nominal', 15)->nullable()->after('status_pembayaran');
 
         });
 
         Schema::table('pembayarans', function (Blueprint $table) {
-            $table->string('nominal')->nullable()->after('status_pembayaran');
+            $table->string('nominal', 15)->nullable()->after('status_pembayaran');
 
         });
     }

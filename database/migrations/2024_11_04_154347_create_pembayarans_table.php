@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('kost_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->date('tanggal_booking');
-            $table->string('status_konfirmasi')->default('Pending');
-            $table->string('status_pembayaran')->default('Pending');
+            $table->string('status_konfirmasi', 15)->default('Pending');
+            $table->string('status_pembayaran', 15)->default('Pending');
             $table->string('kartu_identitas');
             $table->text('transaksi_id');
             $table->timestamps();

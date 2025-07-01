@@ -10,15 +10,16 @@
     <!-- GLightbox CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-4 lg:px-6">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="py-12 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 sm:p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
+                
                 <!-- Foto dan nama -->
-                <div class="flex items-center">
-                    <img class="flex-shrink-0 border rounded-full w-20 h-20 mr-5" src="{{ asset('storage/' . $pembayaran->user->avatar) }}" alt="Foto Pemilik Kost">
-                    <div class="text-start">
-                        <h5 class="mb-2 font-medium">{{ $pembayaran->user->name }}</h5>
-                        <span class="text-gray-500">{{ $pembayaran->user->email }}</span>
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <img class="border rounded-full w-20 h-20 object-cover" src="{{ asset('storage/' . $pembayaran->user->avatar) }}" alt="Foto Pemilik Kost">
+                    <div class="text-center sm:text-start">
+                        <h5 class="mb-1 font-medium text-sm sm:text-base">{{ $pembayaran->user->name }}</h5>
+                        <span class="text-gray-500 text-sm">{{ $pembayaran->user->email }}</span>
                     </div>
                 </div>
 
@@ -93,19 +94,20 @@
 
                 <!-- Tombol Konfirmasi -->
                 @if (!($pembayaran->tanggal_keluar || $pembayaran->status_konfirmasi === 'Ditolak' || $pembayaran->status_konfirmasi === 'Disetujui'))
-                <div class="md:col-span-2 flex justify-end mt-6 space-x-4">
-                    <!-- Tombol Disetujui -->
+                <div class="flex flex-col sm:flex-row justify-end gap-4 mt-6">
+
+                    {{-- Tombol Disetujui --}}
                     @if ($pembayaran->status_konfirmasi === 'Disetujui')
-                    <button type="button" onclick="showAlreadyApprovedAlert()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2">
+                    <button type="button" onclick="showAlreadyApprovedAlert()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center justify-center gap-2 w-full sm:w-auto">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Sudah Disetujui
                     </button>
                     @else
-                    <form action="{{ route('admin.pembayaran.approve', $pembayaran->id) }}" method="POST">
+                    <form action="{{ route('admin.pembayaran.approve', $pembayaran->id) }}" method="POST" class="w-full sm:w-auto">
                         @csrf
-                        <button type="submit" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2">
+                        <button type="submit" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center justify-center gap-2 w-full sm:w-auto">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -114,19 +116,17 @@
                     </form>
                     @endif
 
-                    <!-- Tombol Ditolak -->
+                    {{-- Tombol Ditolak --}}
                     @if ($pembayaran->status_konfirmasi === 'Ditolak')
-                    <button type="button" onclick="showAlreadyRejectAlert()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center gap-2">
+                    <button type="button" onclick="showAlreadyRejectAlert()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center justify-center gap-2 w-full sm:w-auto">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                         Sudah Ditolak
                     </button>
                     @else
-                    <form action="{{ route('admin.pembayaran.reject', $pembayaran->id) }}" method="POST">
-                        @csrf
-                        <!-- Tombol Ditolak -->
-                        <button type="button" data-modal-target="#modalTolak{{ $pembayaran->id }}" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center gap-2">
+                    <div class="w-full sm:w-auto">
+                        <button type="button" data-modal-target="#modalTolak{{ $pembayaran->id }}" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center justify-center gap-2 w-full sm:w-auto">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
@@ -147,7 +147,7 @@
                                 </form>
                             </div>
                         </div>
-                    </form>
+                    </div>
                     @endif
                 </div>
                 @endif
