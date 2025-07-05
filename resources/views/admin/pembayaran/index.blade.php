@@ -11,23 +11,24 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                <!-- Membuat tabel bisa digulir pada layar kecil -->
-                <div class="overflow-x-auto">
 
-                    <div class="py-4 flex justify-end px-4">
-                        <form method="GET" action="{{ route('admin.pembayaran.index') }}" class="flex items-center w-full sm:w-96">
-                            <input type="text" name="search" value="{{ request('search') }}"
-                                class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                placeholder="Cari data pemesanan...">
-                            <button type="submit"
-                                class="ml-3 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">
-                                Cari
-                            </button>
-                        </form>
-                    </div>
+                <!-- Form Pencarian -->
+                <div class="py-4 flex justify-end px-4">
+                    <form method="GET" action="{{ route('admin.pembayaran.index') }}" class="flex items-center w-full sm:w-96">
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="Cari data pemesanan...">
+                        <button type="submit"
+                            class="ml-3 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                            Cari
+                        </button>
+                    </form>
+                </div>
 
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-white-100">
+                <!-- Tabel -->
+                <div class="w-full overflow-x-auto">
+                    <table class="min-w-[1000px] w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-100">
                             <tr>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Lengkap</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jenis Kelamin</th>
@@ -46,37 +47,35 @@
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $pembayaran->user->email }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $pembayaran->user->phone }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ \Carbon\Carbon::parse($pembayaran->tanggal_booking)->format('d-m-Y') }}</td>
-                                <!-- Status Konfirmasi -->
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if($pembayaran->status_konfirmasi == 'Disetujui')
-                                    <span class="text-green-600">Disetujui</span>
+                                        <span class="text-green-600">Disetujui</span>
                                     @elseif($pembayaran->status_konfirmasi == 'Ditolak')
-                                    <span class="text-red-600">Ditolak</span>
+                                        <span class="text-red-600">Ditolak</span>
                                     @else
-                                    <span class="text-yellow-600">Pending</span>
+                                        <span class="text-yellow-600">Pending</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ route('admin.pembayaran.show', $pembayaran->id)}}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition duration-300">
+                                    <a href="{{ route('admin.pembayaran.show', $pembayaran->id)}}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition duration-300">
                                         Detail
                                     </a>
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-4 text-sm text-gray-500 text-center">
+                                <td colspan="7" class="px-6 py-4 text-sm text-gray-500 text-center">
                                     Tidak ada data pemesanan tersedia.
                                 </td>
                             </tr>
                             @endforelse
                         </tbody>
-
                     </table>
                 </div>
+
             </div>
         </div>
     </div>
-
 
     <!-- SweetAlert2 Script -->
 

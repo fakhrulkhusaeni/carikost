@@ -14,8 +14,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-lg rounded-lg overflow-hidden">
                 <!-- Membuat tabel bisa digulir pada layar kecil -->
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
+                <div class="w-full overflow-x-auto">
+                    <table class="min-w-[1000px] w-full divide-y divide-gray-200">
                         <thead class="bg-white-100">
                             <tr>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Hunian</th>

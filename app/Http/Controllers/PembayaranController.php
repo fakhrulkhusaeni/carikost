@@ -26,7 +26,7 @@ class PembayaranController extends Controller
             $q->where('user_id', auth()->user()->id);
         });
 
-        // Pencarian berdasarkan nama user (pembayar)
+        // Pencarian berdasarkan nama user
         if (!empty($search)) {
             $keywords = explode(' ', $search);
 

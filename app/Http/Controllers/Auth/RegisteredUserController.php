@@ -32,7 +32,7 @@ class RegisteredUserController extends Controller
         // Validasi input, termasuk avatar, phone, dan account_type, gender
         $request->validate([
             'name' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:25', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:50', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
             'phone' => ['required', 'regex:/^[0-9]{10,13}$/', 'unique:' . User::class],

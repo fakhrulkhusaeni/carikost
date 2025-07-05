@@ -12,8 +12,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-lg rounded-lg overflow-hidden">
                 <!-- Membuat tabel bisa digulir pada layar kecil -->
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
+                <div class="w-full overflow-x-auto">
+                    <table class="min-w-[1000px] w-full divide-y divide-gray-200">
                         <thead class="bg-white-100">
                             <tr>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Hunian</th>
@@ -42,7 +42,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ route('admin.riwayat.show', $riwayat->id)}}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition duration-300">
+                                    <a href="{{ route('admin.riwayat.show', $riwayat->id)}}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition duration-300">
                                         Detail
                                     </a>
                                 </td>
@@ -61,7 +61,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- SweetAlert2 Script -->
 

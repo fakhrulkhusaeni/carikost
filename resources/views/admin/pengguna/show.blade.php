@@ -9,14 +9,14 @@
 
         <div class="py-12 px-4 sm:px-6 lg:px-8">
             <div class="max-w-7xl mx-auto">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 sm:p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 sm:p-8 max-w-2xl mx-auto grid grid-cols-1 gap-6">
                 
                 <!-- Owner Details -->
-                <div class="flex items-center gap-4">
-                    <img class="flex-shrink-0 border rounded-full w-20 h-20 mr-5" src="{{ asset('storage/' . $user->avatar) }}" alt="Foto Pemilik Kost">
-                    <div class="text-start">
-                        <h5 class="mb-1 font-medium"><span class="font-semibold">{{ $user->name }}</span></h5>
-                        <span class="text-gray-500"> @foreach ($user->roles as $role)
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <img class="border rounded-full w-20 h-20 object-cover" src="{{ asset('storage/' . $user->avatar) }}" alt="Foto Pemilik Kost">
+                    <div class="text-center sm:text-start">
+                        <h5 class="mb-1 font-medium text-sm sm:text-base"><span class="font-semibold">{{ $user->name }}</span></h5>
+                        <span class="text-gray-500 text-sm"> @foreach ($user->roles as $role)
                             {{ $role->name }}@if (!$loop->last), @endif
                             @endforeach</span>
                     </div>

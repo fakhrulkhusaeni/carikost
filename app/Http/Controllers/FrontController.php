@@ -71,44 +71,40 @@ class FrontController extends Controller
 
         $weights = array_map(fn($value) => $value / 100, $weightsPercent);
 
+        // Ambil semua kost terverifikasi
         $kosts = Kost::with('verifikasi')
             ->whereHas('verifikasi', fn($q) => $q->where('status_verifikasi', 'terverifikasi'))
-            ->when($location, fn($q) => $q->where('location', $location))
-            ->when($type, fn($q) => $q->where('type', $type))
             ->get()
             ->filter(fn($kost) => $kost->sisaKamar() > 0);
 
-        $kosts = $kosts->map(function ($kost) use ($location, $type, $hargaInput, $facilities, $weights) {
-            $score = 0;
+        // Kumpulkan nilai-nilai
+        $hargaList = $kosts->map(fn($kost) => $this->convertHargaToNumber($kost->harga))->filter()->values();
+        $hargaMin = $hargaList->min();
 
-            // Lokasi
-            if ($location && strtolower($kost->location) == strtolower($location)) {
-                $score += $weights['location'] * 100;
-            }
+        $kosts = $kosts->map(function ($kost) use ($location, $type, $hargaInput, $facilities, $weights, $hargaMin) {
+            // 1. Normalisasi Lokasi
+            $locationScore = (strtolower($kost->location) == strtolower($location)) ? 1 : 0;
 
-            // Tipe
-            if ($type && strtolower($kost->type) == strtolower($type)) {
-                $score += $weights['type'] * 100;
-            }
+            // 2. Normalisasi Tipe
+            $typeScore = (strtolower($kost->type) == strtolower($type)) ? 1 : 0;
 
-            // Harga
-            if ($hargaInput > 0) {
-                $kostHarga = $this->convertHargaToNumber($kost->harga);
-                $hargaDiff = abs($kostHarga - $hargaInput);
-                $maxDiff = $hargaInput * 1.5;
-                $hargaScore = max(0, 100 - ($hargaDiff / $maxDiff) * 100);
-                $score += $weights['harga'] * $hargaScore;
-            }
+            // 3. Normalisasi Harga (cost criteria → harga min / harga kost)
+            $kostHarga = $this->convertHargaToNumber($kost->harga);
+            $hargaScore = ($kostHarga > 0) ? ($hargaMin / $kostHarga) : 0;
 
-            // Fasilitas
+            // 4. Normalisasi Fasilitas (benefit criteria)
             $kostFacilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : (array) $kost->facilities;
-            if (!empty($facilities) && is_array($kostFacilities)) {
-                $matched = collect($facilities)->intersect($kostFacilities)->count();
-                $facilityScore = count($facilities) > 0 ? ($matched / count($facilities)) * 100 : 0;
-                $score += $weights['facilities'] * $facilityScore;
-            }
+            $matched = collect($facilities)->intersect($kostFacilities)->count();
+            $facilityScore = (count($facilities) > 0) ? $matched / count($facilities) : 0;
 
-            $kost->bobotScore = min(round($score, 2), 100);
+            // Hitung skor akhir dengan SAW
+            $totalScore =
+                ($weights['location'] * $locationScore) +
+                ($weights['type'] * $typeScore) +
+                ($weights['harga'] * $hargaScore) +
+                ($weights['facilities'] * $facilityScore);
+
+            $kost->bobotScore = round($totalScore * 100, 2);
             return $kost;
         });
 
@@ -116,7 +112,6 @@ class FrontController extends Controller
 
         return view('frontend.rekomendasi', compact('kosts', 'facilities'));
     }
-
 
 
     // Mengubah harga string jadi angka

@@ -10,12 +10,32 @@ use Illuminate\Support\Facades\Storage;
 class HunianLainController extends Controller
 {
     // Menampilkan daftar data hunian
-    public function index()
+    public function index(Request $request)
     {
-        $hunians = HunianLain::orderBy('created_at', 'desc')->get();
+        $query = HunianLain::query();
+    
+        $search = $request->input('search');
+    
+        if (!empty($search)) {
+            $keywords = explode(' ', $search);
+    
+            $query->where(function ($q) use ($keywords) {
+                foreach ($keywords as $word) {
+                    $q->where(function ($subQuery) use ($word) {
+                        $subQuery->where('nama_pemilik', 'like', "%$word%")
+                            ->orWhere('telepon', 'like', "%$word%")
+                            ->orWhere('tipe_hunian', 'like', "%$word%")
+                            ->orWhere('status', 'like', "%$word%");
+                    });
+                }
+            });
+        }
+    
+        $hunians = $query->orderBy('created_at', 'desc')->get();
+    
         return view('admin.hunian_lain.index', compact('hunians'));
     }
-
+    
     // Form untuk membuat hunian baru
     public function create()
     {

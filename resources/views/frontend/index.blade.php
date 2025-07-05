@@ -22,12 +22,15 @@
                             <div class="row">
                                 <div class="col-md-6 ">
                                     <div class="detail-box">
-                                        <!-- <h1>
-                                            Tegal Kost
-                                        </h1> -->
-                                        <p style="text-align: justify;">
-                                            Temukan kost dan kontrakan ideal Anda di daerah Tegal dengan mudah dan cepat! Kami menyediakan berbagai pilihan
-                                            kost dan kontrakan dengan informasi lengkap dan akurat untuk memudahkan pencarian Anda.
+                                        <!-- Slogan -->
+                                        <h2 class="mb-4 fs-2 fw-bold text-white">
+                                            Temukan Hunian Nyaman,<br class="d-none d-sm-block"> Tanpa Ribet!
+                                        </h2>
+
+                                        <p class="text-white" style="text-align: justify; line-height: 2.0;">
+                                            Jelajahi berbagai pilihan kost dan kontrakan di Tegal dengan cepat dan mudah.
+                                            Kami menghadirkan informasi lengkap, akurat, dan terpercaya untuk membantu Anda
+                                            menemukan tempat tinggal yang sesuai dengan kebutuhan.
                                         </p>
                                     </div>
                                 </div>

@@ -174,7 +174,7 @@
                             @csrf
                             <button
                                 type="submit"
-                                class="items-center justify-center px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }}"
+                                class="items-center justify-center gap-2 w-full sm:w-auto px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }}"
                                 {{ !$memenuhiSyaratDokumen ? 'disabled' : '' }}>
                                 Verifikasi
                             </button>
@@ -195,7 +195,7 @@
                             @csrf
                             <button
                                 type="submit"
-                                class="items-center justify-center px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-400 cursor-not-allowed' }}"
+                                class="items-center justify-center gap-2 w-full sm:w-auto px-6 py-2 rounded-lg text-white {{ $memenuhiSyaratDokumen ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-400 cursor-not-allowed' }}"
                                 {{ !$memenuhiSyaratDokumen ? 'disabled' : '' }}>
                                 Tolak
                             </button>
@@ -284,12 +284,12 @@
                         e.preventDefault(); // stop form submit
 
                         Swal.fire({
-                            title: 'Tolak Kost?',
-                            text: "Apakah Anda yakin ingin menolak kost ini?",
+                            title: 'Tolak Hunian?',
+                            text: "Apakah Anda yakin ingin menolak hunian ini?",
                             icon: 'warning',
                             showCancelButton: true,
-                            confirmButtonColor: '#d33',
-                            cancelButtonColor: '#3085d6',
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
                             confirmButtonText: 'Ya, Tolak',
                             cancelButtonText: 'Batal'
                         }).then((result) => {

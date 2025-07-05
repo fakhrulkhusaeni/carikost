@@ -13,40 +13,59 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                <!-- Membuat tabel bisa digulir pada layar kecil -->
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-white-100">
+
+                <!-- Form Pencarian -->
+                <div class="py-4 flex justify-end px-4">
+                    <form method="GET" action="{{ route('admin.hunian_lain.index') }}" class="flex items-center w-full sm:w-96">
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            class="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="Cari ruko atau kios...">
+                        <button type="submit"
+                            class="ml-3 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                            Cari
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Tabel -->
+                <div class="w-full overflow-x-auto">
+                    <table class="min-w-[1000px] w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-100">
                             <tr>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Pemilik</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nomor Telepon</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Tipe Hunian</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status (Dijual/Disewakan)</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @forelse ($hunians as $hunianLain)
-
                             <tr>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $hunianLain->nama_pemilik }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $hunianLain->telepon }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $hunianLain->tipe_hunian }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $hunianLain->status }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ route('admin.hunian_lain.edit', $hunianLain->id) }}" class="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-full font-semibold hover:bg-yellow-700 transition duration-300">
-                                        Edit
-                                    </a>
-                                    <form method="POST" action="{{ route('admin.hunian_lain.destroy', $hunianLain) }}" class="inline-block delete-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition duration-300">
-                                            Hapus
-                                        </button>
-                                    </form>
-                                    <a href="{{ route('admin.hunian_lain.show', $hunianLain->id)}}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition duration-300">
-                                        Detail
-                                    </a>
+                                    <div class="flex justify-center flex-wrap gap-2">
+                                        <a href="{{ route('admin.hunian_lain.edit', $hunianLain->id) }}"
+                                            class="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-full font-semibold hover:bg-yellow-700 transition duration-300">
+                                            Edit
+                                        </a>
+                                        <form method="POST" action="{{ route('admin.hunian_lain.destroy', $hunianLain) }}"
+                                            class="delete-form inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition duration-300">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                        <a href="{{ route('admin.hunian_lain.show', $hunianLain->id) }}"
+                                            class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition duration-300">
+                                            Detail
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                             @empty
@@ -57,9 +76,11 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
     </div>
+
 
 
     <!-- SweetAlert2 Script -->

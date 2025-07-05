@@ -3,25 +3,24 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard Admin') }}
         </h2>
-        <!-- <p class="text-sm text-gray-500">Welcome back, {{ Auth::user()->name }}! Here is an overview of your account and activities.</p> -->
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="py-6 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
             <!-- Statistik Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="card bg-blue-500 text-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold">Total Pengguna</h3>
-                    <p class="text-3xl font-bold mt-2">{{ $totalPengguna }}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div class="card bg-blue-500 text-white p-4 sm:p-6 rounded-lg shadow-md">
+                    <h3 class="text-base sm:text-lg font-semibold">Total Pengguna</h3>
+                    <p class="text-2xl sm:text-3xl font-bold mt-2">{{ $totalPengguna }}</p>
                 </div>
-                <div class="card bg-green-500 text-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold">Total Data Kost dan Kontrakan</h3>
-                    <p class="text-3xl font-bold mt-2">{{ $totalKost }}</p>
+                <div class="card bg-green-500 text-white p-4 sm:p-6 rounded-lg shadow-md">
+                    <h3 class="text-base sm:text-lg font-semibold">Total Data Kost dan Kontrakan</h3>
+                    <p class="text-2xl sm:text-3xl font-bold mt-2">{{ $totalKost }}</p>
                 </div>
-                <!-- <div class="card bg-orange-500 text-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold">Total Data Ruko dan Kios</h3>
-                    <p class="text-3xl font-bold mt-2">{{ $totalHunianLain }}</p>
-                </div> -->
+                <div class="card bg-orange-500 text-white p-4 sm:p-6 rounded-lg shadow-md">
+                    <h3 class="text-base sm:text-lg font-semibold">Total Data Ruko dan Kios</h3>
+                    <p class="text-2xl sm:text-3xl font-bold mt-2">{{ $totalHunianLain }}</p>
+                </div>
             </div>
         </div>
     </div>
