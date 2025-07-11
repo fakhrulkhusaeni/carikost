@@ -198,7 +198,16 @@
                             <p id="rating-value" class="text-center mt-2 text-gray-600 text-sm">Nilai: 0</p>
                             <input type="hidden" name="kost_id" id="kost_id" value="{{ $riwayat->kost->id }}">
                             <input type="hidden" name="rating" id="rating" value="0">
-                            <button id="submit-rating" class="mt-3 px-3 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 w-full sm:w-auto">Kirim Rating</button>
+
+                            <input type="hidden" id="existing-rating" value="{{ $existingRating ?? 0 }}">
+
+                            <button 
+                                id="submit-rating" 
+                                class="mt-3 px-3 py-2 text-white text-sm rounded w-full sm:w-auto 
+                                    {{ $existingRating ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600' }}" 
+                                {{ $existingRating ? 'disabled' : '' }}>
+                                Kirim Rating
+                            </button>
                             @else
                             <div class="flex justify-center space-x-2" id="stars-disabled">
                                 @for ($i = 1; $i <= 5; $i++)
@@ -268,91 +277,99 @@
        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
        <script>
-           document.addEventListener("DOMContentLoaded", function() {
-               const stars = document.querySelectorAll('.fa-star');
-               const ratingValue = document.getElementById('rating-value');
-               const submitButton = document.getElementById('submit-rating');
-               const kostId = document.getElementById('kost_id').value;
-               let userRating = 0;
+            document.addEventListener("DOMContentLoaded", function () {
+                const stars = document.querySelectorAll('#stars .fa-star');
+                const ratingValue = document.getElementById('rating-value');
+                const submitButton = document.getElementById('submit-rating');
+                const kostId = document.getElementById('kost_id')?.value;
+                const existingRating = parseInt(document.getElementById('existing-rating')?.value || 0);
+                let userRating = existingRating;
 
-               stars.forEach(star => {
-                   star.addEventListener("mouseover", function() {
-                       highlightStars(this.getAttribute("data-value"));
-                   });
+                // Tampilkan rating yang sudah ada
+                highlightStars(userRating);
+                ratingValue.textContent = `Nilai: ${userRating}`;
 
-                   star.addEventListener("mouseout", function() {
-                       highlightStars(userRating);
-                   });
+                const ratingLocked = existingRating > 0;
 
-                   star.addEventListener("click", function() {
-                       userRating = this.getAttribute("data-value");
-                       ratingValue.textContent = `Nilai: ${userRating}`;
-                   });
-               });
+                if (!ratingLocked) {
+                    stars.forEach(star => {
+                        star.addEventListener("mouseover", function () {
+                            highlightStars(this.getAttribute("data-value"));
+                        });
 
-               function highlightStars(rating) {
-                   stars.forEach(star => {
-                       if (star.getAttribute("data-value") <= rating) {
-                           star.classList.add("text-yellow-400", "scale-110");
-                           star.classList.remove("text-gray-300");
-                       } else {
-                           star.classList.add("text-gray-300");
-                           star.classList.remove("text-yellow-400", "scale-110");
-                       }
-                   });
-               }
+                        star.addEventListener("mouseout", function () {
+                            highlightStars(userRating);
+                        });
 
-               submitButton.addEventListener("click", function() {
-                   if (userRating > 0 && kostId) {
-                       submitButton.innerHTML = "Mengirim...";
-                       submitButton.disabled = true;
+                        star.addEventListener("click", function () {
+                            userRating = this.getAttribute("data-value");
+                            ratingValue.textContent = `Nilai: ${userRating}`;
+                        });
+                    });
 
-                       fetch('{{ route("rating.store") }}', {
-                               method: "POST",
-                               headers: {
-                                   "Content-Type": "application/json",
-                                   "X-CSRF-TOKEN": '{{ csrf_token() }}'
-                               },
-                               body: JSON.stringify({
-                                   rating: userRating,
-                                   kost_id: kostId
-                               })
-                           })
-                           .then(response => response.json())
-                           .then(data => {
-                               Swal.fire({
-                                   icon: data.message === "Anda sudah memberikan rating untuk kost/kontrakan ini." ? 'warning' : 'success',
-                                   title: data.message,
-                                   showConfirmButton: false,
-                                   timer: 3000
-                               });
+                    submitButton?.addEventListener("click", function () {
+                        if (userRating > 0 && kostId) {
+                            submitButton.innerHTML = "Mengirim...";
+                            submitButton.disabled = true;
 
-                               if (data.message === "Anda sudah memberikan rating untuk kost/kontrakan ini.") {
-                                   submitButton.disabled = true;
-                                   stars.forEach(star => star.classList.add("cursor-not-allowed"));
-                               }
+                            fetch('{{ route("rating.store") }}', {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    rating: userRating,
+                                    kost_id: kostId
+                                })
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    Swal.fire({
+                                        icon: data.message.includes("sudah") ? 'warning' : 'success',
+                                        title: data.message,
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
 
-                               setTimeout(() => location.reload(), 1600);
-                           })
-                           .catch(error => {
-                               console.error("Terjadi kesalahan:", error);
-                               Swal.fire({
-                                   icon: 'error',
-                                   title: 'Oops...',
-                                   text: 'Gagal mengirim rating, coba lagi nanti.'
-                               });
-                               submitButton.innerHTML = "Kirim Rating";
-                               submitButton.disabled = false;
-                           });
-                   } else {
-                       Swal.fire({
-                           icon: 'info',
-                           title: 'Belum ada rating',
-                           text: 'Silakan pilih rating terlebih dahulu.'
-                       });
-                   }
-               });
-           });
+                                    setTimeout(() => location.reload(), 1600);
+                                })
+                                .catch(error => {
+                                    console.error("Terjadi kesalahan:", error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Gagal mengirim rating, coba lagi nanti.'
+                                    });
+                                    submitButton.innerHTML = "Kirim Rating";
+                                    submitButton.disabled = false;
+                                });
+                        } else {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Belum ada rating',
+                                text: 'Silakan pilih rating terlebih dahulu.'
+                            });
+                        }
+                    });
+                } else {
+                    stars.forEach(star => {
+                        star.classList.add("cursor-not-allowed");
+                    });
+                }
+
+                function highlightStars(rating) {
+                    stars.forEach(star => {
+                        if (parseInt(star.getAttribute("data-value")) <= rating) {
+                            star.classList.add("text-yellow-400", "scale-110");
+                            star.classList.remove("text-gray-300");
+                        } else {
+                            star.classList.add("text-gray-300");
+                            star.classList.remove("text-yellow-400", "scale-110");
+                        }
+                    });
+                }
+            });
 
            function showPaymentAlert() {
                Swal.fire({

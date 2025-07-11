@@ -153,7 +153,7 @@
 
                             <hr class="my-4">
 
-                            <h4 class="mb-3">Lokasi Hunian</h4>
+                            <h4 class="mb-3">Peta Lokasi</h4>
                             <div id="map" style="height: 400px; border-radius: 8px;"></div>
                         </div>
                     </div>
@@ -223,9 +223,9 @@
                             <input type="hidden" name="kost_id" value="{{ $kost->id }}">
 
                             <!-- Tombol Tanya Pemilik -->
-                            <!-- <div class="mb-3">
+                            <div class="mb-3">
                                 <a href="https://wa.me/{{ '62' . substr($kost->user->phone, 1) }}" target="_blank" class="btn btn-primary w-100">Tanya Pemilik</a>
-                            </div> -->
+                            </div>
 
                             <!-- Tombol Booking -->
                             <div class="card-item">
@@ -254,7 +254,7 @@
 
                     <!-- Card Rating -->
                     <div class="card shadow rounded bg-white p-4 mb-4 wow slideInUp" data-wow-delay="0.2s">
-                        <h4 class="mb-3">Rating Masyarakat</h4>
+                        <h4 class="mb-3">Rating Pengguna</h4>
                         <div class="d-flex align-items-center mb-4">
                             <div class="text-center" style="margin-right: 30px;">
                                 <h2 style="font-weight: bold;">{{ number_format($averageRating ?? 0, 1) }}</h2>

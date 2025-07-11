@@ -3,8 +3,9 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="assets/icon.png" type="">
 
-        <title>Laravel</title>
+        <title>InfoKost</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

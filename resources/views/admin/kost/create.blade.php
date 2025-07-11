@@ -83,13 +83,6 @@
                         <x-input-error :messages="$errors->get('location')" class="mt-2" />
                     </div>
 
-
-                    <div class="mt-4">
-                        <x-input-label for="alamat" :value="__('Alamat Lengkap')" />
-                        <textarea name="alamat" id="alamat" cols="30" rows="3" class="border border-slate-300 rounded-xl w-full" placeholder="Masukkan Alamat Lengkap" required>{{ old('alamat') }}</textarea>
-                        <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
-                    </div>
-
                     <div class="mt-4">
                         <x-input-label for="map" :value="__('Tentukan Lokasi Hunian di Peta')" />
 
@@ -106,6 +99,11 @@
                         <p class="text-sm text-gray-600 mt-2">Klik pada peta untuk memilih lokasi hunian.</p>
                     </div>
 
+                    <div class="mt-4">
+                        <x-input-label for="alamat" :value="__('Alamat Lengkap')" />
+                        <textarea name="alamat" id="alamat" cols="30" rows="3" class="border border-slate-300 rounded-xl w-full" placeholder="Masukkan Alamat Lengkap" required>{{ old('alamat') }}</textarea>
+                        <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
+                    </div>
 
                     <div class="mt-4">
                         <x-input-label for="harga" :value="__('Harga (per bulan)')" />
@@ -315,7 +313,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        let defaultLat = -6.869969;
+        let defaultLat = -6.869969; // Tegal
         let defaultLng = 109.125595;
 
         let lat = parseFloat(document.getElementById('latitude').value) || defaultLat;
@@ -331,22 +329,33 @@
             draggable: true
         }).addTo(map);
 
-        // Saat marker digeser
-        marker.on('dragend', function (e) {
+        // Ambil alamat dalam Bahasa Indonesia
+        function ambilAlamat(lat, lng) {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=id`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('alamat').textContent = data.display_name || 'Alamat tidak ditemukan';
+                })
+                .catch(error => {
+                    document.getElementById('alamat').textContent = 'Gagal mengambil alamat';
+                });
+        }
+
+        marker.on('dragend', function () {
             let posisi = marker.getLatLng();
             document.getElementById('latitude').value = posisi.lat;
             document.getElementById('longitude').value = posisi.lng;
+            ambilAlamat(posisi.lat, posisi.lng);
         });
 
-        // Saat map diklik
         map.on('click', function (e) {
             let posisi = e.latlng;
             marker.setLatLng(posisi);
             document.getElementById('latitude').value = posisi.lat;
             document.getElementById('longitude').value = posisi.lng;
+            ambilAlamat(posisi.lat, posisi.lng);
         });
 
-        // Tombol lokasi saat ini
         document.getElementById('lokasiSekarang').addEventListener('click', function () {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (posisi) {
@@ -357,15 +366,23 @@
                     marker.setLatLng([lat, lng]);
                     document.getElementById('latitude').value = lat;
                     document.getElementById('longitude').value = lng;
+                    ambilAlamat(lat, lng);
+
                 }, function () {
                     alert('Gagal mendapatkan lokasi. Pastikan izin lokasi diaktifkan.');
+                }, {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
                 });
             } else {
                 alert("Browser tidak mendukung Geolocation.");
             }
         });
+
+        if (document.getElementById('latitude').value && document.getElementById('longitude').value) {
+            ambilAlamat(lat, lng);
+        }
     </script>
-
-
 
 </x-app-layout>

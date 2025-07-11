@@ -7,6 +7,7 @@ use App\Mail\NotifikasiPembayaranMasuk;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use App\Models\Riwayat;
+use App\Models\Rating;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -63,7 +64,11 @@ class RiwayatController extends Controller
         $pembayaran->transaksi_id = $midtransToken;
         $pembayaran->save();
 
-        return view('admin.riwayat.show', compact('riwayat', 'midtransToken', 'pembayaran'));
+        $existingRating = Rating::where('user_id', auth()->id())
+            ->where('kost_id', $riwayat->kost->id)
+            ->value('rating');
+
+        return view('admin.riwayat.show', compact('riwayat', 'midtransToken', 'pembayaran', 'existingRating'));
     }
 
     public function bayar($id)

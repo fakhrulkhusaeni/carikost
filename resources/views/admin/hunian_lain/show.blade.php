@@ -10,47 +10,70 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
+    <div class="py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 sm:p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
 
                 <!-- Photo Gallery -->
-                <div x-data="{ currentIndex: 0 }" class="relative w-full">
-                    <div class="relative w-full overflow-hidden rounded-lg shadow">
-                        @php
-                        $images = json_decode($hunianLain->foto, true);
-                        @endphp
-
-                        <template x-for="(image, index) in {{ json_encode($images) }}" :key="index">
-                            <div x-show="currentIndex === index" class="w-full">
-                                <a :href="'{{ asset('storage/') }}/' + image" class="glightbox" data-gallery="kost-gallery">
-                                    <img :src="'{{ asset('storage/') }}/' + image" class="w-full h-[400px] object-cover rounded-lg" alt="Foto Hunian">
-                                </a>
-                            </div>
-                        </template>
+                <div
+                    x-data="{
+                        currentIndex: 0,
+                        images: {{ json_encode(json_decode($hunianLain->foto, true)) }},
+                        interval: null,
+                        startAutoplay() {
+                            this.interval = setInterval(() => this.next(), 5000);
+                        },
+                        stopAutoplay() {
+                            clearInterval(this.interval);
+                        },
+                        next() {
+                            this.currentIndex = (this.currentIndex + 1) % this.images.length;
+                        },
+                        prev() {
+                            this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+                        }
+                    }"
+                    x-init="startAutoplay()"
+                    @mouseover="stopAutoplay()"
+                    @mouseleave="startAutoplay()"
+                    class="relative w-full overflow-hidden rounded-lg shadow">
+                    <!-- Kontainer gambar -->
+                    <div class="relative w-full h-60 sm:h-[400px] md:h-[500px] rounded-lg overflow-hidden">
+                        <div class="flex transition-transform duration-700 ease-in-out"
+                            :style="`transform: translateX(-${currentIndex * 100}%);`">
+                            <template x-for="(image, index) in images" :key="index">
+                                <div class="min-w-full h-60 sm:h-[400px] md:h-[500px]">
+                                    <a :href="'{{ asset('storage/') }}/' + image" class="glightbox" data-gallery="kost-gallery">
+                                        <img :src="'{{ asset('storage/') }}/' + image"
+                                            class="w-full h-full object-cover rounded-lg"
+                                            alt="Foto Hunian">
+                                    </a>
+                                </div>
+                            </template>
+                        </div>
                     </div>
 
-                    <!-- Navigasi Gambar -->
-                    <button @click="currentIndex = (currentIndex - 1 + {{ count($images) }}) % {{ count($images) }}"
-                        class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
+                    <!-- Navigasi kiri -->
+                    <button
+                        @click="prev()"
+                        class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75 z-10">
+                        &#10094;
                     </button>
 
-                    <button @click="currentIndex = (currentIndex + 1) % {{ count($images) }}"
-                        class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
+                    <!-- Navigasi kanan -->
+                    <button
+                        @click="next()"
+                        class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 p-2 rounded-full text-white hover:bg-opacity-75 z-10">
+                        &#10095;
                     </button>
                 </div>
 
-                <!-- Kost Details -->
-                <div>
-                    <p class="text-gray-700">{!! nl2br(e($hunianLain->deskripsi)) !!}</p>
 
-                    <div class="grid grid-cols-2 gap-4 mt-4">
+                <!-- Details -->
+                <div>
+                    <p class="text-gray-700 text-sm sm:text-base">{!! nl2br(e($hunianLain->deskripsi)) !!}</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm sm:text-base">
                         <div><span class="font-semibold">Nama Pemilik:</span> {{ $hunianLain->nama_pemilik }}</div>
                         <div><span class="font-semibold">Tipe:</span> {{ $hunianLain->tipe_hunian }}</div>
                         <div><span class="font-semibold">Status:</span> {{ $hunianLain->status }}</div>
@@ -65,7 +88,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mt-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm sm:text-base">
                     <!-- Facilities -->
                     <div>
                         <span class="font-semibold">Fasilitas:</span>
@@ -91,7 +114,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="text-sm sm:text-base">
                     <span class="font-semibold">Bukti Kepemilikan:</span>
 
                     @if ($hunianLain->bukti_kepemilikan && is_array(json_decode($hunianLain->bukti_kepemilikan)))

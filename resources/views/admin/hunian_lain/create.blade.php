@@ -1,16 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Tambah Data') }}
+            {{ __('Tambah Data Ruko/Kios') }}
         </h2>
     </x-slot>
 
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.11/dist/sweetalert2.min.css" rel="stylesheet">
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden p-10 shadow-sm sm:rounded-lg">
+    <div class="py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 sm:p-8 max-w-5xl mx-auto grid grid-cols-1 gap-6">
 
                 <form method="POST" action="{{ route('admin.hunian_lain.store') }}" enctype="multipart/form-data">
                     @csrf
@@ -107,7 +107,10 @@
                     <!-- Nomor Telepon -->
                     <div class="mt-4">
                         <x-input-label for="telepon" :value="__('Nomor Telepon')" />
-                        <x-text-input inputmode="numeric" id="telepon" class="block mt-1 w-full" type="number" name="telepon" :value="old('telepon')" placeholder="Nomor telepon" required autocomplete="telepon" />
+                        <x-text-input id="telepon" class="block mt-1 w-full" inputmode="numeric" type="text" name="telepon" :value="old('telepon')" placeholder="Nomor telepon" required autocomplete="telepon"
+                            maxlength="13"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.setCustomValidity('');"
+                            oninvalid="this.setCustomValidity('Silakan isi nomor telepon')" />
                         <x-input-error :messages="$errors->get('telepon')" class="mt-2" />
                     </div>
 

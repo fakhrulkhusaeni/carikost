@@ -80,41 +80,53 @@
                             <div class="mb-5">
                                 <!-- Deskripsi -->
                                 <h4 class="mb-3">Deskripsi</h4>
-                                <p>{{ $hunianLain->deskripsi }}</p>
+                                <p>{{ ucwords($hunianLain->deskripsi) }}</p>
 
                                 <hr class="my-4"> <!-- Garis pembatas -->
 
                                 <!-- Fasilitas -->
                                 <h4 class="mb-3">Fasilitas</h4>
-                                <ul class="list-unstyled">
-                                    @php
+                                @php
                                     $fasilitas = is_string($hunianLain->fasilitas) ? json_decode($hunianLain->fasilitas, true) : $hunianLain->fasilitas;
-                                    @endphp
-
-                                    @foreach ($fasilitas as $facility)
-                                    <li class="d-flex align-items-center mb-3">
-                                        <i class="fa fa-circle text-primary" style="margin-right: 15px;"></i>
-                                        <span>{{ ucwords($facility) }}</span>
-                                    </li>
+                                    $chunks = array_chunk($fasilitas, ceil(count($fasilitas) / 2));
+                                @endphp
+                                <div class="row">
+                                    @foreach ($chunks as $chunk)
+                                        <div class="col-md-6">
+                                            <ul class="list-unstyled">
+                                                @foreach ($chunk as $facility)
+                                                    <li class="d-flex align-items-center mb-3">
+                                                        <i class="fa fa-circle text-primary me-2"></i>
+                                                        <span>{{ ucwords($facility) }}</span>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
                                     @endforeach
-                                </ul>
+                                </div>
 
                                 <hr class="my-4"> <!-- Garis pembatas -->
 
                                 <!-- Detail Hunian -->
                                 <h4 class="mb-3">Detail Hunian</h4>
-                                <ul class="list-unstyled">
-                                    @php
+                                @php
                                     $detail_hunian = is_string($hunianLain->detail_hunian) ? json_decode($hunianLain->detail_hunian, true) : $hunianLain->detail_hunian;
-                                    @endphp
-
-                                    @foreach ($detail_hunian as $details)
-                                    <li class="d-flex align-items-center mb-3">
-                                        <i class="fa fa-circle text-primary" style="margin-right: 15px;"></i>
-                                        <span>{{ ucwords($details) }}</span>
-                                    </li>
+                                    $chunks = array_chunk($detail_hunian, ceil(count($detail_hunian) / 2));
+                                @endphp
+                                <div class="row">
+                                    @foreach ($chunks as $chunk)
+                                        <div class="col-md-6">
+                                            <ul class="list-unstyled">
+                                                @foreach ($chunk as $details)
+                                                    <li class="d-flex align-items-center mb-3">
+                                                        <i class="fa fa-circle text-primary me-2"></i>
+                                                        <span>{{ ucwords($details) }}</span>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
                                     @endforeach
-                                </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -178,9 +190,9 @@
                         </div>
 
                         <!-- Tombol Tanya Pemilik -->
-                        <!-- <div class="card-item d-flex align-items-center">
+                        <div class="card-item d-flex align-items-center">
                             <a href="https://wa.me/{{ '62' . substr($hunianLain->telepon, 1) }}" target="_blank" class="btn btn-primary w-100">Tanya Pemilik</a>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
