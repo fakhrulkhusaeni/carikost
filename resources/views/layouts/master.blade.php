@@ -11,9 +11,9 @@
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link rel="shortcut icon" href="assets/icon.png" type="">
+    <link rel="shortcut icon" href="{{ asset('assets/icon.png') }}" type="">
 
-    <title>InfoKost Bahari</title>
+    <title>InfoKosTegal</title>
 
     <!-- jQery -->
     <script type="text/javascript" src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>

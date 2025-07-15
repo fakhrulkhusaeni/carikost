@@ -4,7 +4,7 @@
         <nav class="navbar navbar-expand-lg custom_nav-container ">
             <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('frontend.index') }}">
                 <img src="{{ asset('assets/icon.png') }}" alt="CariHunian Logo" style="height: 40px;" class="img-fluid">
-                <span class="fw-bold fs-5 text-white mb-0">InfoKost Bahari</span>
+                <span class="fw-bold fs-5 text-white mb-0">InfoKosTegal</span>
             </a>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"

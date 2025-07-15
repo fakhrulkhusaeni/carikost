@@ -1,4 +1,12 @@
 <x-guest-layout>
+
+    <x-slot name="logo">
+        <a href="/" class="flex flex-col items-center justify-center">
+            <img src="{{ asset('assets/icon.png') }}" class="w-20 h-20 mb-2" alt="Logo">
+            <span class="text-xl font-bold text-gray-800">InfoKosTegal</span>
+        </a>
+    </x-slot>
+
     <div class="mb-4 text-sm text-gray-600">
         {{ __('Terima kasih telah mendaftar! Sebelum memulai, silakan verifikasi alamat email Anda dengan mengklik tautan yang baru saja kami kirimkan ke email Anda.') }}
     </div>

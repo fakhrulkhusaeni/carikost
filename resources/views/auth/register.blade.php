@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="assets/icon.png" type="" />
 
-    <title>InfoKost Bahari | Register</title>
+    <title>InfoKosTegal | Register</title>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}" />
@@ -21,7 +21,7 @@
         <div class="website-logo">
             <a class="navbar-brand" href="{{ route('frontend.index') }}">
                 <span>
-                    InfoKost Bahari
+                    InfoKosTegal
                 </span>
             </a>
         </div>

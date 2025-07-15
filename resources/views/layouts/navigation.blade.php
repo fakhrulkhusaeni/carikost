@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('frontend.index') }}" class="text-gray-800 text-lg font-semibold">
-                        InfoKost Bahari
+                        InfoKosTegal
                     </a>
                 </div>
 
