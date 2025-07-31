@@ -10,21 +10,23 @@ class Kost extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nama',
-        'deskripsi',
+        'hunian_id',
+        'nama_kamar',
         'type',
         'jumlah_kamar',
-        'location',
-        'alamat',
         'harga',
         'facilities',
         'rules',
         'foto',
-        'latitude', 
-        'longitude',
         'user_id', // Foreign key
     ];
 
+    // relasi ke hunian
+    public function hunian()
+    {
+        return $this->belongsTo(Hunian::class, 'hunian_id');
+    }
+    
     // Relasi ke User
     public function user()
     {

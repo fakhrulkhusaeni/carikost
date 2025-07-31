@@ -46,63 +46,64 @@ class FrontController extends Controller
         // Ambil data dan urutkan berdasarkan rata-rata rating
         $kosts = $query->orderByDesc('ratings_avg_rating')->paginate(9);
 
-        return view('frontend.index', compact('kosts', 'search'));
+        $totalKamarPerHunian = Kost::selectRaw('hunian_id, SUM(jumlah_kamar) as total')
+            ->groupBy('hunian_id')
+            ->pluck('total', 'hunian_id');
+
+        return view('frontend.index', compact('kosts', 'search', 'totalKamarPerHunian'));
     }
 
 
     public function rekomendasi(Request $request)
     {
+        // Ambil input user
         $location = $request->input('location');
         $type = $request->input('type');
         $hargaInput = $this->convertHargaToNumber($request->input('harga'));
         $facilities = $request->input('facilities', []);
+        $kriteriaOrder = $request->input('kriteria', []);
 
-        $weightsPercent = [
-            'location' => floatval($request->input('weight_location', 30)),
-            'type' => floatval($request->input('weight_type', 20)),
-            'harga' => floatval($request->input('weight_harga', 30)),
-            'facilities' => floatval($request->input('weight_facilities', 20)),
-        ];
+        // Bobot otomatis berdasarkan urutan
+        $defaultWeights = [0.4, 0.3, 0.2, 0.1];
+        $weights = [];
 
-        $totalWeightPercent = array_sum($weightsPercent);
-        if ($totalWeightPercent != 100) {
-            return back()->with('error', 'Total bobot harus berjumlah 100%');
+        foreach ($kriteriaOrder as $index => $kriteria) {
+            $weights[$kriteria] = $defaultWeights[$index] ?? 0;
         }
 
-        $weights = array_map(fn($value) => $value / 100, $weightsPercent);
-
-        // Ambil semua kost terverifikasi
+        // Ambil kost yang terverifikasi & masih ada kamar kosong
         $kosts = Kost::with('verifikasi')
             ->whereHas('verifikasi', fn($q) => $q->where('status_verifikasi', 'terverifikasi'))
             ->get()
             ->filter(fn($kost) => $kost->sisaKamar() > 0);
 
-        // Kumpulkan nilai-nilai
+        // Dapatkan harga minimum
         $hargaList = $kosts->map(fn($kost) => $this->convertHargaToNumber($kost->harga))->filter()->values();
         $hargaMin = $hargaList->min();
 
+        // Hitung skor tiap kost
         $kosts = $kosts->map(function ($kost) use ($location, $type, $hargaInput, $facilities, $weights, $hargaMin) {
-            // 1. Normalisasi Lokasi
+            // Lokasi
             $locationScore = (strtolower($kost->location) == strtolower($location)) ? 1 : 0;
 
-            // 2. Normalisasi Tipe
+            // Tipe
             $typeScore = (strtolower($kost->type) == strtolower($type)) ? 1 : 0;
 
-            // 3. Normalisasi Harga (cost criteria → harga min / harga kost)
+            // Harga
             $kostHarga = $this->convertHargaToNumber($kost->harga);
             $hargaScore = ($kostHarga > 0) ? ($hargaMin / $kostHarga) : 0;
 
-            // 4. Normalisasi Fasilitas (benefit criteria)
+            // Fasilitas
             $kostFacilities = is_string($kost->facilities) ? json_decode($kost->facilities, true) : (array) $kost->facilities;
             $matched = collect($facilities)->intersect($kostFacilities)->count();
             $facilityScore = (count($facilities) > 0) ? $matched / count($facilities) : 0;
 
-            // Hitung skor akhir dengan SAW
-            $totalScore =
-                ($weights['location'] * $locationScore) +
-                ($weights['type'] * $typeScore) +
-                ($weights['harga'] * $hargaScore) +
-                ($weights['facilities'] * $facilityScore);
+            // Hitung total skor dengan bobot dari drag & drop
+            $totalScore = 0;
+            $totalScore += ($weights['location'] ?? 0) * $locationScore;
+            $totalScore += ($weights['type'] ?? 0) * $typeScore;
+            $totalScore += ($weights['harga'] ?? 0) * $hargaScore;
+            $totalScore += ($weights['facilities'] ?? 0) * $facilityScore;
 
             $kost->bobotScore = round($totalScore * 100, 2);
             return $kost;
@@ -110,7 +111,11 @@ class FrontController extends Controller
 
         $kosts = $kosts->sortByDesc('bobotScore')->values();
 
-        return view('frontend.rekomendasi', compact('kosts', 'facilities'));
+        $totalKamarPerHunian = Kost::selectRaw('hunian_id, SUM(jumlah_kamar) as total')
+            ->groupBy('hunian_id')
+            ->pluck('total', 'hunian_id');
+
+        return view('frontend.rekomendasi', compact('kosts', 'facilities', 'kriteriaOrder', 'totalKamarPerHunian'));
     }
 
 
@@ -174,6 +179,16 @@ class FrontController extends Controller
     {
         return view('frontend.request');
     }
+
+    public function detail_kamar($id)
+    {
+        $kosts = Kost::withAvg('ratings', 'rating')
+                    ->where('hunian_id', $id)
+                    ->get(); // Ambil semua kamar berdasarkan hunian_id dan sertakan rata-rata rating
+
+        return view('frontend.detail_kamar', compact('kosts'));
+    }
+    
 
     public function detail($id)
     {

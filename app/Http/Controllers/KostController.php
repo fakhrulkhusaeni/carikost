@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BuktiKepemilikanKost;
 use Illuminate\Http\Request;
 use App\Models\Kost;
+use App\Models\Hunian;
 use App\Models\Pembayaran;
 use App\Models\Riwayat;
 use Carbon\Carbon;
@@ -14,29 +15,29 @@ class KostController extends Controller
 {
     public function index()
     {
-        // Ambil hanya kost milik user yang sedang login, urutkan dari yang terbaru
-        $kosts = Kost::where('user_id', auth()->id())
+        // Ambil hanya kost milik user yang sedang login, sertakan relasi 'hunian'
+        $kosts = Kost::with('hunian')
+            ->where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get();
-
+    
         return view('admin.kost.index', compact('kosts'));
     }
 
 
     public function create()
     {
-        return view('admin.kost.create');
+        $hunians = Hunian::where('user_id', auth()->id())->get();
+        return view('admin.kost.create', compact('hunians'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string',
-            'deskripsi' => 'required|string',
+            'hunian_id' => 'required|exists:hunians,id',
+            'nama_kamar' => 'required|string',
             'type' => 'required|string',
             'jumlah_kamar' => 'required|integer',
-            'location' => 'required|string',
-            'alamat' => 'required|string',
             'harga' => 'required|string',
             'facilities' => 'required|array',
             'facilities.*' => 'string|max:255',
@@ -44,18 +45,12 @@ class KostController extends Controller
             'rules.*' => 'string|max:255',
             'foto' => 'required|array',
             'foto.*' => 'image|mimes:jpeg,png,jpg|max:2048',
-
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
         ]);
 
         $data = $request->except('foto');
 
         // Tambahkan user_id ke data
         $data['user_id'] = auth()->id();
-
-        $data['latitude'] = $request->latitude;
-        $data['longitude'] = $request->longitude;
 
         if ($request->hasFile('foto')) {
             $fotoPaths = [];
@@ -91,18 +86,17 @@ class KostController extends Controller
 
     public function edit(Kost $kost)
     {
-        return view('admin.kost.edit', compact('kost'));
+        $hunians = Hunian::where('user_id', auth()->id())->get();
+        return view('admin.kost.edit', compact('kost', 'hunians'));
     }
 
     public function update(Request $request, Kost $kost)
     {
         $request->validate([
-            'nama' => 'required|string',
-            'deskripsi' => 'required|string',
+            'hunian_id' => 'required|exists:hunians,id',
+            'nama_kamar' => 'required|string',
             'type' => 'required|string',
             'jumlah_kamar' => 'required|integer',
-            'location' => 'required|string',
-            'alamat' => 'required|string',
             'harga' => 'required|string',
             'facilities' => 'required|array',
             'facilities.*' => 'string|max:255',

@@ -18,7 +18,7 @@
                             <tr>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Hunian</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jenis Hunian</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Harga (per bulan)</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Harga</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Tanggal Mulai Sewa</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Konfirmasi</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Aksi</th>
@@ -27,9 +27,29 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @forelse($riwayatBookings as $riwayat)
                             <tr>
-                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $riwayat->kost->nama }}</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $riwayat->kost->hunian->nama }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $riwayat->kost->type}}</td>
-                                <td class="px-6 py-4 text-center whitespace-nowrap">Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $riwayat->kost->harga), 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">
+                                    @php
+                                        $hargaRaw = $riwayat->kost->harga ?? '0';
+                                        $hargaPerBulan = (int) preg_replace('/[^0-9]/', '', $hargaRaw);
+
+                                        // Konversi durasi_sewa string ke angka bulan
+                                        $durasiText = strtolower($riwayat->durasi_sewa ?? '1 bulan');
+                                        $durasi = match ($durasiText) {
+                                            '1 bulan' => 1,
+                                            '3 bulan' => 3,
+                                            '1 tahun' => 12,
+                                            default => 1,
+                                        };
+
+                                        $totalHarga = $hargaPerBulan * $durasi;
+                                        if ($durasi >= 12) {
+                                            $totalHarga = round($totalHarga * 0.9); // diskon 10%
+                                        }
+                                    @endphp
+                                    Rp{{ number_format($totalHarga, 0, ',', '.') }}
+                                </td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ \Carbon\Carbon::parse($riwayat->tanggal_booking)->format('d-m-Y') }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if($riwayat->status_konfirmasi == 'Disetujui')

@@ -58,6 +58,7 @@ class PembayaranController extends Controller
             'tanggal_booking' => 'required|date',
             'kost_id' => 'required|exists:kosts,id',
             'kartu_identitas' => 'required|file|mimes:jpeg,png,pdf|max:2048',
+            'durasi_sewa' => 'required|string',
         ]);
 
         // Ambil data kost
@@ -88,11 +89,31 @@ class PembayaranController extends Controller
 
         $kost = Kost::find($validated['kost_id']);
 
-        // Bersihkan dan konversi harga ke integer
         $harga = (int) preg_replace('/[^0-9]/', '', $kost->harga);
         $margin = 0;
-        $totalHarga = $harga + $margin;
-
+        $durasiSewa = $validated['durasi_sewa'];
+        
+        switch ($durasiSewa) {
+            case '1 bulan':
+                $durasiBulan = 1;
+                break;
+            case '3 bulan':
+                $durasiBulan = 3;
+                break;
+            case '1 tahun':
+                $durasiBulan = 12;
+                break;
+            default:
+                $durasiBulan = 1;
+        }
+        
+        // Hitung harga dasar
+        $hargaDasar = $harga + $margin;
+        
+        // Hitung total harga (dengan diskon jika 1 tahun)
+        $diskon = ($durasiSewa === '1 tahun') ? 0.9 : 1;
+        $totalHarga = (int) round($hargaDasar * $durasiBulan * $diskon);
+        
         // Buat array data body
         $body = [
             'transaction_details' => [
@@ -121,6 +142,7 @@ class PembayaranController extends Controller
             'kost_id' => $validated['kost_id'],
             'user_id' => auth()->id(),
             'tanggal_booking' => $validated['tanggal_booking'],
+            'durasi_sewa' => $durasiSewa,
             'status_konfirmasi' => 'Pending',
             'status_pembayaran' => 'Pending',
             'kartu_identitas' => $kartuIdentitasPath,
@@ -132,6 +154,7 @@ class PembayaranController extends Controller
             'kost_id' => $validated['kost_id'],
             'user_id' => auth()->id(),
             'tanggal_booking' => $validated['tanggal_booking'],
+            'durasi_sewa' => $durasiSewa,
             'status_konfirmasi' => 'Pending',
             'status_pembayaran' => 'Pending',
             'kartu_identitas' => $kartuIdentitasPath,

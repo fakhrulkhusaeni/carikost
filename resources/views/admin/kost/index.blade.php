@@ -2,10 +2,10 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Kelola Kost dan Kontrakan') }}
+                {{ __('Kelola Kamar') }}
             </h2>
             <a href="{{ route('admin.kost.create') }}" class="mt-4 sm:mt-0 px-6 py-3 bg-indigo-600 text-white rounded-full font-semibold hover:bg-indigo-700 transition duration-300 text-center">
-                Tambah Baru
+                Tambah Kamar
             </a>
         </div>
     </x-slot>
@@ -13,27 +13,40 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                <!-- Navbar Mini -->
+                <nav class="bg-white border-b border-gray-200 mb-4 px-4 py-2 flex justify-between items-center">
+                    <div class="flex space-x-4">
+                        <a href="{{ route('admin.kost.index') }}"
+                            class="font-semibold transition {{ request()->routeIs('admin.kost.index') ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600' }}">
+                                Lihat Kamar
+                        </a>
+                        <a href="{{ route('admin.hunian.index') }}"
+                            class="font-semibold transition {{ request()->routeIs('admin.hunian.index') ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600' }}">
+                                Lihat Hunian
+                        </a>
+                    </div>
+                </nav>
                 <!-- Membuat tabel bisa digulir pada layar kecil -->
                 <div class="w-full overflow-x-auto">
                     <table class="min-w-[1000px] w-full divide-y divide-gray-200">
-                        <thead class="bg-white-100">
+                        <thead class="bg-gray-100">
                             <tr>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Hunian</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Kamar</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jenis Hunian</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jumlah Kamar</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Harga (per-bulan)</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Verifikasi</th>
+                                <!-- <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Verifikasi</th> -->
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @forelse ($kosts as $kost)
                             <tr>
-                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->nama }}</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->nama_kamar }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->type }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->jumlah_kamar }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}</td>
-                                <td class="px-6 py-4 text-center whitespace-nowrap">
+                                <!-- <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if ($kost->verifikasi)
                                     @if ($kost->verifikasi->status_verifikasi === 'terverifikasi')
                                     <span class="text-blue-600">Terverifikasi</span>
@@ -43,7 +56,7 @@
                                     <span class="text-yellow-600">{{ ucfirst($kost->verifikasi->status_verifikasi) }}</span>
                                     @endif
                                     @endif
-                                </td>
+                                </td> -->
 
                                 <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium">
                                     <a href="{{ route('admin.kost.edit', $kost->id) }}" class="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-full font-semibold hover:bg-yellow-700 transition duration-300">
@@ -56,9 +69,9 @@
                                             Hapus
                                         </button>
                                     </form>
-                                    <a href="{{ route('admin.kost.show', $kost->id) }}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition duration-300">
+                                    <!-- <a href="{{ route('admin.kost.show', $kost->id) }}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition duration-300">
                                         Detail
-                                    </a>
+                                    </a> -->
                                 </td>
                             </tr>
                             @empty

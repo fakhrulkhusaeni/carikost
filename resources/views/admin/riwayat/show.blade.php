@@ -127,14 +127,36 @@
 
                     <!-- Kost Details -->
                     <div class="space-y-4">
-                        <h4 class="text-xl sm:text-3xl font-bold text-gray-900">{{ $riwayat->kost->nama }}</h4>
-                        <p class="text-gray-700">{!! nl2br(e($riwayat->kost->deskripsi)) !!}</p>
+                        <h4 class="text-xl sm:text-3xl font-bold text-gray-900">{{ $riwayat->kost->hunian->nama }}</h4>
+                        <p class="text-gray-700">{!! nl2br(e($riwayat->kost->hunian->deskripsi)) !!}</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <p><span class="font-semibold">Tipe:</span> {{ $riwayat->kost->type }}</p>
+
+                            <p><span class="font-semibold">Tipe Hunian:</span> {{ $riwayat->kost->type }}</p>
                             <p><span class="font-semibold">Jumlah Kamar:</span> {{ $riwayat->kost->jumlah_kamar }}</p>
-                            <p><span class="font-semibold">Lokasi Kecamatan:</span> {{ $riwayat->kost->location }}</p>
-                            <p><span class="font-semibold">Alamat Lengkap:</span> {{ $riwayat->kost->alamat }}</p>
-                            <p><span class="font-semibold">Harga:</span> Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $riwayat->kost->harga), 0, ',', '.') }}/bulan</p>
+                            <p><span class="font-semibold">Lokasi Kecamatan:</span> {{ $riwayat->kost->hunian->location }}</p>
+                            <p><span class="font-semibold">Harga:</span>
+                                @php
+                                    $hargaRaw = $riwayat->kost->harga ?? '0';
+                                    $hargaPerBulan = (int) preg_replace('/[^0-9]/', '', $hargaRaw);
+
+                                    // Konversi durasi_sewa string ke angka bulan
+                                    $durasiText = strtolower($riwayat->durasi_sewa ?? '1 bulan');
+                                    $durasi = match ($durasiText) {
+                                        '1 bulan' => 1,
+                                        '3 bulan' => 3,
+                                        '1 tahun' => 12,
+                                        default => 1,
+                                    };
+
+                                    $totalHarga = $hargaPerBulan * $durasi;
+                                    if ($durasi >= 12) {
+                                        $totalHarga = round($totalHarga * 0.9); // diskon 10%
+                                    }
+                                @endphp
+                                Rp{{ number_format($totalHarga, 0, ',', '.') }}
+                                {{ $durasi === 1 ? '(1 Bulan)' : ($durasi === 3 ? '(3 Bulan)' : ($durasi >= 12 ? '(1 Tahun)' : '')) }}
+                            </p>
+                            <p><span class="font-semibold">Alamat Lengkap:</span> {{ $riwayat->kost->hunian->alamat }}</p>
                             <p><span class="font-semibold">Nomor Telepon:</span> {{ $riwayat->kost->user->phone }}</p>
                         </div>
                     </div>
@@ -228,10 +250,11 @@
                             Bayar Sekarang
                         </button>
                         @elseif ($riwayat->status_pembayaran == 'Berhasil')
-                        <button type="button" onclick="showAlreadyBayarAlert()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center justify-center gap-2 w-full sm:w-auto">
-                            <i class="fas fa-check-circle"></i>
-                            Sudah Dibayar
-                        </button>
+                            <button type="button" disabled
+                                class="px-6 py-2 bg-gray-400 text-white rounded-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-not-allowed opacity-70">
+                                <i class="fas fa-check-circle"></i>
+                                Sudah Dibayar
+                            </button>
                         @else
                         <button type="button" disabled class="px-6 py-2 bg-gray-400 text-white rounded-lg flex items-center justify-center gap-2 cursor-not-allowed w-full sm:w-auto">
                             <i class="fas fa-hourglass-half"></i>

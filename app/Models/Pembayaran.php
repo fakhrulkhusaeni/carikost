@@ -13,6 +13,7 @@ class Pembayaran extends Model
         'kost_id',
         'user_id',
         'tanggal_booking',
+        'durasi_sewa',
         'status_konfirmasi',
         'catatan_penolakan',
         'status_pembayaran',

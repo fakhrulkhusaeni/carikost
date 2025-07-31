@@ -15,20 +15,28 @@
                 <form method="POST" action="{{ route('admin.kost.store') }}" enctype="multipart/form-data">
                     @csrf
 
+                    <!-- Pilih Hunian -->
                     <div>
-                        <x-input-label for="nama" :value="__('Nama Hunian')" />
-                        <x-text-input id="nama" class="block mt-1 w-full" type="text" name="nama" :value="old('nama')" placeholder="Nama hunian Anda" required autofocus autocomplete="nama" />
-                        <x-input-error :messages="$errors->get('nama')" class="mt-2" />
+                        <x-input-label for="hunian_id" :value="__('Pilih Hunian')" />
+                        <select name="hunian_id" id="hunian_id" class="block mt-1 w-full border border-slate-300 rounded-lg" required>
+                            <option value="" disabled selected>Pilih hunian...</option>
+                            @foreach ($hunians as $hunian)
+                                <option value="{{ $hunian->id }}" {{ old('hunian_id', $kost->hunian_id ?? '') == $hunian->id ? 'selected' : '' }}>
+                                    {{ $hunian->nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('hunian_id')" class="mt-2" />
                     </div>
 
                     <div class="mt-4">
-                        <x-input-label for="deskripsi" :value="__('Deskripsi')" />
-                        <textarea name="deskripsi" id="deskripsi" cols="30" rows="3" class="border border-slate-300 rounded-xl w-full" placeholder="Deskripsi tentang hunian Anda" required>{{ old('deskripsi') }}</textarea>
-                        <x-input-error :messages="$errors->get('deskripsi')" class="mt-2" />
+                        <x-input-label for="nama_kamar" :value="__('Nama Tipe Kamar')" />
+                        <x-text-input id="nama_kamar" class="block mt-1 w-full" type="text" name="nama_kamar" :value="old('nama_kamar')" placeholder="Nama tipe kamar Anda" required autocomplete="nama_kamar" />
+                        <x-input-error :messages="$errors->get('nama_kamar')" class="mt-2" />
                     </div>
 
                     <div class="mt-4">
-                        <x-input-label for="type" :value="__('Jenis Kost')" />
+                        <x-input-label for="type" :value="__('Jenis Hunian')" />
                         <select name="type" id="type" class="py-3 rounded-lg pl-3 w-full border border-slate-300">
                             <option value="" disabled selected>Pilih Jenis Hunian</option>
                             <option value="putra">Kost Putra</option>
@@ -41,68 +49,8 @@
 
                     <div class="mt-4">
                         <x-input-label for="jumlah_kamar" :value="__('Jumlah Kamar')" />
-                        <x-text-input inputmode="numeric" id="jumlah_kamar" class="block mt-1 w-full" type="number" name="jumlah_kamar" :value="old('jumlah_kamar')" placeholder="Jumlah kamar hunian Anda" required autofocus autocomplete="jumlah_kamar" />
+                        <x-text-input inputmode="numeric" id="jumlah_kamar" class="block mt-1 w-full" type="number" name="jumlah_kamar" :value="old('jumlah_kamar')" placeholder="Jumlah kamar hunian Anda" required autocomplete="jumlah_kamar" />
                         <x-input-error :messages="$errors->get('jumlah_kamar')" class="mt-2" />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-input-label for="location" :value="__('Lokasi Kecamatan')" />
-                        <select name="location" id="location" class="py-3 rounded-lg pl-3 w-full border border-slate-300" required>
-                            <option value="" disabled selected>Pilih Lokasi Kecamatan</option>
-
-                            <!-- Kota Tegal -->
-                            <optgroup label="Kota Tegal">
-                                <option value="Margadana">Margadana</option>
-                                <option value="Tegal Barat">Tegal Barat</option>
-                                <option value="Tegal Selatan">Tegal Selatan</option>
-                                <option value="Tegal Timur">Tegal Timur</option>
-                            </optgroup>
-
-                            <!-- Kabupaten Tegal -->
-                            <optgroup label="Kabupaten Tegal">
-                                <option value="Adiwerna">Adiwerna</option>
-                                <option value="Balapulang">Balapulang</option>
-                                <option value="Bojong">Bojong</option>
-                                <option value="Bumijawa">Bumijawa</option>
-                                <option value="Dukuhturi">Dukuhturi</option>
-                                <option value="Dukuhwaru">Dukuhwaru</option>
-                                <option value="Jatinegara">Jatinegara</option>
-                                <option value="Kedungbanteng">Kedungbanteng</option>
-                                <option value="Kramat">Kramat</option>
-                                <option value="Lebaksiu">Lebaksiu</option>
-                                <option value="Margasari">Margasari</option>
-                                <option value="Pagerbarang">Pagerbarang</option>
-                                <option value="Pangkah">Pangkah</option>
-                                <option value="Slawi">Slawi</option>
-                                <option value="Surodadi">Surodadi</option>
-                                <option value="Talang">Talang</option>
-                                <option value="Tarub">Tarub</option>
-                                <option value="Warureja">Warureja</option>
-                            </optgroup>
-                        </select>
-                        <x-input-error :messages="$errors->get('location')" class="mt-2" />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-input-label for="map" :value="__('Tentukan Lokasi Hunian di Peta')" />
-
-                        <!-- Tombol lokasi saat ini -->
-                        <button type="button" id="lokasiSekarang" class="btn btn-sm btn-primary mt-2 mb-2">
-                            Gunakan Lokasi Saat Ini
-                        </button>
-
-                        <div id="map" style="height: 400px;" class="rounded border border-slate-300"></div>
-
-                        <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude') }}">
-                        <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
-
-                        <p class="text-sm text-gray-600 mt-2">Klik pada peta untuk memilih lokasi hunian.</p>
-                    </div>
-
-                    <div class="mt-4">
-                        <x-input-label for="alamat" :value="__('Alamat Lengkap')" />
-                        <textarea name="alamat" id="alamat" cols="30" rows="3" class="border border-slate-300 rounded-xl w-full" placeholder="Masukkan Alamat Lengkap" required>{{ old('alamat') }}</textarea>
-                        <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
                     </div>
 
                     <div class="mt-4">

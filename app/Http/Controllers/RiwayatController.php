@@ -34,7 +34,19 @@ class RiwayatController extends Controller
         // Bersihkan dan konversi harga ke integer
         $harga = (int) preg_replace('/[^0-9]/', '', $riwayat->kost->harga);
         $margin = 0;
-        $totalHarga = $harga + $margin;
+        $durasiText = strtolower($riwayat->durasi_sewa ?? '1 bulan');
+        
+        // Hitung durasi bulan
+        $durasiBulan = match ($durasiText) {
+            '1 bulan' => 1,
+            '3 bulan' => 3,
+            '1 tahun' => 12,
+            default => 1,
+        };
+        
+        $hargaDasar = $harga + $margin;
+        $diskon = ($durasiText === '1 tahun') ? 0.9 : 1;
+        $totalHarga = (int) round($hargaDasar * $durasiBulan * $diskon);        
 
         // Buat array data body
         $body = [

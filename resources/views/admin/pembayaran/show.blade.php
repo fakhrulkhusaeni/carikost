@@ -51,6 +51,11 @@
                     </div>
 
                     <div>
+                        <span class="font-semibold text-gray-700">Durasi Sewa: </span>
+                        <span class="text-gray-600">{{ $pembayaran->durasi_sewa}}</span>
+                    </div>
+
+                    <div>
                         <span class="font-semibold text-gray-700">Status Konfirmasi: </span>
                         @if($pembayaran->status_konfirmasi == 'Disetujui')
                         <span class="text-green-600">Disetujui</span>

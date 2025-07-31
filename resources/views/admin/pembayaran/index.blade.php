@@ -32,7 +32,6 @@
                             <tr>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Lengkap</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jenis Kelamin</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Email</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nomor Telepon</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Tanggal Mulai Sewa</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Konfirmasi</th>
@@ -44,7 +43,6 @@
                             <tr>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $pembayaran->user->name }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $pembayaran->user->gender }}</td>
-                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $pembayaran->user->email }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $pembayaran->user->phone }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ \Carbon\Carbon::parse($pembayaran->tanggal_booking)->format('d-m-Y') }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">

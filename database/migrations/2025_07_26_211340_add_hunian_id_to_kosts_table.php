@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('kosts', function (Blueprint $table) {
-            $table->decimal('latitude', 10, 7)->nullable()->after('alamat');
-            $table->decimal('longitude', 10, 7)->nullable()->after('alamat');
+            $table->unsignedBigInteger('hunian_id')->nullable()->after('id');
+            $table->foreign('hunian_id')->references('id')->on('hunians')->onDelete('cascade');
         });
     }
 
@@ -23,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('kosts', function (Blueprint $table) {
-            $table->dropColumn(['latitude', 'longitude']);
+            $table->dropForeign(['hunian_id']);
+            $table->dropColumn('hunian_id');
         });
     }
 };

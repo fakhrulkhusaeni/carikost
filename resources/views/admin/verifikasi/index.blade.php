@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Kelola Daftar Kost dan Kontrakan') }}
+                {{ __('Kelola Verifikasi Kost dan Kontrakan') }}
             </h2>
         </div>
     </x-slot>
@@ -30,9 +30,8 @@
                         <thead class="bg-gray-100">
                             <tr>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Pemilik</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Kost/Kontrakan</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Nama Hunian</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jenis Hunian</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Jumlah Kamar</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Status Verifikasi</th>
                                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-900 uppercase tracking-wider">Aksi</th>
                             </tr>
@@ -41,9 +40,8 @@
                             @forelse ($kosts as $kost)
                             <tr>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->user->name }}</td>
-                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->nama }}</td>
+                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->hunian->nama }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->type }}</td>
-                                <td class="px-6 py-4 text-center whitespace-nowrap">{{ $kost->jumlah_kamar }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if ($kost->verifikasi)
                                         @if ($kost->verifikasi->status_verifikasi === 'terverifikasi')

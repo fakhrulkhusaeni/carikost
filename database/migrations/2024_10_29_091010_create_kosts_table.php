@@ -13,12 +13,9 @@ return new class extends Migration
     {
         Schema::create('kosts', function (Blueprint $table) {
             $table->id();
-            $table->string('nama', 25); // Nama Kost/Kontrakan
-            $table->text('deskripsi'); // Deskripsi
+            $table->string('nama_kamar', 50); // Nama Tipe Kamar
             $table->enum('type', ['putra', 'putri', 'campur', 'kontrakan']); // Jenis Kost
             $table->integer('jumlah_kamar'); // Jumlah Kamar
-            $table->string('location', 20); // Lokasi Kecamatan
-            $table->text('alamat'); // Alamat
             $table->string('harga', 15); // Harga (per bulan)
             $table->json('facilities'); // Fasilitas
             $table->json('rules'); // Peraturan Kost/Kontrakan

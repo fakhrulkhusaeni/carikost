@@ -14,6 +14,10 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/iofrm-style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/iofrm-theme7.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}" />
+
+    <!-- CDN Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -65,12 +69,24 @@
                                 style="outline: 1px solid gray; border-radius: 5px;" required
                                 oninvalid="this.setCustomValidity('Silakan isi password')"
                                 oninput="this.setCustomValidity('')" />
-                            <div class="form-button mt-4">
-                                <button id="submit" type="submit" class="btn btn-primary">Login</button>
-                                @if (Route::has('password.request'))
-                                <a href="{{ route('password.request') }}">Lupa Password?</a>
-                                @endif
+                            {{-- Tombol Login --}}
+                            <div class="d-grid gap-2 mt-3">
+                                <button id="submit" type="submit" class="btn btn-primary w-100">
+                                    Login
+                                </button>
+
+                                {{-- Tombol Login dengan Google --}}
+                                <a href="{{ route('google.login') }}" class="btn btn-danger w-100 d-flex align-items-center justify-content-center" style="gap: 8px;">
+                                    <i class="fab fa-google"></i> Login dengan Google
+                                </a>
                             </div>
+
+                            {{-- Lupa Password --}}
+                            @if (Route::has('password.request'))
+                                <div class="text-end mt-2">
+                                    <a href="{{ route('password.request') }}" class="text-decoration-none">Lupa Password?</a>
+                                </div>
+                            @endif
                         </form>
                     </div>
                 </div>

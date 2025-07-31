@@ -28,155 +28,113 @@
                         <div class="col-lg-10 col-md-12">
                             <div class="card-cari shadow h-100 border-0 rounded" style="background-color: white;">
                                 <form action="{{ route('frontend.rekomendasi') }}" method="GET">
-                                    <div class="row g-3 align-items-center p-4">
+                                    @php
+                                        $orderedCriteria = $kriteriaOrder ?: ['location', 'type', 'harga', 'facilities'];
+                                    @endphp
 
-                                        <!-- Lokasi -->
-                                        <div class="col-lg-12 col-md-6 col-12 mb-3">
-                                            <select id="location" name="location" class="form-control" style="border-radius: 5px;" required
-                                                oninvalid="this.setCustomValidity('Silakan Pilih Lokasi')"
-                                                oninput="this.setCustomValidity('')">
-                                                <option value="" disabled {{ request('location') ? '' : 'selected' }}>Lokasi</option>
-                                                <!-- Kota Tegal -->
-                                                <optgroup label="Kota Tegal">
-                                                    <option value="Margadana" {{ request('location') == 'Margadana' ? 'selected' : '' }}>Margadana</option>
-                                                    <option value="Tegal Barat" {{ request('location') == 'Tegal Barat' ? 'selected' : '' }}>Tegal Barat</option>
-                                                    <option value="Tegal Timur" {{ request('location') == 'Tegal Timur' ? 'selected' : '' }}>Tegal Timur</option>
-                                                    <option value="Tegal Selatan" {{ request('location') == 'Tegal Selatan' ? 'selected' : '' }}>Tegal Selatan</option>
-                                                </optgroup>
-                                                <!-- Kabupaten Tegal -->
-                                                <optgroup label="Kabupaten Tegal">
-                                                    @foreach(['Adiwerna', 'Balapulang', 'Bojong', 'Dukuhturi', 'Dukuhwaru', 'Jatinegara',
-                                                    'Kedungbanteng', 'Kramat', 'Lebaksiu', 'Margasari', 'Pagerbarang', 'Pangkah',
-                                                    'Slawi', 'Suradadi', 'Talang', 'Tarub', 'Warureja'] as $area)
-                                                    <option value="{{ $area }}" {{ request('location') == $area ? 'selected' : '' }}>{{ $area }}</option>
-                                                    @endforeach
-                                                </optgroup>
-                                            </select>
-                                        </div>
-
-                                        <!-- Jenis Hunian -->
-                                        <div class="col-lg-12 col-md-6 col-12 mb-3">
-                                            <select id="type" name="type" class="form-control" style="border-radius: 5px;">
-                                                <option value="" disabled {{ request('type') ? '' : 'selected' }}>Tipe Hunian</option>
-                                                <option value="putra" {{ request('type') == 'putra' ? 'selected' : '' }}>Kost Putra</option>
-                                                <option value="putri" {{ request('type') == 'putri' ? 'selected' : '' }}>Kost Putri</option>
-                                                <option value="campur" {{ request('type') == 'campur' ? 'selected' : '' }}>Kost Campur</option>
-                                                <option value="kontrakan" {{ request('type') == 'kontrakan' ? 'selected' : '' }}>Kontrakan</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Harga -->
-                                        <div class="col-lg-12 col-md-6 col-12 mb-3">
-                                            <div class="dropdown">
-                                                <select class="form-control" id="pilihanHarga" style="border-radius: 5px;">
-                                                    <option value="" disabled selected>Harga</option>
-                                                </select>
-                                                <div id="inputHargaContainer" class="mt-2" style="display: none;">
-                                                    <input type="text" id="harga" name="harga" class="form-control" placeholder="Masukkan Harga (contoh: 500000)" value="{{ request('harga') }}" style="border-radius: 5px; margin-top: 5px;">
+                                    <div class="row g-3 align-items-center p-4" id="sortable-criteria">
+                                        @foreach ($orderedCriteria as $criteria)
+                                            @if ($criteria === 'location')
+                                                <div class="col-lg-12 col-md-6 col-12 mb-3 draggable-item" data-kriteria="location">
+                                                    {{-- === LOKASI === --}}
+                                                    <select id="location" name="location" class="form-control" style="border-radius: 5px;" required
+                                                        oninvalid="this.setCustomValidity('Silakan Pilih Lokasi')"
+                                                        oninput="this.setCustomValidity('')">
+                                                        <option value="" disabled {{ request('location') ? '' : 'selected' }}>Lokasi</option>
+                                                        <optgroup label="Kota Tegal">
+                                                            <option value="Margadana" {{ request('location') == 'Margadana' ? 'selected' : '' }}>Margadana</option>
+                                                            <option value="Tegal Barat" {{ request('location') == 'Tegal Barat' ? 'selected' : '' }}>Tegal Barat</option>
+                                                            <option value="Tegal Timur" {{ request('location') == 'Tegal Timur' ? 'selected' : '' }}>Tegal Timur</option>
+                                                            <option value="Tegal Selatan" {{ request('location') == 'Tegal Selatan' ? 'selected' : '' }}>Tegal Selatan</option>
+                                                        </optgroup>
+                                                        <optgroup label="Kabupaten Tegal">
+                                                            @foreach(['Adiwerna', 'Balapulang', 'Bojong', 'Dukuhturi', 'Dukuhwaru', 'Jatinegara',
+                                                                    'Kedungbanteng', 'Kramat', 'Lebaksiu', 'Margasari', 'Pagerbarang', 'Pangkah',
+                                                                    'Slawi', 'Suradadi', 'Talang', 'Tarub', 'Warureja'] as $area)
+                                                                <option value="{{ $area }}" {{ request('location') == $area ? 'selected' : '' }}>{{ $area }}</option>
+                                                            @endforeach
+                                                        </optgroup>
+                                                    </select>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Pilihan Fasilitas -->
-                                        <div class="col-lg-12 col-md-6 col-12 mb-3">
-                                            <select id="facilityDropdown" class="form-control" style="border-radius: 5px;">
-                                                <option value="" disabled selected>Fasilitas</option>
-                                            </select>
-
-                                            <!-- Checkbox Fasilitas dalam Dua Kolom -->
-                                            <div id="checkboxContainer" class="border p-3 rounded mt-2" style="display: none;">
-                                                <div class="row">
-                                                    @php
-                                                    $allFacilities = [
-                                                    "Kamar Mandi Dalam", "Air Panas", "Shower", "Lemari Baju", "AC",
-                                                    "Kursi", "Meja", "TV", "Kasur", "Mesin Cuci", "Dapur Bersama", "Parkir Mobil",
-                                                    "Kloset Duduk", "Kloset Jongkok", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV", "Dispenser", "Kulkas", "Teras",
-                                                    "Ruang Tamu", "Ruang Makan", "Tempat Jemuran", "Kamar Mandi Luar", "Mushola"
-                                                    ];
-                                                    $selectedFacilities = $facilities ?? []; // Pastikan array selalu ada
-                                                    @endphp
-
-                                                    @foreach($allFacilities as $facility)
-                                                    <div class="col-md-6 col-12">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="facilities[]" value="{{ $facility }}"
-                                                                {{ in_array($facility, $selectedFacilities) ? 'checked' : '' }}>
-                                                            <label class="form-check-label">{{ strtoupper($facility) }}</label>
+                                            @elseif ($criteria === 'type')
+                                                <div class="col-lg-12 col-md-6 col-12 mb-3 draggable-item" data-kriteria="type">
+                                                    {{-- === JENIS HUNIAN === --}}
+                                                    <select id="type" name="type" class="form-control" style="border-radius: 5px;">
+                                                        <option value="" disabled {{ request('type') ? '' : 'selected' }}>Tipe Hunian</option>
+                                                        <option value="putra" {{ request('type') == 'putra' ? 'selected' : '' }}>Kost Putra</option>
+                                                        <option value="putri" {{ request('type') == 'putri' ? 'selected' : '' }}>Kost Putri</option>
+                                                        <option value="campur" {{ request('type') == 'campur' ? 'selected' : '' }}>Kost Campur</option>
+                                                        <option value="kontrakan" {{ request('type') == 'kontrakan' ? 'selected' : '' }}>Kontrakan</option>
+                                                    </select>
+                                                </div>
+                                            @elseif ($criteria === 'harga')
+                                                <div class="col-lg-12 col-md-6 col-12 mb-3 draggable-item" data-kriteria="harga">
+                                                    {{-- === HARGA === --}}
+                                                    <div class="dropdown">
+                                                        <select class="form-control" id="pilihanHarga" style="border-radius: 5px;">
+                                                            <option value="" disabled selected>Harga</option>
+                                                        </select>
+                                                        <div id="inputHargaContainer" class="mt-2" style="display: none;">
+                                                            <input type="text" id="harga" name="harga" class="form-control"
+                                                                placeholder="Masukkan Harga (contoh: 500000)" value="{{ request('harga') }}"
+                                                                style="border-radius: 5px; margin-top: 5px;">
                                                         </div>
                                                     </div>
-                                                    @endforeach
                                                 </div>
-                                            </div>
-                                        </div>
+                                            @elseif ($criteria === 'facilities')
+                                                <div class="col-lg-12 col-md-6 col-12 mb-3 draggable-item" data-kriteria="facilities">
+                                                    {{-- === FASILITAS === --}}
+                                                    <select id="facilityDropdown" class="form-control" style="border-radius: 5px;">
+                                                        <option value="" disabled selected>Fasilitas</option>
+                                                    </select>
 
-                                        <!-- Tombol -->
-                                        <div class="col-lg-12 col-md-6 col-12 text-center">
+                                                    <div id="checkboxContainer" class="border p-3 rounded mt-2" style="display: none;">
+                                                        <div class="row">
+                                                            @php
+                                                                $allFacilities = [
+                                                                    "Kamar Mandi Dalam", "Air Panas", "Shower", "Lemari Baju", "AC",
+                                                                    "Kursi", "Meja", "TV", "Kasur", "Mesin Cuci", "Dapur Bersama", "Parkir Mobil",
+                                                                    "Kloset Duduk", "Kloset Jongkok", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV",
+                                                                    "Dispenser", "Kulkas", "Teras", "Ruang Tamu", "Ruang Makan",
+                                                                    "Tempat Jemuran", "Kamar Mandi Luar", "Mushola"
+                                                                ];
+                                                                $selectedFacilities = $facilities ?? [];
+                                                            @endphp
+
+                                                            @foreach($allFacilities as $facility)
+                                                                <div class="col-md-6 col-12">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox" name="facilities[]" value="{{ $facility }}"
+                                                                            {{ in_array($facility, $selectedFacilities) ? 'checked' : '' }}>
+                                                                        <label class="form-check-label">{{ strtoupper($facility) }}</label>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+
+
+                                    <div id="kriteriaInputs"></div>
+
+                                    <div class="row px-4">
+                                        <div class="col-12">
+                                            <p class="text-muted" style="font-size: 14px;">* Urutkan kriteria sesuai prioritas (Drag & Drop)</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tombol Submit -->
+                                    <div class="row px-4 pb-4">
+                                        <div class="col-lg-12 col-md-6 col-12 text-center mt-1">
+                                            <input type="hidden" name="priority_order" id="priorityOrder">
                                             <button type="submit" class="btn w-100" style="background-color: #007bff; border-radius: 10px;">
                                                 <i class="bi bi-magic text-white"></i> <span class="text-white">Cari Rekomendasi</span>
                                             </button>
                                         </div>
                                     </div>
-
-                                    <!-- Input Bobot -->
-                                    <div class="col-12 mb-3">
-                                        <h5 class="mb-2">Bobot Kriteria</h5>
-                                        <span class="text-dark" style="font-size: 0.9rem;">
-                                            Silakan isi bobot sesuai prioritas Anda. Total dari semua bobot harus 100%. Nilai bobot setiap kriteria berkisar antara 0 hingga 100.
-                                        </span>
-                                        
-                                        <!-- <strong class="mt-3 mb-2 d-block">Ketentuan bobot:</strong>
-                                        <div class="d-flex flex-wrap mb-3">
-                                            <span style="margin-right: 30px;">0 – 30 : Cukup Penting</span>
-                                            <span style="margin-right: 30px;">31 – 60 : Penting</span>
-                                            <span>61 – 100 : Sangat Penting</span>
-                                        </div> -->
-
-                                        <div class="row g-2 mt-3">
-                                            <div class="col-md-3 col-6">
-                                                <label for="weight_location" class="form-label">Lokasi</label>
-                                                <input type="number" step="1" min="0" max="100" required
-                                                    name="weight_location"
-                                                    class="form-control"
-                                                    placeholder="Contoh: 30"
-                                                    title="Isi dengan angka 0 - 100"
-                                                    value="{{ request('weight_location', 30) }}">
-                                            </div>
-                                            <div class="col-md-3 col-6">
-                                                <label for="weight_type" class="form-label">Tipe Hunian</label>
-                                                <input type="number" step="1" min="0" max="100" required
-                                                    name="weight_type"
-                                                    class="form-control"
-                                                    placeholder="Contoh: 20"
-                                                    title="Isi dengan angka 0 - 100"
-                                                    value="{{ request('weight_type', 20) }}">
-                                            </div>
-                                            <div class="col-md-3 col-6">
-                                                <label for="weight_harga" class="form-label">Harga</label>
-                                                <input type="number" step="1" min="0" max="100" required
-                                                    name="weight_harga"
-                                                    class="form-control"
-                                                    placeholder="Contoh: 30"
-                                                    title="Isi dengan angka 0 - 100"
-                                                    value="{{ request('weight_harga', 30) }}">
-                                            </div>
-                                            <div class="col-md-3 col-6">
-                                                <label for="weight_facilities" class="form-label">Fasilitas</label>
-                                                <input type="number" step="1" min="0" max="100" required
-                                                    name="weight_facilities"
-                                                    class="form-control"
-                                                    placeholder="Contoh: 20"
-                                                    title="Isi dengan angka 0 - 100"
-                                                    value="{{ request('weight_facilities', 20) }}">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    @if(session('error'))
-                                    <div class="alert alert-danger mt-2">
-                                        {{ session('error') }}
-                                    </div>
-                                    @endif
-
                                 </form>
                             </div>
                         </div>
@@ -196,25 +154,29 @@
                                 alt="{{ $kost->nama }}">
                             <div class="card-body text-start">
                                 <h6 class="card-title mb-2" style="color: #007bff;">{{ ucfirst($kost->type) }}</h6>
-                                <p class="card-text mb-3">{{ $kost->nama }}</p>
+                                <p class="card-text mb-3">{{ $kost->hunian->nama }}</p>
                                 <ul class="list-unstyled mb-3">
-                                    <li><i class="bi bi-geo-alt me-2"></i> <span class="ms-2">Lokasi: {{ $kost->location }}</span></li>
-                                    <li><i class="bi bi-cash me-2"></i> <span class="ms-2">Harga: Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}/bulan</span></li>
-                                    <li><i class="bi bi-door-closed me-2"></i> <span class="ms-2">Jumlah Kamar: {{ $kost->jumlah_kamar }}</span></li>
+                                    <li><i class="bi bi-geo-alt me-2"></i> <span class="ms-2">Lokasi: {{ $kost->hunian->location }}</span></li>
+                                    <li>
+                                        <i class="bi bi-door-closed me-2"></i>
+                                        <span class="ms-2">
+                                            Total Kamar: {{ $totalKamarPerHunian[$kost->hunian_id] ?? '0' }}
+                                        </span>
+                                    </li>
                                 </ul>
 
                                 <!-- Tampilkan jumlah skor -->
-                                @isset($kost->bobotScore)
+                                <!-- @isset($kost->bobotScore)
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="badge bg-info" style="font-size: 1rem;">Skor: {{ number_format($kost->bobotScore, 2) }}</span>
                                 </div>
-                                @endisset
+                                @endisset -->
 
                                 <div class="d-flex justify-content-between align-items-center">
                                     @if ($kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi')
                                     <span class="verified text-primary" style="font-size: 0.80rem; cursor: pointer;">Terverifikasi</span>
                                     @endif
-                                    <a href="{{ route('frontend.detail', $kost->id) }}" class="btn btn-primary">Lihat Detail</a>
+                                    <a href="{{ route('frontend.detail_kamar', $kost->hunian_id) }}" class="btn btn-primary">Pilih Kamar</a>
                                 </div>
                             </div>
                         </div>
@@ -239,6 +201,60 @@
     <!-- footer section -->
     <x-footer />
     <!-- footer section -->
+
+    <!-- Bootstrap Icons (drag indicator) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <!-- SortableJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <style>
+        .draggable-item {
+            cursor: move;
+            border: 1px dashed #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            transition: background-color 0.2s ease;
+        }
+
+        .draggable-item:hover {
+            background-color: #eef6ff;
+        }
+
+        .drag-indicator {
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+    </style>
+
+    <script>
+        const sortable = new Sortable(document.getElementById('sortable-criteria'), {
+            animation: 150,
+            handle: '.draggable-item',
+            onEnd: function () {
+                updatePriorityOrder();
+            }
+        });
+
+        function updatePriorityOrder() {
+            const container = document.getElementById('kriteriaInputs');
+            container.innerHTML = ''; // Bersihkan dulu
+
+            document.querySelectorAll('#sortable-criteria .draggable-item').forEach(el => {
+                const kriteria = el.getAttribute('data-kriteria');
+                if (kriteria) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'kriteria[]';
+                    input.value = kriteria;
+                    container.appendChild(input);
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', updatePriorityOrder);
+    </script>
 
     <!-- SweetAlert2 Script -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -13,6 +13,9 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifikasiController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\HunianController;
+use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\RoleController;
 
 
 Route::get('/', [FrontController::class, 'index'])->name('frontend.index');
@@ -25,10 +28,18 @@ Route::get('/request', [FrontController::class, 'request'])->name('frontend.requ
 Route::get('/kebijakan_privasi', [FrontController::class, 'kebijakan_privasi'])->name('frontend.kebijakan_privasi');
 Route::get('/syarat_ketentuan', [FrontController::class, 'syarat_ketentuan'])->name('frontend.syarat_ketentuan');
 Route::get('/detail/{id}', [FrontController::class, 'detail'])->name('frontend.detail');
+Route::get('/detail_kamar/{id}', [FrontController::class, 'detail_kamar'])->name('frontend.detail_kamar');
 Route::post('/rating', [RatingController::class, 'store'])->name('rating.store');
 Route::post('bukti-kepemilikan/store', [BuktiKepemilikanKostController::class, 'store'])->name('bukti-kepemilikan.store');
-
 Route::post('/riwayat/bayar/{transaksi_id}', [RiwayatController::class, "bayar"]);
+
+
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
+// Role selection
+Route::get('/select-role', [RoleController::class, 'showForm'])->name('select-role');
+Route::post('/select-role', [RoleController::class, 'store'])->name('select-role.store');
 
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -45,6 +56,7 @@ Route::prefix(prefix: 'admin')->name('admin.')->group(function () {
 
     Route::middleware(['auth', 'can:manage hunian'])->group(function () {
         Route::resource('kost', KostController::class);
+        Route::resource('hunian', HunianController::class);
 
         Route::post('kost/{id}/keluar', [KostController::class, 'keluar'])->name('kost.keluar');
     });

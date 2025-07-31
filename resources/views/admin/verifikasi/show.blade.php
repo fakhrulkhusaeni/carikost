@@ -83,21 +83,18 @@
 
                 <!-- Kost Details -->
                 <div>
-                    <h4 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">{{ $kost->nama }}</h4>
-                    <p class="text-gray-700 text-sm sm:text-base">{!! nl2br(e($kost->deskripsi)) !!}</p>
+                    <h4 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">{{ $kost->hunian->nama }}</h4>
+                    <p class="text-gray-700 text-sm sm:text-base">{!! nl2br(e($kost->hunian->deskripsi)) !!}</p>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm sm:text-base">
-                        <div><span class="font-semibold">Tipe:</span> {{ $kost->type }}</div>
-                        <div><span class="font-semibold">Jumlah Kamar:</span> {{ $kost->jumlah_kamar }}</div>
-                        <div><span class="font-semibold">Lokasi Kecamatan:</span> {{ $kost->location }}</div>
-                        <div><span class="font-semibold">Alamat Lengakp:</span> {{ $kost->alamat }}</div>
-                        <div><span class="font-semibold">Harga:</span> Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }} / bulan</div>
+                        <div><span class="font-semibold">Tipe Hunian:</span> {{ $kost->type }}</div>
+                        <div><span class="font-semibold">Lokasi Kecamatan:</span> {{ $kost->hunian->location }}</div>
+                        <div><span class="font-semibold">Alamat Lengakp:</span> {{ $kost->hunian->alamat }}</div>
                         <div><span class="font-semibold">Telepon:</span> {{ $kost->user->phone }}</div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm sm:text-base">
-                    <!-- Facilities -->
+                <!-- <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm sm:text-base">
                     <div>
                         <span class="font-semibold">Fasilitas:</span>
                         <ul class="mt-1 text-gray-600 list-disc pl-6">
@@ -109,7 +106,7 @@
                         </ul>
                     </div>
 
-                    <!-- Rules -->
+                    
                     <div>
                         <span class="font-semibold">Peraturan:</span>
                         <ul class="mt-1 text-gray-600 list-disc pl-6">
@@ -120,7 +117,7 @@
                             @endforelse
                         </ul>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="text-sm sm:text-base">
                     <span class="font-semibold">Bukti Kepemilikan:</span>
@@ -163,9 +160,10 @@
                     <div class="flex flex-col sm:flex-row justify-end gap-4 mt-6">
                         <!-- Tombol Verifikasi atau Sudah Diverifikasi -->
                         @if ($statusVerifikasi === 'terverifikasi')
-                        <button type="button" onclick="showAlreadyVerifiedAlert()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center justify-center gap-2 w-full sm:w-auto">
-                            Sudah Diverifikasi
-                        </button>
+                            <button type="button" disabled
+                                class="px-6 py-2 bg-gray-400 text-white rounded-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-not-allowed opacity-70">
+                                Sudah Diverifikasi
+                            </button>
                         @else
                         <form action="{{ route('admin.verifikasi.verifikasi', $kost->id) }}" method="POST">
                             @if ($statusVerifikasi === 'ditolak')
@@ -184,9 +182,10 @@
 
                         <!-- Tombol Tolak atau Sudah Ditolak -->
                         @if ($statusVerifikasi === 'ditolak')
-                        <button type="button" onclick="showAlreadyRejectAlert()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center justify-center gap-2 w-full sm:w-auto">
-                            Sudah Ditolak
-                        </button>
+                            <button type="button" disabled
+                                class="px-6 py-2 bg-gray-400 text-white rounded-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-not-allowed opacity-70">
+                                Sudah Ditolak
+                            </button>
                         @else
                         <form action="{{ route('admin.verifikasi.tolak', $kost->id) }}" method="POST" class="form-tolak">
                             @if ($statusVerifikasi === 'terverifikasi')
@@ -202,12 +201,6 @@
                             @endif
                         </form>
                         @endif
-
-                        <!-- <form action="{{ route('admin.verifikasi.destroy', $kost->id) }}" method="POST" class="inline-block delete-form">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Tolak</button>
-                        </form> -->
                     </div>
                 </div>
             </div>

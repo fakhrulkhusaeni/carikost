@@ -66,10 +66,7 @@
             </div>
         </div>
     </div>
-
     <!-- Kost Detail End -->
-
-
 
     <!-- Detail Start -->
     <div class="container-xxl py-2 mb-5 wow fadeInUp" data-wow-delay="0.1s">
@@ -94,7 +91,7 @@
                             <!-- Bagian Kost -->
                             <div class="d-flex align-items-center mb-3">
                                 <div class="text-start">
-                                    <h4 class="mb-2" style="font-weight: bold;">{{ $kost->nama }}</h4>
+                                    <h4 class="mb-2" style="font-weight: bold;">{{ $kost->hunian->nama }}</h4>
                                     <span>{{ ucfirst($kost->type) }}</span>
                                 </div>
                             </div>
@@ -104,7 +101,7 @@
                             <!-- Bagian Deskripsi -->
                             <div class="mb-5">
                                 <h4 class="mb-3">Deskripsi</h4>
-                                <p>{{ $kost->deskripsi }}</p>
+                                <p>{{ $kost->hunian->deskripsi }}</p>
 
                                 <hr class="my-4">
 
@@ -185,13 +182,13 @@
                         <!-- Lokasi -->
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-map-marker-alt text-primary" style="margin-right: 10px;"></i>
-                            <span>Lokasi Kecamatan: {{ $kost->location }}</span>
+                            <span>Lokasi Kecamatan: {{ $kost->hunian->location }}</span>
                         </div>
 
                         <!-- Alamat Lengkap -->
                         <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-home text-primary" style="margin-right: 10px;"></i>
-                            <span>Alamat Lengkap: {{ $kost->alamat }}</span>
+                            <span>Alamat Lengkap: {{ $kost->hunian->alamat }}</span>
                         </div>
 
                         <!-- Nomor Telepon -->
@@ -206,7 +203,9 @@
                         <!-- Harga -->
                         <div class="card-item mb-4 d-flex align-items-center">
                             <i class="fa fa-money-bill-wave text-primary" style="margin-right: 10px;"></i>
-                            <span>Harga: <strong>Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}/bulan</strong></span>
+                            <span>Harga: <strong id="harga-total" data-harga="{{ (int) preg_replace('/[^0-9]/', '', $kost->harga) }}">
+                                Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}
+                            </strong></span>
                         </div>
 
                         <!-- Form Booking -->
@@ -217,6 +216,20 @@
                             <div class="card-item mb-3">
                                 <label for="booking-date" class="form-label">Pilih Tanggal Mulai Sewa:</label>
                                 <input type="date" class="form-control" id="booking-date" name="tanggal_booking" onkeydown="return false" required>
+                            </div>
+
+                            <!-- Durasi Sewa -->
+                            <div class="card-item mb-3 position-relative">
+                                <label for="durasi_sewa" class="form-label">Pilih Durasi Sewa:</label>
+                                <div class="position-relative">
+                                    <select class="form-control pe-5" id="durasi_sewa" name="durasi_sewa" required>
+                                        <option value="" disabled selected>Pilih Durasi</option>
+                                        <option value="1 bulan">1 Bulan</option>
+                                        <option value="3 bulan">3 Bulan</option>
+                                        <option value="1 tahun">1 Tahun</option>
+                                    </select>
+                                    <i class="bi bi-caret-down-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary"></i>
+                                </div>
                             </div>
 
                             <!-- Hidden Kost ID -->
@@ -340,6 +353,7 @@
                                 <div class="modal-body">
                                     <form id="uploadForm" method="POST" action="{{ route('admin.pembayaran.store') }}" enctype="multipart/form-data">
                                         @csrf
+                                        <input type="hidden" name="durasi_sewa" id="hiddenDurasiSewa">
                                         <input type="hidden" name="kost_id" value="{{ $kost->id }}">
                                         <input type="hidden" name="tanggal_booking" id="modalBookingDate">
                                         <div class="mb-3">
@@ -364,6 +378,40 @@
     <x-footer />
     <!-- footer section -->
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const durasiSelect = document.getElementById('durasi_sewa');
+            const hargaText = document.getElementById('harga-total');
+            const hargaPerBulan = parseInt(hargaText.getAttribute('data-harga'));
+
+            durasiSelect.addEventListener('change', function () {
+                let multiplier = 1;
+                let diskon = 0;
+
+                switch (this.value) {
+                    case "1 bulan":
+                        multiplier = 1;
+                        break;
+                    case "3 bulan":
+                        multiplier = 3;
+                        break;
+                    case "1 tahun":
+                        multiplier = 12;
+                        diskon = 0.10; // diskon 10%
+                        break;
+                }
+
+                let total = hargaPerBulan * multiplier;
+                if (diskon > 0) {
+                    total = total - (total * diskon);
+                }
+
+                hargaText.textContent = "Rp" + total.toLocaleString('id-ID');
+            });
+        });
+    </script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
     <!-- Inisialisasi GLightbox -->
@@ -375,12 +423,29 @@
         });
     </script>
 
-    <!-- Script untuk menyimpan tanggal booking ke dalam modal -->
     <script>
-        document.querySelector("#booking-date").addEventListener("change", function() {
-            document.querySelector("#modalBookingDate").value = this.value;
+        const durasiSewaSelect = document.getElementById('durasi_sewa');
+        const bookingDateInput = document.getElementById('booking-date');
+        const hiddenDurasiInput = document.getElementById('hiddenDurasiSewa');
+        const hiddenBookingInput = document.getElementById('modalBookingDate');
+
+        // Update nilai saat tanggal atau durasi diubah
+        function updateHiddenFields() {
+            hiddenDurasiInput.value = durasiSewaSelect.value;
+            hiddenBookingInput.value = bookingDateInput.value;
+        }
+
+        // Trigger saat input berubah
+        durasiSewaSelect.addEventListener('change', updateHiddenFields);
+        bookingDateInput.addEventListener('change', updateHiddenFields);
+
+        // Saat modal dibuka, pastikan input tersembunyi diperbarui juga
+        const uploadModal = document.getElementById('uploadModal');
+        uploadModal.addEventListener('show.bs.modal', function () {
+            updateHiddenFields();
         });
     </script>
+
 
 
     <!-- SweetAlert2 Script -->
@@ -450,8 +515,8 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const latitude = {{ $kost->latitude ?? -6.9 }};
-            const longitude = {{ $kost->longitude ?? 109.1 }};
+            const latitude = {{ $kost->hunian->latitude ?? -6.9 }};
+            const longitude = {{ $kost->hunian->longitude ?? 109.1 }};
 
             const map = L.map('map').setView([latitude, longitude], 16);
 
@@ -460,7 +525,7 @@
             }).addTo(map);
 
             L.marker([latitude, longitude]).addTo(map)
-                .bindPopup("{{ $kost->nama }}<br>{{ $kost->alamat }}")
+                .bindPopup("{{ $kost->hunian->nama }}<br>{{ $kost->hunian->alamat }}")
                 .openPopup();
         });
     </script>

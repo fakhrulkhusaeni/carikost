@@ -98,15 +98,19 @@
                                 alt="{{ $kost->nama }}">
                             <div class="card-body text-start">
                                 <h6 class="card-title mb-2" style="color: #007bff;">{{ ucfirst($kost->type) }}</h6>
-                                <p class="card-text mb-3">{{ $kost->nama }}</p>
+                                <p class="card-text mb-3">{{ $kost->hunian->nama }}</p>
                                 <ul class="list-unstyled mb-3">
-                                    <li><i class="bi bi-geo-alt me-2"></i> <span class="ms-2">Lokasi: {{ $kost->location }}</span></li>
-                                    <li><i class="bi bi-cash me-2"></i> <span class="ms-2">Harga: Rp{{ number_format((int) preg_replace('/[^0-9]/', '', $kost->harga), 0, ',', '.') }}/bulan</span></li>
-                                    <li><i class="bi bi-door-closed me-2"></i> <span class="ms-2">Jumlah Kamar: {{ $kost->jumlah_kamar }}</span></li>
+                                    <li><i class="bi bi-geo-alt me-2"></i> <span class="ms-2">Lokasi: {{ $kost->hunian->location }}</span></li>
+                                    <li>
+                                        <i class="bi bi-door-closed me-2"></i>
+                                        <span class="ms-2">
+                                            Total Kamar: {{ $totalKamarPerHunian[$kost->hunian_id] ?? '0' }}
+                                        </span>
+                                    </li>
                                 </ul>
 
                                 <!-- Tampilkan rating biasa -->
-                                <div class="d-flex align-items-center mb-3">
+                                <!-- <div class="d-flex align-items-center mb-3">
                                     <span class="me-2" style="color: #ffc107;">
                                         @php
                                         $rating = $kost->ratings_avg_rating ?? 0;
@@ -114,22 +118,22 @@
 
                                         @for ($i = 1; $i <= 5; $i++)
                                             @if ($i <=floor($rating))
-                                            <i class="bi bi-star-fill"></i> <!-- Bintang penuh -->
+                                            <i class="bi bi-star-fill"></i>
                                             @elseif ($i - $rating < 1 && $i - $rating> 0)
-                                                <i class="bi bi-star-half"></i> <!-- Bintang setengah -->
+                                                <i class="bi bi-star-half"></i>
                                                 @else
-                                                <i class="bi bi-star"></i> <!-- Bintang kosong -->
+                                                <i class="bi bi-star"></i>
                                                 @endif
                                                 @endfor
                                     </span>
                                     <small>({{ number_format($rating, 1) }})</small>
-                                </div>
+                                </div> -->
 
                                 <div class="d-flex justify-content-between align-items-center">
                                     @if ($kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi')
                                     <span class="verified text-primary" style="font-size: 0.80rem; cursor: pointer;">Terverifikasi</span>
                                     @endif
-                                    <a href="{{ route('frontend.detail', $kost->id) }}" class="btn btn-primary">Lihat Detail</a>
+                                    <a href="{{ route('frontend.detail_kamar', $kost->hunian_id) }}" class="btn btn-primary">Pilih Kamar</a>
                                 </div>
                             </div>
                         </div>

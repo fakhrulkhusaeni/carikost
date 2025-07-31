@@ -35,7 +35,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:50', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
-            'phone' => ['required', 'regex:/^[0-9]{10,13}$/', 'unique:' . User::class],
+            'phone' => ['nullable', 'regex:/^[0-9]{10,13}$/', 'unique:' . User::class],
             'account_type' => ['required'],
             'gender' => ['nullable', 'string', 'in:laki-laki,perempuan', 'max:14'],
         ], [
