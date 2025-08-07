@@ -71,12 +71,12 @@
                                 oninput="this.setCustomValidity('')" />
                             {{-- Tombol Login --}}
                             <div class="d-grid gap-2 mt-3">
-                                <button id="submit" type="submit" class="btn btn-primary w-100">
+                                <button id="submitBtn" type="submit" class="btn btn-primary w-100">
                                     Login
                                 </button>
 
                                 {{-- Tombol Login dengan Google --}}
-                                <a href="{{ route('google.login') }}" class="btn btn-danger w-100 d-flex align-items-center justify-content-center" style="gap: 8px;">
+                                <a id="googleLoginBtn" href="{{ route('google.login') }}" class="btn btn-danger w-100 d-flex align-items-center justify-content-center" style="gap: 8px;">
                                     <i class="fab fa-google"></i> Login dengan Google
                                 </a>
                             </div>
@@ -93,6 +93,34 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const submitBtn = document.getElementById("submitBtn");
+            const googleLoginBtn = document.getElementById("googleLoginBtn");
+            const googleLoginText = document.getElementById("googleLoginText");
+
+            if (form && submitBtn) {
+                form.addEventListener("submit", function () {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm text-white me-2" role="status" aria-hidden="true"></span>
+                        <span class="text-white">Memproses...</span>`;
+                });
+            }
+
+            if (googleLoginBtn) {
+                googleLoginBtn.addEventListener("click", function () {
+                    googleLoginBtn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm text-white me-2" role="status" aria-hidden="true"></span>
+                        <span class="text-white">Memproses...</span>`;
+                    googleLoginBtn.classList.add('disabled');
+                });
+            }
+        });
+    </script>
+
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>

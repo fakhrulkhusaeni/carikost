@@ -110,10 +110,10 @@
                                 </ul>
 
                                 <!-- Tampilkan rating biasa -->
-                                <!-- <div class="d-flex align-items-center mb-3">
+                                <div class="d-flex align-items-center mb-3">
                                     <span class="me-2" style="color: #ffc107;">
                                         @php
-                                        $rating = $kost->ratings_avg_rating ?? 0;
+                                            $rating = $kost->combined_avg_rating ?? 0;
                                         @endphp
 
                                         @for ($i = 1; $i <= 5; $i++)
@@ -127,7 +127,7 @@
                                                 @endfor
                                     </span>
                                     <small>({{ number_format($rating, 1) }})</small>
-                                </div> -->
+                                </div>
 
                                 <div class="d-flex justify-content-between align-items-center">
                                     @if ($kost->verifikasi && $kost->verifikasi->status_verifikasi === 'terverifikasi')

@@ -39,17 +39,23 @@
                                         $durasi = match ($durasiText) {
                                             '1 bulan' => 1,
                                             '3 bulan' => 3,
+                                            '6 bulan' => 6,
                                             '1 tahun' => 12,
                                             default => 1,
                                         };
 
                                         $totalHarga = $hargaPerBulan * $durasi;
-                                        if ($durasi >= 12) {
+
+                                        // Terapkan diskon jika berlaku
+                                        if ($durasi === 6) {
+                                            $totalHarga = round($totalHarga * 0.95); // diskon 5%
+                                        } elseif ($durasi >= 12) {
                                             $totalHarga = round($totalHarga * 0.9); // diskon 10%
                                         }
                                     @endphp
                                     Rp{{ number_format($totalHarga, 0, ',', '.') }}
                                 </td>
+
                                 <td class="px-6 py-4 text-center whitespace-nowrap">{{ \Carbon\Carbon::parse($riwayat->tanggal_booking)->format('d-m-Y') }}</td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
                                     @if($riwayat->status_konfirmasi == 'Disetujui')

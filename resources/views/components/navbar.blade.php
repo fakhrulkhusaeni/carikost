@@ -20,12 +20,12 @@
                     <li class="nav-item {{ request()->routeIs('frontend.rekomendasi') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('frontend.rekomendasi') }}">Rekomendasi</a>
                     </li>
-                    <li class="nav-item {{ request()->routeIs('frontend.hunian_lain') ? 'active' : '' }}">
+                    <!-- <li class="nav-item {{ request()->routeIs('frontend.hunian_lain') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('frontend.hunian_lain') }}">Tempat Usaha</a>
                     </li>
                     <li class="nav-item {{ request()->routeIs('frontend.promosi') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('frontend.promosi') }}">Pasang Iklan</a>
-                    </li>
+                    </li> -->
 
                     @auth
                     <li class="nav-item">

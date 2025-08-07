@@ -134,7 +134,8 @@
                             <p><span class="font-semibold">Tipe Hunian:</span> {{ $riwayat->kost->type }}</p>
                             <p><span class="font-semibold">Jumlah Kamar:</span> {{ $riwayat->kost->jumlah_kamar }}</p>
                             <p><span class="font-semibold">Lokasi Kecamatan:</span> {{ $riwayat->kost->hunian->location }}</p>
-                            <p><span class="font-semibold">Harga:</span>
+                            <p>
+                                <span class="font-semibold">Harga:</span>
                                 @php
                                     $hargaRaw = $riwayat->kost->harga ?? '0';
                                     $hargaPerBulan = (int) preg_replace('/[^0-9]/', '', $hargaRaw);
@@ -144,17 +145,30 @@
                                     $durasi = match ($durasiText) {
                                         '1 bulan' => 1,
                                         '3 bulan' => 3,
+                                        '6 bulan' => 6,
                                         '1 tahun' => 12,
                                         default => 1,
                                     };
 
                                     $totalHarga = $hargaPerBulan * $durasi;
-                                    if ($durasi >= 12) {
+
+                                    // Diskon berdasarkan durasi
+                                    if ($durasi === 6) {
+                                        $totalHarga = round($totalHarga * 0.95); // diskon 5%
+                                    } elseif ($durasi >= 12) {
                                         $totalHarga = round($totalHarga * 0.9); // diskon 10%
                                     }
+
+                                    // Label durasi
+                                    $durasiLabel = match ($durasi) {
+                                        1 => '(1 Bulan)',
+                                        3 => '(3 Bulan)',
+                                        6 => '(6 Bulan)',
+                                        12 => '(1 Tahun)',
+                                        default => "({$durasi} Bulan)",
+                                    };
                                 @endphp
-                                Rp{{ number_format($totalHarga, 0, ',', '.') }}
-                                {{ $durasi === 1 ? '(1 Bulan)' : ($durasi === 3 ? '(3 Bulan)' : ($durasi >= 12 ? '(1 Tahun)' : '')) }}
+                                Rp{{ number_format($totalHarga, 0, ',', '.') }} {{ $durasiLabel }}
                             </p>
                             <p><span class="font-semibold">Alamat Lengkap:</span> {{ $riwayat->kost->hunian->alamat }}</p>
                             <p><span class="font-semibold">Nomor Telepon:</span> {{ $riwayat->kost->user->phone }}</p>

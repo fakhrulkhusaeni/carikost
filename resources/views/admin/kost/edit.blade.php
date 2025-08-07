@@ -71,28 +71,19 @@
                         <!-- Checkbox Fasilitas -->
                         <div id="checkboxContainer" class="mt-3 p-4 border rounded-md">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
-                                @php
-                                $allFacilities = [
-                                "Kamar Mandi Dalam", "Air Panas", "Shower", "Lemari Baju", "AC",
-                                "Kursi", "Meja", "TV", "Kasur", "Mesin Cuci", "Dapur Bersama", "Parkir Mobil",
-                                "Kloset Duduk", "Kloset Jongkok", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV", "Dispenser", "Kulkas", "Teras",
-                                "Ruang Tamu", "Ruang Makan", "Tempat Jemuran", "Kamar Mandi Luar", "Mushola"
-                                ];
-                                $selectedFacilities = old('facilities', $kost->facilities ?? []);
-                                @endphp
-
-                                @foreach($allFacilities as $facility)
+                                @foreach($facilities as $facility)
                                 <div class="col-md-6 col-12 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="facilities[]" value="{{ $facility }}"
-                                            {{ in_array($facility, $selectedFacilities) ? 'checked' : '' }}>
-                                        <label class="form-check-label">{{ strtoupper($facility) }}</label>
+                                        <input class="form-check-input" type="checkbox" 
+                                            name="facilities[]" 
+                                            value="{{ $facility->nama_fasilitas }}" 
+                                            {{ in_array($facility->nama_fasilitas, $selectedFacilities) ? 'checked' : '' }}>
+                                        <label class="form-check-label">{{ strtoupper($facility->nama_fasilitas) }}</label>
                                     </div>
                                 </div>
                                 @endforeach
                             </div>
                         </div>
-
                         <x-input-error :messages="$errors->get('facilities')" class="mt-2" />
                     </div>
 

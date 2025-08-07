@@ -76,7 +76,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data kost tersedia.</td>
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data tipe kamar</td>
                             </tr>
                             @endforelse
                         </tbody>

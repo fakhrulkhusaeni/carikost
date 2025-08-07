@@ -9,7 +9,7 @@
         <h2 style="margin-bottom: 20px;">Halo {{ $user->name }},</h2>
 
         <p style="font-size: 16px; line-height: 1.6;">
-            Selamat! Anda telah disetujui untuk menempati kost atau kontrakan <strong>{{ $pembayaran->kost->nama }}</strong> 
+            Selamat! Anda telah disetujui untuk menempati kost atau kontrakan <strong>{{ $pembayaran->kost->hunian->nama }}</strong> 
             pada tanggal <strong>{{ \Carbon\Carbon::parse($pembayaran->tanggal_booking)->locale('id')->translatedFormat('d F Y') }}</strong>.
         </p>
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="assets/icon.png" type="" />
 
-    <title>InfoKosTegal | Register</title>
+    <title>InfoKosTegal | Tipe Akun</title>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}" />
@@ -32,11 +32,11 @@
                             <label for="account_type">Tipe Akun</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="account_type" id="pemilik_kost" value="pemilik_kost" required>
-                                <label class="form-check-label" for="pemilik_kost">Pemilik Kost</label>
+                                <label class="form-check-label" for="pemilik_kost">Pemilik Hunian</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="account_type" id="pencari_kost" value="pencari_kost" required>
-                                <label class="form-check-label" for="pencari_kost">Pencari Kost</label>
+                                <label class="form-check-label" for="pencari_kost">Pencari Hunian</label>
                             </div>
                         </div>
 

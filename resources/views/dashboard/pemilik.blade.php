@@ -15,7 +15,7 @@
                 </div>
                 <div class="card bg-blue-500 text-white p-4 sm:p-6 rounded-lg shadow-md">
                     <h3 class="text-base sm:text-lg font-semibold">Total Kost dan Kontrakan</h3>
-                    <p class="text-2xl sm:text-3xl font-bold mt-2">{{ $totalKost }}</p>
+                    <p class="text-2xl sm:text-3xl font-bold mt-2">{{ $totalHunian }}</p>
                 </div>
                 <div class="card bg-green-500 text-white p-4 sm:p-6 rounded-lg shadow-md">
                     <h3 class="text-base sm:text-lg font-semibold">Total Data Pemesanan</h3>

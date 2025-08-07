@@ -9,7 +9,7 @@
         <h2 style="margin-bottom: 20px;">Halo {{ $user->name }},</h2>
 
         <p style="font-size: 16px; line-height: 1.6;">
-            Kami mohon maaf, proses verifikasi untuk kost atau kontrakan Anda <strong>{{ $kost->nama }}</strong> telah <strong>ditolak</strong>.
+            Kami mohon maaf, proses verifikasi untuk kost atau kontrakan Anda <strong>{{ $kost->hunian->nama }}</strong> telah <strong>ditolak</strong>.
         </p>
 
         <p style="font-size: 16px; line-height: 1.6;">

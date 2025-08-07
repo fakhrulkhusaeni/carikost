@@ -14,8 +14,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifikasiController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\HunianController;
+use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\RoleController;
+
 
 
 Route::get('/', [FrontController::class, 'index'])->name('frontend.index');
@@ -90,6 +92,11 @@ Route::prefix(prefix: 'admin')->name('admin.')->group(function () {
     Route::middleware(['auth', 'can:manage data promosi'])->group(function () {
         Route::resource('promosi', PromosiController::class);
     });
+
+    Route::middleware(['auth', 'can:manage fasilitas'])->group(function () {
+        Route::resource('facilities', FacilityController::class);
+    });
+
 });
 
 

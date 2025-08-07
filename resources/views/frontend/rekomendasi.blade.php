@@ -83,7 +83,7 @@
                                                 </div>
                                             @elseif ($criteria === 'facilities')
                                                 <div class="col-lg-12 col-md-6 col-12 mb-3 draggable-item" data-kriteria="facilities">
-                                                    {{-- === FASILITAS === --}}
+                                                    {{-- === FASILITAS (DINAMIS) === --}}
                                                     <select id="facilityDropdown" class="form-control" style="border-radius: 5px;">
                                                         <option value="" disabled selected>Fasilitas</option>
                                                     </select>
@@ -91,17 +91,11 @@
                                                     <div id="checkboxContainer" class="border p-3 rounded mt-2" style="display: none;">
                                                         <div class="row">
                                                             @php
-                                                                $allFacilities = [
-                                                                    "Kamar Mandi Dalam", "Air Panas", "Shower", "Lemari Baju", "AC",
-                                                                    "Kursi", "Meja", "TV", "Kasur", "Mesin Cuci", "Dapur Bersama", "Parkir Mobil",
-                                                                    "Kloset Duduk", "Kloset Jongkok", "Kipas Angin", "Wifi", "Parkir Motor", "CCTV",
-                                                                    "Dispenser", "Kulkas", "Teras", "Ruang Tamu", "Ruang Makan",
-                                                                    "Tempat Jemuran", "Kamar Mandi Luar", "Mushola"
-                                                                ];
+                                                                $allFacilities = $availableFacilities ?? [];
                                                                 $selectedFacilities = $facilities ?? [];
                                                             @endphp
 
-                                                            @foreach($allFacilities as $facility)
+                                                            @forelse($allFacilities as $facility)
                                                                 <div class="col-md-6 col-12">
                                                                     <div class="form-check">
                                                                         <input class="form-check-input" type="checkbox" name="facilities[]" value="{{ $facility }}"
@@ -109,14 +103,15 @@
                                                                         <label class="form-check-label">{{ strtoupper($facility) }}</label>
                                                                     </div>
                                                                 </div>
-                                                            @endforeach
+                                                            @empty
+                                                                <p class="text-muted">Belum ada fasilitas yang tersedia.</p>
+                                                            @endforelse
                                                         </div>
                                                     </div>
                                                 </div>
                                             @endif
                                         @endforeach
                                     </div>
-
 
                                     <div id="kriteriaInputs"></div>
 
@@ -130,7 +125,7 @@
                                     <div class="row px-4 pb-4">
                                         <div class="col-lg-12 col-md-6 col-12 text-center mt-1">
                                             <input type="hidden" name="priority_order" id="priorityOrder">
-                                            <button type="submit" class="btn w-100" style="background-color: #007bff; border-radius: 10px;">
+                                            <button id="submitBtn" type="submit" class="btn w-100" style="background-color: #007bff; border-radius: 10px;">
                                                 <i class="bi bi-magic text-white"></i> <span class="text-white">Cari Rekomendasi</span>
                                             </button>
                                         </div>
@@ -201,6 +196,19 @@
     <!-- footer section -->
     <x-footer />
     <!-- footer section -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form"); // Pastikan ini form yang benar
+            const submitBtn = document.getElementById("submitBtn");
+
+            form.addEventListener("submit", function () {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm text-white me-2" role="status" aria-hidden="true"></span> <span class="text-white">Memproses...</span>';
+            });
+        });
+    </script>
+
 
     <!-- Bootstrap Icons (drag indicator) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">

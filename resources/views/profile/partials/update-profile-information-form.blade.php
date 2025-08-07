@@ -40,6 +40,7 @@
         <div>
             <x-input-label for="gender" :value="__('Jenis Kelamin')" />
             <select id="gender" name="gender" class="mt-1 block w-full border-gray-300 rounded-md">
+                <option value="" disabled {{ old('gender', $user->gender ?? '') == '' ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
                 <option value="laki-laki" {{ old('gender', $user->gender ?? '') == 'laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                 <option value="perempuan" {{ old('gender', $user->gender ?? '') == 'perempuan' ? 'selected' : '' }}>Perempuan</option>
             </select>
@@ -93,4 +94,17 @@
             @endif
         </div>
     </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if ($errors->has('phone'))
+    <script>
+        Swal.fire({
+            icon: 'warning',
+            title: 'Nomor Telepon Sudah Terdaftar',
+            text: '{{ $errors->first('phone') }}',
+        });
+    </script>
+    @endif
+
 </section>

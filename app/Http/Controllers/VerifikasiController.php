@@ -40,6 +40,10 @@ class VerifikasiController extends Controller
         // Eksekusi query dengan urutan terbaru
         $kosts = $query->orderBy('created_at', 'desc')->get();
 
+        $kosts = Kost::with(['hunian'])
+            ->get()
+            ->unique('hunian_id');
+
         return view('admin.verifikasi.index', compact('kosts'));
     }
 

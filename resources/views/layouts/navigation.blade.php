@@ -23,6 +23,12 @@
                     </x-nav-link>
                     @endcan
 
+                    @can('manage fasilitas')
+                    <x-nav-link :href="route('admin.facilities.index')" :active="request()->routeIs('admin.facilities.index')">
+                        {{ __('Kelola Fasilitas') }}
+                    </x-nav-link>
+                    @endcan
+
                     @can('manage verifikasi data')
                     <x-nav-link :href="route('admin.verifikasi.index')" :active="request()->routeIs('admin.verifikasi.index')">
                         {{ __('Verifikasi Kost dan Kontrakan') }}
@@ -47,11 +53,11 @@
                     </x-nav-link>
                     @endunless
 
-                    @can('manage hunian lain')
+                    <!-- @can('manage hunian lain')
                     <x-nav-link :href="route('admin.hunian_lain.index')" :active="request()->routeIs('admin.hunian_lain.index')">
                         {{ __('Kelola Data Ruko dan Kios') }}
                     </x-nav-link>
-                    @endcan
+                    @endcan -->
 
                     <!-- @can('manage data promosi')
                     <x-nav-link :href="route('admin.promosi.index')" :active="request()->routeIs('admin.promosi.index')">

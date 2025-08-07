@@ -14,6 +14,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/iofrm-style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/iofrm-theme7.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 </head>
 
 <body>
@@ -147,17 +150,49 @@
                                 </div>
                             </div>
 
-                            <div class="form-button mt-4">
-                                <button type="submit" class="btn btn-primary">Register</button>
+                            <div class="d-grid gap-2 mt-3">
+                                <button id="submitBtn" type="submit" class="btn btn-primary w-100">
+                                    Register
+                                </button>
+                            
+                                {{-- Tombol Register dengan Google --}}
+                                <a id="googleLoginBtn" href="{{ route('google.login') }}" class="btn btn-danger w-100 d-flex align-items-center justify-content-center" style="gap: 8px;">
+                                    <i class="fab fa-google"></i> Register dengan Google
+                                </a>
                             </div>
                         </form>
-
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const submitBtn = document.getElementById("submitBtn");
+            const googleLoginBtn = document.getElementById("googleLoginBtn");
+            const googleLoginText = document.getElementById("googleLoginText");
+
+            if (form && submitBtn) {
+                form.addEventListener("submit", function () {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm text-white me-2" role="status" aria-hidden="true"></span>
+                        <span class="text-white">Memproses...</span>`;
+                });
+            }
+
+            if (googleLoginBtn) {
+                googleLoginBtn.addEventListener("click", function () {
+                    googleLoginBtn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm text-white me-2" role="status" aria-hidden="true"></span>
+                        <span class="text-white">Memproses...</span>`;
+                    googleLoginBtn.classList.add('disabled');
+                });
+            }
+        });
+    </script>
 
     <script>
         // Menambahkan event listener untuk tombol upload foto

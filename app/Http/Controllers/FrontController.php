@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Kost;
 use App\Models\Pembayaran;
 use App\Models\Rating;
-
+use App\Models\Hunian;
+use App\Models\Facility;
 use App\Models\HunianLain;
 use App\Models\Riwayat;
 
@@ -46,6 +47,22 @@ class FrontController extends Controller
         // Ambil data dan urutkan berdasarkan rata-rata rating
         $kosts = $query->orderByDesc('ratings_avg_rating')->paginate(9);
 
+        $kosts = $query->orderByDesc('ratings_avg_rating')->paginate(9);
+
+        // Hitung rating gabungan dari semua kost dalam satu hunian
+        $kosts->getCollection()->transform(function ($kost) {
+            $allRatings = \App\Models\Rating::whereIn('kost_id', function ($query) use ($kost) {
+                $query->select('id')
+                    ->from('kosts')
+                    ->where('hunian_id', $kost->hunian_id);
+            })->pluck('rating');
+
+            $avgRating = $allRatings->avg();
+            $kost->combined_avg_rating = $avgRating ?? 0;
+            return $kost;
+        });
+
+
         $totalKamarPerHunian = Kost::selectRaw('hunian_id, SUM(jumlah_kamar) as total')
             ->groupBy('hunian_id')
             ->pluck('total', 'hunian_id');
@@ -63,31 +80,40 @@ class FrontController extends Controller
         $facilities = $request->input('facilities', []);
         $kriteriaOrder = $request->input('kriteria', []);
 
+        // Ambil lokasi user (latitude & longitude dari hunian milik user)
+        $hunianUser = Hunian::where('user_id', auth()->id())->first();
+        $userLat = $hunianUser->latitude ?? 0;
+        $userLng = $hunianUser->longitude ?? 0;
+
         // Bobot otomatis berdasarkan urutan
         $defaultWeights = [0.4, 0.3, 0.2, 0.1];
         $weights = [];
-
         foreach ($kriteriaOrder as $index => $kriteria) {
             $weights[$kriteria] = $defaultWeights[$index] ?? 0;
         }
 
-        // Ambil kost yang terverifikasi & masih ada kamar kosong
+        // Ambil semua kost yang terverifikasi dan masih ada kamar
         $kosts = Kost::with('verifikasi')
             ->whereHas('verifikasi', fn($q) => $q->where('status_verifikasi', 'terverifikasi'))
             ->get()
             ->filter(fn($kost) => $kost->sisaKamar() > 0);
 
-        // Dapatkan harga minimum
+        // Konversi harga dan tipe untuk normalisasi
         $hargaList = $kosts->map(fn($kost) => $this->convertHargaToNumber($kost->harga))->filter()->values();
         $hargaMin = $hargaList->min();
 
-        // Hitung skor tiap kost
-        $kosts = $kosts->map(function ($kost) use ($location, $type, $hargaInput, $facilities, $weights, $hargaMin) {
-            // Lokasi
-            $locationScore = (strtolower($kost->location) == strtolower($location)) ? 1 : 0;
+        $typeMapping = ['Kontrakan' => 1, 'Campur' => 2, 'Putri' => 3, 'Putra' => 4];
+        $typeMax = max($typeMapping);
+
+        // Hitung skor masing-masing kost
+        $kosts = $kosts->map(function ($kost) use ($userLat, $userLng, $type, $hargaMin, $facilities, $weights, $typeMapping, $typeMax) {
+            // Lokasi - hitung jarak (semakin dekat semakin baik)
+            $jarak = $this->hitungJarak($userLat, $userLng, $kost->latitude, $kost->longitude);
+            $locationScore = ($jarak > 0) ? 1 / $jarak : 1; // Benefit (semakin dekat semakin tinggi)
 
             // Tipe
-            $typeScore = (strtolower($kost->type) == strtolower($type)) ? 1 : 0;
+            $kostTypeValue = $typeMapping[$kost->type] ?? 0;
+            $typeScore = ($typeMax > 0) ? ($kostTypeValue / $typeMax) : 0;
 
             // Harga
             $kostHarga = $this->convertHargaToNumber($kost->harga);
@@ -98,7 +124,7 @@ class FrontController extends Controller
             $matched = collect($facilities)->intersect($kostFacilities)->count();
             $facilityScore = (count($facilities) > 0) ? $matched / count($facilities) : 0;
 
-            // Hitung total skor dengan bobot dari drag & drop
+            // Total skor (SAW)
             $totalScore = 0;
             $totalScore += ($weights['location'] ?? 0) * $locationScore;
             $totalScore += ($weights['type'] ?? 0) * $typeScore;
@@ -109,13 +135,35 @@ class FrontController extends Controller
             return $kost;
         });
 
+        // Urutkan berdasarkan skor tertinggi
         $kosts = $kosts->sortByDesc('bobotScore')->values();
 
         $totalKamarPerHunian = Kost::selectRaw('hunian_id, SUM(jumlah_kamar) as total')
             ->groupBy('hunian_id')
             ->pluck('total', 'hunian_id');
 
-        return view('frontend.rekomendasi', compact('kosts', 'facilities', 'kriteriaOrder', 'totalKamarPerHunian'));
+        $availableFacilities = Facility::pluck('nama_fasilitas')->toArray();
+
+        return view('frontend.rekomendasi', compact('kosts', 'facilities', 'kriteriaOrder', 'totalKamarPerHunian', 'availableFacilities'));
+    }
+
+
+    private function hitungJarak($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371; // km
+
+        $lat1 = deg2rad($lat1);
+        $lon1 = deg2rad($lon1);
+        $lat2 = deg2rad($lat2);
+        $lon2 = deg2rad($lon2);
+
+        $dlat = $lat2 - $lat1;
+        $dlon = $lon2 - $lon1;
+
+        $a = sin($dlat / 2) ** 2 + cos($lat1) * cos($lat2) * sin($dlon / 2) ** 2;
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        return $earthRadius * $c;
     }
 
 

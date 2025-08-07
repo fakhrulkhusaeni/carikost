@@ -8,6 +8,7 @@ use App\Models\Kost;
 use App\Models\Hunian;
 use App\Models\Pembayaran;
 use App\Models\Riwayat;
+use App\Models\Facility;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,7 +29,8 @@ class KostController extends Controller
     public function create()
     {
         $hunians = Hunian::where('user_id', auth()->id())->get();
-        return view('admin.kost.create', compact('hunians'));
+        $facilities = Facility::all();
+        return view('admin.kost.create', compact('hunians', 'facilities'));
     }
 
     public function store(Request $request)
@@ -87,7 +89,9 @@ class KostController extends Controller
     public function edit(Kost $kost)
     {
         $hunians = Hunian::where('user_id', auth()->id())->get();
-        return view('admin.kost.edit', compact('kost', 'hunians'));
+        $facilities = Facility::all();
+        $selectedFacilities = is_array($kost->facilities) ? $kost->facilities : json_decode($kost->facilities ?? '[]', true);
+        return view('admin.kost.edit', compact('kost', 'hunians', 'facilities', 'selectedFacilities'));
     }
 
     public function update(Request $request, Kost $kost)

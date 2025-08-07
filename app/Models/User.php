@@ -68,18 +68,38 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected function returnSaldo()
     {
-        $riwayat = Riwayat::where("status_pembayaran", "Berhasil")->get();
-        // $this->kosts->each(function ($kost, int $key) use (&$riwayat) {
-        //     $kost->riwayat->each(function ($r, int $keyZ) use (&$riwayat) {
-        //         if ($r->status_pembayaran == "Berhasil") {
-        //             $riwayat[] = $r->kost->harga;
-        //         }
-        //     });
-        // });
-        return collect($riwayat)->map(function ($value) {
-            return (int) preg_replace('/[^0-9]/', '', $value->nominal);
-        })->sum();
+        $riwayat = collect();
+
+        foreach ($this->kosts as $kost) {
+            foreach ($kost->riwayat as $r) {
+                if ($r->status_pembayaran === 'Berhasil') {
+                    // Ambil nominal per bulan dan bersihkan dari format
+                    $nominal = (int) preg_replace('/[^0-9]/', '', $r->nominal);
+                    $durasiSewa = strtolower($r->durasi_sewa);
+
+                    switch ($durasiSewa) {
+                        case '3 bulan':
+                            $total = $nominal * 3;
+                            break;
+                        case '6 bulan':
+                            $total = $nominal * 6 * 0.95; // diskon 5%
+                            break;
+                        case '1 tahun':
+                            $total = $nominal * 12 * 0.9; // diskon 10%
+                            break;
+                        default:
+                            $total = $nominal; // default = 1 bulan
+                    }
+
+                    $riwayat->push($total);
+                }
+            }
+        }
+
+        return $riwayat->sum();
     }
+
+    
 
     public function sendEmailVerificationNotification()
     {

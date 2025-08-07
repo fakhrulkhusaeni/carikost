@@ -24,6 +24,7 @@ class RolePermissionSeeder extends Seeder
             'manage verifikasi data',
             'manage hunian lain',
             'manage data promosi',
+            'manage fasilitas',
         ];
 
         // Create or find permissions
@@ -41,7 +42,7 @@ class RolePermissionSeeder extends Seeder
         $pencariKostRole->syncPermissions($pencariKostPermissions);
 
         $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
-        $superAdminPermissions = ['manage user', 'manage verifikasi data', 'manage hunian lain', 'manage data promosi'];
+        $superAdminPermissions = ['manage user', 'manage verifikasi data', 'manage hunian lain', 'manage data promosi', 'manage fasilitas'];
         $superAdminRole->syncPermissions($superAdminPermissions);
 
         // Create a super admin user and assign the super admin role

@@ -164,10 +164,10 @@
                         <h4 class="mb-4">Informasi</h4>
 
                         <!-- Jumlah Kamar -->
-                        <div class="card-item mb-3 d-flex align-items-center">
+                        <!-- <div class="card-item mb-3 d-flex align-items-center">
                             <i class="fa fa-door-closed text-primary" style="margin-right: 10px;"></i>
                             <span class="text-success">Jumlah Kamar: {{ $kost->jumlah_kamar }}</span>
-                        </div>
+                        </div> -->
 
                         <!-- Sisa Kamar -->
                         <div class="card-item mb-3 d-flex align-items-center">
@@ -226,6 +226,7 @@
                                         <option value="" disabled selected>Pilih Durasi</option>
                                         <option value="1 bulan">1 Bulan</option>
                                         <option value="3 bulan">3 Bulan</option>
+                                        <option value="6 bulan">6 Bulan</option>
                                         <option value="1 tahun">1 Tahun</option>
                                     </select>
                                     <i class="bi bi-caret-down-fill position-absolute top-50 end-0 translate-middle-y me-3 text-secondary"></i>
@@ -394,6 +395,10 @@
                         break;
                     case "3 bulan":
                         multiplier = 3;
+                        break;
+                    case "6 bulan":
+                        multiplier = 6;
+                        diskon = 0.05; // diskon 5%
                         break;
                     case "1 tahun":
                         multiplier = 12;

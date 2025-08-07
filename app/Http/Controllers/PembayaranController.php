@@ -92,27 +92,32 @@ class PembayaranController extends Controller
         $harga = (int) preg_replace('/[^0-9]/', '', $kost->harga);
         $margin = 0;
         $durasiSewa = $validated['durasi_sewa'];
-        
+
         switch ($durasiSewa) {
             case '1 bulan':
                 $durasiBulan = 1;
+                $diskon = 1;
                 break;
             case '3 bulan':
                 $durasiBulan = 3;
+                $diskon = 1;
+                break;
+            case '6 bulan':
+                $durasiBulan = 6;
+                $diskon = 0.95; // diskon 5%
                 break;
             case '1 tahun':
                 $durasiBulan = 12;
+                $diskon = 0.9; // diskon 10%
                 break;
             default:
                 $durasiBulan = 1;
+                $diskon = 1;
         }
-        
-        // Hitung harga dasar
+
         $hargaDasar = $harga + $margin;
-        
-        // Hitung total harga (dengan diskon jika 1 tahun)
-        $diskon = ($durasiSewa === '1 tahun') ? 0.9 : 1;
         $totalHarga = (int) round($hargaDasar * $durasiBulan * $diskon);
+
         
         // Buat array data body
         $body = [
@@ -147,6 +152,7 @@ class PembayaranController extends Controller
             'status_pembayaran' => 'Pending',
             'kartu_identitas' => $kartuIdentitasPath,
             'transaksi_id' =>  $midtransToken,
+            'nominal' => 'Rp' . number_format($totalHarga, 0, ',', '.'),
         ]);
 
         // Simpan data riwayat
@@ -158,6 +164,7 @@ class PembayaranController extends Controller
             'status_konfirmasi' => 'Pending',
             'status_pembayaran' => 'Pending',
             'kartu_identitas' => $kartuIdentitasPath,
+            'nominal' => 'Rp' . number_format($totalHarga, 0, ',', '.'),
         ]);
 
         // Ambil data kost beserta pemiliknya

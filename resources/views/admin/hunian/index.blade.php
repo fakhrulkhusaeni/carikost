@@ -81,7 +81,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center py-4">Belum ada data hunian.</td>
+                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data hunian.</td>
                                 </tr>
                             @endforelse
                         </tbody>
