@@ -47,7 +47,7 @@ class FacilityController extends Controller
             'nama_fasilitas' => $request->nama_fasilitas,
         ]);
     
-        return redirect()->back()->with('success', 'Fasilitas berhasil ditambahkan.');
+        return redirect()->route('admin.facilities.index')->with('success', 'Fasilitas berhasil ditambahkan.');
     }
 
     public function edit($id)

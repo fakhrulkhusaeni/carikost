@@ -104,7 +104,9 @@
                                                                     </div>
                                                                 </div>
                                                             @empty
+                                                            <div class="col-12 text-center">
                                                                 <p class="text-muted">Belum ada fasilitas yang tersedia.</p>
+                                                            </div>
                                                             @endforelse
                                                         </div>
                                                     </div>

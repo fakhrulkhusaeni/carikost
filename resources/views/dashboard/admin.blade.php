@@ -17,10 +17,10 @@
                     <h3 class="text-base sm:text-lg font-semibold">Total Data Kost dan Kontrakan</h3>
                     <p class="text-2xl sm:text-3xl font-bold mt-2">{{ $totalHunian }}</p>
                 </div>
-                <div class="card bg-orange-500 text-white p-4 sm:p-6 rounded-lg shadow-md">
+                <!-- <div class="card bg-orange-500 text-white p-4 sm:p-6 rounded-lg shadow-md">
                     <h3 class="text-base sm:text-lg font-semibold">Total Data Ruko dan Kios</h3>
                     <p class="text-2xl sm:text-3xl font-bold mt-2">{{ $totalHunianLain }}</p>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

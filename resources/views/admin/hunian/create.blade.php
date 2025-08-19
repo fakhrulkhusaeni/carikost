@@ -120,16 +120,35 @@
             draggable: true
         }).addTo(map);
 
-        // Ambil alamat dalam Bahasa Indonesia
+        // Ambil alamat dari koordinat
         function ambilAlamat(lat, lng) {
             fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=id`)
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('alamat').textContent = data.display_name || 'Alamat tidak ditemukan';
+                    document.getElementById('alamat').value = data.display_name || '';
                 })
-                .catch(error => {
-                    document.getElementById('alamat').textContent = 'Gagal mengambil alamat';
+                .catch(() => {
+                    document.getElementById('alamat').value = '';
                 });
+        }
+
+        // Ambil koordinat dari alamat (forward geocoding)
+        function cariKoordinatDariAlamat(alamat) {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(alamat)}&accept-language=id&limit=1`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        let lokasi = data[0];
+                        let lat = parseFloat(lokasi.lat);
+                        let lng = parseFloat(lokasi.lon);
+
+                        map.setView([lat, lng], 16);
+                        marker.setLatLng([lat, lng]);
+                        document.getElementById('latitude').value = lat;
+                        document.getElementById('longitude').value = lng;
+                    }
+                })
+                .catch(err => console.error('Geocoding error:', err));
         }
 
         marker.on('dragend', function () {
@@ -158,7 +177,6 @@
                     document.getElementById('latitude').value = lat;
                     document.getElementById('longitude').value = lng;
                     ambilAlamat(lat, lng);
-
                 }, function () {
                     alert('Gagal mendapatkan lokasi. Pastikan izin lokasi diaktifkan.');
                 }, {
@@ -171,9 +189,23 @@
             }
         });
 
+        // Deteksi perubahan input alamat → update peta
+        let timeoutId;
+        document.getElementById('alamat').addEventListener('input', function () {
+            clearTimeout(timeoutId);
+            const alamat = this.value;
+            if (alamat.length > 5) {
+                timeoutId = setTimeout(() => {
+                    cariKoordinatDariAlamat(alamat);
+                }, 600); // debounce 600ms
+            }
+        });
+
+        // Jika data lama tersedia
         if (document.getElementById('latitude').value && document.getElementById('longitude').value) {
             ambilAlamat(lat, lng);
         }
     </script>
+
 
 </x-app-layout>
